@@ -1,17 +1,18 @@
-<!doctype html>
+---
+layout: default
+---
 
-<html>
-<head>
-  <title>Laurence Bradford</title>
- 
+<div class="posts">
+  {% for post in site.posts %}
+    <article class="post">
 
-  <link rel="stylesheet" href="main.css">
+      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
 
-</head>
+      <div class="entry">
+        {{ post.excerpt }}
+      </div>
 
-<body>
-  <h1>Hi. My name is Laurence.</h1>
-  <p>Thank you for visiting my site!</p>
-  <p>This is a change I am making to my file.</p>
-</body>
-</html>
+      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+    </article>
+  {% endfor %}
+</div>
