@@ -1,12 +1,12 @@
 ---
 layout: post
-title: Article summarisation using LexRank
+title: Natural language processing using LexRank
 icon: book
 ---
 
 LexRank is an article summarisation technique explored by Erkan and Radev in their [2004 paper](https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume22/erkan04a-html/erkan04a.html) on the subject. It uses the concepts introduced by PageRank, which is the well known algorithm that is the backbone of the Google Search methodology, and extends them to the field of text. For this project, I implemented LexRank in Python, and applied it to the New York Times corpus to see what sort of results I'd get.
 
-### Natural Language Processing
+## Natural Language Processing
 
 NLP is a field of machine learning related to the processing of written or spoken speech by a computer. Some examples are chat bots - in the form of Facebook advertising bots interacting with their customers; spam filtering on email platforms; classification of news articles - or automatic text summarisation, which is what this project is about.
 
