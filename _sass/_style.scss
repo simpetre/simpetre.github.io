@@ -227,13 +227,13 @@ pre {
      }
 }
 /* THIS CHUNK*/
-h1.site-description {
+h2.site-description {
    font-size: 30px;
    display: inline-block;
    margin: 0 0 0 0;
    text-transform: uppercase;
    background: transparent;
-    color: $text-color;
+    color: lighten($grey-color, 10%);
     @include media-query($on-palm) {
         font-size: 30px;
         margin: 0 0 0 0;
