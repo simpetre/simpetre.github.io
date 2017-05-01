@@ -10,7 +10,7 @@ LexRank is an article summarisation technique explored by Erkan and Radev in the
 
 NLP is a field of machine learning related to the processing of written or spoken speech by a computer. Some examples are chat bots - in the form of Facebook advertising bots interacting with their customers; spam filtering on email platforms; classification of news articles - or automatic text summarisation, which is what this project is about.
 
-There are two forms of text summarisation - *abstractive* and *extractive*. Extractive summarisation attempts to distil the text down into its most explanatory or useful phrases (and is what this project uses), while abstractive summarisation summarises the text in new words. Abstractive summarisation is a much more difficult problem and is still very much in its infancy.
+There are two forms of text summarisation - *abstractive* and *extractive*. Extractive summarisation attempts to distill the text down into its most explanatory or useful phrases (and is what this project uses), while abstractive summarisation summarises the text in new words. Abstractive summarisation is a much more difficult problem and is still very much in its infancy.
 
 ## PageRank, and the idea of prestige
 
@@ -18,4 +18,4 @@ PageRank, which was introduced by Larry Page and Sergey Brin in their [1999 pape
 
 ## Prestige in text summarisation
 
-This is a concept that Erkan and Radev have applied to the problem of text summarisation. If we look at the problem we are trying to solve as finding the subset of sentences within a body of text that do the best job of summarising the main theme of the text, then we can consider the importance of particular sentences, and their relationship with other sentences within the body of text (or corpus). A sentence, in this context, has a higher importance than another sentence if it is more similar to other sentences in the corpus than the other sentence is.
+This is a concept that Erkan and Radev have applied to the problem of text summarisation. If we look at the problem we are trying to solve as finding the subset of sentences within a body of text that do the best job of summarising the main theme of the text, then we can consider the importance of particular sentences, and their relationship with other sentences within the body of text (or corpus). A sentence, in this context, has a higher importance, or relevance to the topic at hand, than another sentence if it is more similar to other sentences in the corpus than the other sentence is.
