@@ -278,15 +278,15 @@ header {
     vertical-align: top;
 }
 
-.list:last-child {
-  border-bottom: none;
-}
 
 .list {
     border-bottom: 1px solid #ddd;
 
 }
 
+.list+list {
+  border-bottom: none;
+}
 
 
 .post-index-title {
