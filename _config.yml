@@ -5,6 +5,8 @@ include: ["_pages"]
 # Name of your site (displayed in the header)
 name: Simon Petre
 
+twitter_username: bigs1m
+
 title: Simon Petre
 # page-title: Simon Petre's DS Blog 1
 # site-title: Simon Petre's DS Blog 2
