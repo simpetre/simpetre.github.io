@@ -278,14 +278,16 @@ header {
     vertical-align: top;
 }
 
+.list:last-child {
+  border-bottom: none;
+}
+
 .list {
     border-bottom: 1px solid #ddd;
 
 }
 
-.list:last-child {
-  border-bottom: none;
-}
+
 
 .post-index-title {
     font-size: 1.2em;
