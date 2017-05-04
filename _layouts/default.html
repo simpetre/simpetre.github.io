@@ -35,7 +35,14 @@
   {{ content }}
 
     <footer>
-      Made with <span style="color: palevioletred">❤</span> by <a href="http://webjeda.com">webjeda</a>
+      <!--Made with <span style="color: palevioletred">❤</span> by <a href="http://webjeda.com">webjeda</a>-->
+      {% if site.twitter_username %}
+  <li>
+    <a href="https://twitter.com/{{ site.twitter_username }}">
+      <i class="fa fa-twitter"></i> Twitter
+    </a>
+  </li>
+{% endif %}
   </footer>
 </div>
   <!-- Calling Fontawesome at the end to avoid delay in loading -->
