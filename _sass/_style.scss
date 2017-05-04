@@ -281,12 +281,11 @@ header {
 
 .list {
     border-bottom: 1px solid #ddd;
-
+    > :last-child {
+        border-bottom: 0;
+    }
 }
 
-.list+list {
-  border-bottom: none;
-}
 
 
 .post-index-title {
