@@ -191,6 +191,8 @@ pre {
 }
 
 .content {
+  > :last-child {
+      border-bottom: none;
 	max-width: 650px;
 	transition: all .2s;
 	transition-delay: .1s;
@@ -276,13 +278,13 @@ header {
 .post-index .post-image, .post-index .post-content {
     display: table-cell;
     vertical-align: top;
+
 }
 
 
 .list {
     border-bottom: 1px solid #ddd;
-    > :last-of-type {
-        border-bottom: none;
+
     }
 
 }
