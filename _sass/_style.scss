@@ -264,7 +264,7 @@ header {
         color: lighten($grey-color, 10%);
         font-size: 0.8em;
         font-style: italic;
-        > :last-child {
+        :last-child {
             border-bottom: none;
     }
 
