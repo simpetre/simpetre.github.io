@@ -191,8 +191,7 @@ pre {
 }
 
 .content {
-  > :last-child {
-      border-bottom: none;
+
 	max-width: 650px;
 	transition: all .2s;
 	transition-delay: .1s;
@@ -265,6 +264,8 @@ header {
         color: lighten($grey-color, 10%);
         font-size: 0.8em;
         font-style: italic;
+        > :last-child {
+            border-bottom: none;
     }
 
     a {
