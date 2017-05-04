@@ -191,7 +191,6 @@ pre {
 }
 
 .content {
-
 	max-width: 650px;
 	transition: all .2s;
 	transition-delay: .1s;
@@ -264,8 +263,6 @@ header {
         color: lighten($grey-color, 10%);
         font-size: 0.8em;
         font-style: italic;
-        :last-child {
-            border-bottom: none;
     }
 
     a {
@@ -279,13 +276,13 @@ header {
 .post-index .post-image, .post-index .post-content {
     display: table-cell;
     vertical-align: top;
-
 }
 
 
 .list {
     border-bottom: 1px solid #ddd;
-
+    > :last-of-type {
+        border-bottom: none;
     }
 
 }
