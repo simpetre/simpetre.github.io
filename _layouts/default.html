@@ -37,11 +37,14 @@
     <footer>
       <!--Made with <span style="color: palevioletred">❤</span> by <a href="http://webjeda.com">webjeda</a>-->
       {% if site.twitter_username %}
-  <li>
     <a href="https://twitter.com/{{ site.twitter_username }}">
-      <i class="fa fa-twitter"></i> Twitter
+      <i class="fa fa-twitter"></i>
     </a>
-  </li>
+{% if site.linkedin_username %}
+    <a href="https://linkedin.com/in/{{ site.linkedin_username }}">
+      <i class="fa fa-linkedin"></i>
+    </a>
+
 {% endif %}
   </footer>
 </div>
