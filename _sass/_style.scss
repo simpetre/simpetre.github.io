@@ -198,6 +198,10 @@ pre {
     @include media-query($on-palm) {
         padding: 1rem 1rem;
         font-size: 1em;
+
+    :last-child {
+      border-style: none;
+    }
     }
 
 
@@ -251,7 +255,9 @@ header {
         line-height: 1.5em;
         margin-bottom: 0.1em;
     }
-
+    :last-child {
+      border-style: none;
+    }
     .post-image {
         padding-right: 1.4em;
         padding-top: 1em;
@@ -276,12 +282,17 @@ header {
 .post-index .post-image, .post-index .post-content {
     display: table-cell;
     vertical-align: top;
+    :last-child {
+      border-style: none;
+    }
 }
 
 
 .list {
     border-bottom: 1px solid #ddd;
-
+    :last-child {
+      border-style: none;
+    }
 
 }
 
