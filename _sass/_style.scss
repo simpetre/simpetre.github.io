@@ -200,7 +200,7 @@ pre {
         font-size: 1em;
 
     :last-child {
-      border-style: none;
+      border-bottom: none;
     }
     }
 
@@ -283,18 +283,16 @@ header {
     display: table-cell;
     vertical-align: top;
     :last-child {
-      border-style: none;
+      border-bottom: none;
     }
 }
 
 
 .list {
     border-bottom: 1px solid #ddd;
-    :last-child {
-      border-style: none;
-    }
-
 }
+
+.list:last-child { border-bottom: none;}
 
 .post-index-title {
     font-size: 1.2em;
