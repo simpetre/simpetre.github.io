@@ -4,8 +4,7 @@ title: Contact
 permalink: /contact/
 ---
 
-Insert a form or contact details here.
-
+LinkedIn:
 More about jekyll forms here: [https://blog.webjeda.com/jekyll-contact-form/](https://blog.webjeda.com/jekyll-contact-form/)
 
 Be in touch and get updates on our new themes in your Facebook feed by liking us.
