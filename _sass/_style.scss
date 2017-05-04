@@ -281,8 +281,8 @@ header {
 
 .list {
     border-bottom: 1px solid #ddd;
-    > :last-child {
-        border-bottom: 0;
+    :last-child {
+        border-bottom-style: none;
     }
 }
 
