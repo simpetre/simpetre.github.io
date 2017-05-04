@@ -280,12 +280,13 @@ header {
 
 
 .list {
-    border-bottom: 1px solid #bbb;
-    :last-child {
-        border-bottom-style: none;
-    }
+    border-bottom: 1px solid #ddd;
+
 }
 
+list:last-child {
+    border-bottom: none;
+}
 
 
 .post-index-title {
