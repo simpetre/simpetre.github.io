@@ -29,8 +29,6 @@ Let's have a look at how these techniques apply to this particular example. The 
 We can use librosa, which is a common audio processing library within Python created by the [LabROSA team](https://labrosa.ee.columbia.edu/) at Columbia university. The library contains tools to process several different types of audio files (all of the ones we have in the UrbanSound collection, at least) so we don't have to worry too much about anything there. Starting with the list of filenames, we can reasonably easily define a function to process each of the audio files and store the resultant spectrogram as an integer filename in a folder with that image's classification.
 
 ```python
-def test_code(var):
-    x += 1
-    print(x)
-    return x
+
+
 ```
