@@ -281,6 +281,10 @@ header {
     border-bottom: 1px solid #ddd;
 }
 
+.list:last-of-type {
+    border-bottom: none;
+}
+
 .post-index-title {
     font-size: 1.2em;
     font-weight: bold;
