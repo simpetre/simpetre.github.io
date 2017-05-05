@@ -10,7 +10,7 @@ This project is an example of image classification (more specifically, the techn
 
 There are a few steps to this particular classification problem - to start, let's tackle the problem of getting the sound in a format that is useful for computers. We need to convert what is effectively an analog signal into its digital counterpart to feed into some sort of machine learning algorithm for classification. The signal is usually broken up into small (overlapping) chunks (this is called sampling) - and then the chunks are taken from the time domain into the frequency domain by applying a mathematical transformation called a *Fourier transform*. this transformation produces a vector of complex numbers. These numbers can be stacked against each other vertically, to produce an image of the audio signal - with time along the *x*-axis, frequency along the *y*-axis and intensity of sound represented by the colour at that point. This is known as an audio spectrogram.
 
-![This is what children playing looks like](images/children_playing_spectrogram "Figure 1-1")
+![This is what children playing looks like](../images/children_playing_spectrogram.png "Figure 1-1")
 
 ## Neural networks ...
 
