@@ -10,6 +10,8 @@ This project is an example of image classification (more specifically, the techn
 
 There are a few steps to this particular classification problem - to start, let's tackle the problem of getting the sound in a format that is useful for computers. We need to convert what is effectively an analog signal into its digital counterpart to feed into some sort of machine learning algorithm for classification. The signal is usually broken up into small (overlapping) chunks (this is called sampling) - and then the chunks are taken from the time domain into the frequency domain by applying a mathematical transformation called a *Fourier transform*. this transformation produces a vector of complex numbers. These numbers can be stacked against each other vertically, to produce an image of the audio signal - with time along the *x*-axis, frequency along the *y*-axis and intensity of sound represented by the colour at that point. This is known as an audio spectrogram.
 
+![This is what children playing looks like](images/children_playing_spectrogram "Figure 1-1")
+
 ## Neural networks ...
 
 So - we've converted an audio classification problem into an image classification problem. Image classification is a hot topic right now - massive tech companies are devoting a lot of time and resources to improving their image recognition technology (facial recognition and computer vision, as examples). Let's approach this task using some similar techniques, then.
@@ -26,9 +28,35 @@ Convolutional layers are central to the idea of convnets, but a common CNN archi
 
 Let's have a look at how these techniques apply to this particular example. The audio data is 8732 files of different sounds, each sound being either: an air conditioner, car horn, children playing, dog barking, drill, engine idling, gun shot, jackhammer, siren, or street music. The individual files come in a number of file formats, and come with an accompanying JSON and CSV file, containing relevant metadata. If we listen to a couple of the files to see what we're dealing with - a few dog barks, for example, we can see that some of the sounds have one bark and some have several. For the most part, the CSV files tell us when this is the case - if there's more than one bark in a file then the CSV will tell us how many and when the start and end point of the individual barks are - but this isn't always the case. As well as this, sometimes the sound to be classified is in the foreground of the recording and sometimes it's in the background, and finally the classes are reasonably imbalanced - there are a lot of dogs, but not so many gunshots. There are many techniques available to address class imbalance, and there are several things we could do to address the other issues if they present a problem, but for the moment let's proceed as planned and see how we go.
 
+![Figure 1-1](images/figure 1-1.png "Figure 1-1")
 We can use librosa, which is a common audio processing library within Python created by the [LabROSA team](https://labrosa.ee.columbia.edu/) at Columbia university. The library contains tools to process several different types of audio files (all of the ones we have in the UrbanSound collection, at least) so we don't have to worry too much about anything there. Starting with the list of filenames, we can reasonably easily define a function to process each of the audio files and store the resultant spectrogram as an integer filename in a folder with that image's classification.
 
 ```python
+def audio_to_spectrogram(root, audio_filenames):
+    for audio_filename in audio_filenames[:100]:
+        csv_filename = ".".join(audio_filename.split(".")[:-1]) + ".csv"
+        metadata = pd.read_csv(csv_filename)
 
+        # breaks up spectrogram into individual sound components if necessary
+        # (e.g. several dog barks into individual barks)
+        for row in metadata.itertuples():
+            offset = row[1]
+            duration = row[2] - row[1]
+            label = row[4]
+
+            spectrogram_filename = (root + "/spectrograms/" +
+                                        label + "/" + str(i) + ".png")
+            try:
+                y, sr = librosa.load(audio_filename,
+                                        offset=offset,
+                                        duration=duration)
+                D = librosa.core.stft(y)
+
+                librosa.display.specshow(librosa.amplitude_to_db
+                                                        (D, ref=np.max))
+                plt.savefig(spectrogram_filename)
+                i += 1
+            except:
+                continue
 
 ```

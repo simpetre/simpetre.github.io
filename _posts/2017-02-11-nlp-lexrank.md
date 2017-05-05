@@ -19,3 +19,5 @@ PageRank, which was introduced by Larry Page and Sergey Brin in their [1999 pape
 ## Prestige in text summarisation
 
 This is a concept that Erkan and Radev have applied to the problem of text summarisation. If we look at the problem we are trying to solve as finding the subset of sentences within a body of text that do the best job of summarising the main theme of the text, then we can consider the importance of particular sentences, and their relationship with other sentences within the body of text (or corpus). A sentence, in this context, has a higher importance, or relevance to the topic at hand, than another sentence if it is more similar to other sentences in the corpus than the other sentence is.
+
+This is the fundamental idea that PageRank is built on - the highest ranked websites have the are linked to from the most prestigious ones. LexRank extends this concept to text - the most relevant sentences within a document are connected to the highest prestige sentences within the corpus.
