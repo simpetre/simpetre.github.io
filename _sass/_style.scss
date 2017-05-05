@@ -198,10 +198,6 @@ pre {
     @include media-query($on-palm) {
         padding: 1rem 1rem;
         font-size: 1em;
-
-    :last-child {
-      border-bottom: none;
-    }
     }
 
 
@@ -221,29 +217,16 @@ pre {
  h1.site-title {
     font-size: 70px;
     display: inline-block;
-    margin: 2em 0 0 0;
+    margin: 2em 0 1em 0;
     text-transform: uppercase;
     background: transparent;
      color: $text-color;
      @include media-query($on-palm) {
          font-size: 60px;
-         margin: 0 0 0 0;
+         margin: 1em 0 0.5em 0;
      }
 }
-/* THIS CHUNK*/
-h2.site-description {
-   font-size: 30px;
-   display: inline-block;
-   margin: 0 0 1em 0;
-   text-transform: uppercase;
-   background: transparent;
-    color: lighten($grey-color, 10%);
-    @include media-query($on-palm) {
-        font-size: 30px;
-        margin: 0 0 1em 0;
-    }
-}
-/* THIS CHUNK*/
+
 header {
     text-align: center;
 }
@@ -255,9 +238,7 @@ header {
         line-height: 1.5em;
         margin-bottom: 0.1em;
     }
-    :last-child {
-      border-style: none;
-    }
+
     .post-image {
         padding-right: 1.4em;
         padding-top: 1em;
@@ -282,17 +263,11 @@ header {
 .post-index .post-image, .post-index .post-content {
     display: table-cell;
     vertical-align: top;
-    :last-child {
-      border-bottom: none;
-    }
 }
-
 
 .list {
     border-bottom: 1px solid #ddd;
 }
-
-.list:last-child { border-bottom: none;}
 
 .post-index-title {
     font-size: 1.2em;
@@ -340,6 +315,7 @@ header {
         height: 160px;
     }
 }
+
 footer {
   border-top: 1px solid #ddd;
     font-size: 200%;
