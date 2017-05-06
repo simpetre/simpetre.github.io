@@ -6,7 +6,7 @@ permalink: /contact/
 
 Get in touch!
 
-[Email](mailto:sim.petre@gmail.com)
-[LinkedIn](https://www.linkedin.com/in/simonpetre)
-[Twitter](https://www.twitter.com/bigs1m)
-[Github](https://www.github.com/simpetre)
+<li>[Email](mailto:sim.petre@gmail.com)</li>
+<li>[LinkedIn](https://www.linkedin.com/in/simonpetre)</li>
+<li>[Twitter](https://www.twitter.com/bigs1m)</li>
+<li>[Github](https://www.github.com/simpetre)</li>
