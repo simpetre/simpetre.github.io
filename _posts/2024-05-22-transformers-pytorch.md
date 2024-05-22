@@ -32,7 +32,36 @@ Transformers are mainly used in natural language processing (NLP). The aim is to
 
 ### Byte-Pair Encoding (BPE)
 
+```
+import collections
+import re
+
+def get_vocab(corpus):
+    vocab = collections.Counter()
+    for sentence in corpus:
+        words = sentence.split()
+        for word in words:
+            word = ' '.join(list(word)) + ' </w>'
+            vocab[word] += 1
+    return vocab
+
+corpus = [
+    "this is a sample sentence",
+    "tokenization is important",
+    "we are learning about bpe"
+]
+
+vocab = get_vocab(corpus)
+print(vocab)
+```
+
+
 BPE starts by breaking down the vocabulary to the character level (e.g., `d a t a`, `d a t a b a s e`). From here, we look at the frequencies with which pairs of tokens occur and group together the ones with the highest incidence. For example, "d a" occurs most frequently, so we rewrite the corpus as `da t a`, `da t a b a s e`, and so on. We continue this process iteratively, combining the most frequent token pairs until our corpus reaches the desired size.
+
+```
+
+```
+
 
 ### SentencePiece
 
