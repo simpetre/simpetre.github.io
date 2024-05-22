@@ -11,7 +11,9 @@ It seems like everywhere you look these days, you see AI - people talking about 
 Prior to transformers, NLP was dominated by recurrent neural networks (RNNs) and techniques based on RNNs. These techniques faced several issues that limited their impact:
 
 - **Vanishing/Exploding Gradients**: RNNs are sequential models, and during backpropagation, the gradients are passed back through several time-dependent layers of the neural network. If the magnitudes of these gradients are either too large or too small, they can "explode" or "vanish," due to the magnification effect of repeated exponents. Techniques can mitigate this (e.g., initialization, specific activation functions), but they require careful implementation.
+
 - **Sequential Processing**: RNNs are sequential models. This means that the next token is determined based on the previously calculated tokens; weights for token $i$ must be calculated before those for token $i+1$, $i+2$, and so on. This makes training times long and expensive.
+
 - **Long Contexts**: Managing long contexts is difficult. If a sentence contains a token at its beginning and another reference at the end after a long passage of text, models might struggle to recall the beginning of the sentence. Techniques like LSTMs have been used to manage this, but they often require careful tuning.
 
 Transformers avoid many of these issues. They are parallelizable and designed to avoid vanishing/exploding gradients.
