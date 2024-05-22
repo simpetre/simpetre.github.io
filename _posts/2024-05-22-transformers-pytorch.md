@@ -4,15 +4,15 @@ title: Transformers - A PyTorch Implementation
 icon: book
 ---
 
-It seems like everywhere you look these days, you see AI - people talking about AI, or implementing AI, or trying to cash in on the AI goldrush. There are a few technologies underpinning this recent trend, but by far the most influential one is the concept of a *transformer*, which is the building block that you'll find basically every single Large Language Model (I probably don't need to tell you what a LLM is - think ChatGPT, Claude, Google's LLaMa 3). Let's talk about transformers in greater detail, and implement a transformer architecture using PyTorch.
+It seems like everywhere you look these days, you see AI - people talking about AI, or implementing AI, or trying to cash in on the AI goldrush. There are a few technologies underpinning this recent trend, but by far the most influential one is the concept of a *transformer*, which is the building block that you'll find basically every single Large Language Model (unless you've been living under a rock you what a LLM is - think ChatGPT, Claude, Meta's LLaMa 3). Let's talk about transformers in greater detail, and implement a transformer architecture using PyTorch.
 
 ## Historical Context
 
 Prior to transformers, NLP was dominated by recurrent neural networks (RNNs) and techniques based on RNNs. These techniques faced several issues that limited their impact:
 
-- **Vanishing/Exploding Gradients**: RNNs are sequential models, and during backpropagation, the gradients are passed back through several time-dependent layers of the neural network. If the magnitudes of these gradients are either too large or too small, they can "explode" or "vanish," due to the magnification effect of repeated exponents. Techniques can mitigate this (e.g., initialization, specific activation functions), but they require careful implementation.
+- **Vanishing/Exploding Gradients**: RNNs are sequential models, and during backpropagation, the gradients are passed back through several time-dependent layers of the neural network. If the magnitudes of these gradients are either too large or too small, they can "explode" (tend towards infinity) or "vanish" (tend towards zero) due to the magnification effect of repeated multiplication. Techniques can mitigate this (e.g., initialization, specific activation functions), but they're not trivial to implement.
 
-- **Sequential Processing**: RNNs are sequential models. This means that the next token is determined based on the previously calculated tokens; weights for token $i$ must be calculated before those for token $i+1$, $i+2$, and so on. This makes training times long and expensive.
+- **Sequential Processing**: RNNs are sequential models. This means that the next token is determined based on the previously calculated tokens; weights for token $i$ must be calculated before those for token $i+1$, $i+2$, and so on. This means modern hardware (like GPUs') parallelisation capabilities can't be leveraged, which means training times are long and expensive.
 
 - **Long Contexts**: Managing long contexts is difficult. If a sentence contains a token at its beginning and another reference at the end after a long passage of text, models might struggle to recall the beginning of the sentence. Techniques like LSTMs have been used to manage this, but they often require careful tuning.
 
@@ -47,7 +47,7 @@ def get_vocab(corpus):
 
 corpus = [
     "this is a sample sentence",
-    "tokenization is important",
+    "tokenisation is important",
     "we are learning about bpe"
 ]
 
@@ -55,21 +55,89 @@ vocab = get_vocab(corpus)
 print(vocab)
 ```
 
-
-BPE starts by breaking down the vocabulary to the character level (e.g., `d a t a`, `d a t a b a s e`). From here, we look at the frequencies with which pairs of tokens occur and group together the ones with the highest incidence. For example, "d a" occurs most frequently, so we rewrite the corpus as `da t a`, `da t a b a s e`, and so on. We continue this process iteratively, combining the most frequent token pairs until our corpus reaches the desired size.
-
-```
+We start by breaking down the vocabulary to the character level (e.g., `t h i s`, `i s` ...). 
 
 ```
+def get_stats(vocab):
+    pairs = collections.defaultdict(int)
+    for word, freq in vocab.items():
+        symbols = word.split()
+        for i in range(len(symbols) - 1):
+            pairs[symbols[i], symbols[i + 1]] += freq
+    return pairs
 
+def merge_vocab(pair, v_in):
+    v_out = {}
+    pattern = ' '.join(pair)  # Create the pattern to replace
+    replacement = ''.join(pair)  # Create the replacement string
+    for word in v_in:
+        w_out = word.replace(pattern, replacement)  # Replace the pattern with the replacement
+        v_out[w_out] = v_in[word]
+    return v_out
 
-### SentencePiece
+num_merges = 50  # Number of merges to perform
+bpe_merges = []
+for i in range(num_merges):
+    pairs = get_stats(vocab)
+    if not pairs:
+        break
+    best = max(pairs, key=pairs.get)
+    vocab = merge_vocab(best, vocab)
+    bpe_merges.append(best)
+    print(f'Merge {i + 1}: {best}')
+    print(vocab)
+```
 
-SentencePiece is another popular method, often used for multilingual models. It can handle various languages and scripts in a unified manner, making it versatile for different linguistic contexts.
+From here, we look at the frequencies with which pairs of tokens occur and group together the ones with the highest incidence. For example, in the above toy corpus "i s" occurs most frequently, so we merge these separate tokens together into a new `is` token and the corpus is now `t h is`, `i s`, ... `t o k e n is a t i o n` and so on. We continue this process iteratively, combining the most frequent token pairs until our corpus reaches the desired size.
+
+```
+def encode(token, bpe_merges):
+    token = ' '.join(list(token)) + ' </w>'
+    chars = token.split()
+
+    i = 0
+    while i < len(chars) - 1:
+        pair = (chars[i], chars[i + 1])
+        if pair in bpe_merges:
+            chars[i:i + 2] = [''.join(pair)]
+        else:
+            i += 1
+
+    return ' '.join(chars)
+
+# Example of encoding
+encoded = encode("miss", bpe_merges)
+print("\nEncoded 'miss':")
+print(encoded)
+```
+
+Once we've used BPE to create our collection of tokens, we can use our work to tokenise new text.
 
 ## Embedding
 
-The initial representation of text is sparse. We have a corpus of documents with a vast vocabulary, and we know which words are present in a document through one-hot encoding. We wish to compress these word representations into a dense "embedding space," where semantically similar words occupy similar positions.
+The initial representation of text is sparse. We have a corpus of documents with a vast vocabulary (English has around 170,000 words in use), and we indicate to a ML model which words are present in a document through one-hot encoding - we represent an input *context* using a N-dimensional vector of ones or zeroes, where a 1 at position *i* indicates that word *i* is present in our text. This isn't super useful for a computer - it doesn't give us anything about how words are related to each other, or what the *meaning* underpinning words is. We can compress these word representations into a dense "embedding space" where semantically similar words occupy similar positions - so we get closer to our toy example of `king - man + woman = queen`.
+
+```
+import torch
+
+# Parameters
+vocab_size = 10000  # number of unique tokens
+embedding_dim = 300  # size of each embedding vector
+
+# Step 1: Initialize the embedding matrix with random weights
+embedding_matrix = torch.randn(vocab_size, embedding_dim, requires_grad=True)  # Enable gradient
+
+# Step 2: Function to retrieve embeddings for given indices
+def get_embeddings(indices):
+    return embedding_matrix[indices]
+
+# Example usage
+input_ids = torch.tensor([1, 2, 798, 1253, 9999], dtype=torch.long)  # Indices of tokens
+embeddings = get_embeddings(input_ids)
+
+print(embeddings)  # Output the embedding vectors for the input indices
+
+```
 
 The embedding step creates a matrix with dimensionality $N \times D$, where $N$ is the dimension of the original, sparse vocabulary, and $D$ is the dimension of the dense embedding space. Backpropagation produces a matrix of weights, such that row $n$ in the lookup table is the $D$-dimensional representation of token $n$ in the embedding space.
 
