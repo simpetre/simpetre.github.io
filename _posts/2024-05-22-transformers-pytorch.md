@@ -136,14 +136,19 @@ input_ids = torch.tensor([1, 2, 798, 1253, 9999], dtype=torch.long)  # Indices o
 embeddings = get_embeddings(input_ids)
 
 print(embeddings)  # Output the embedding vectors for the input indices
-
 ```
 
-The embedding step creates a matrix with dimensionality $N \times D$, where $N$ is the dimension of the original, sparse vocabulary, and $D$ is the dimension of the dense embedding space. Backpropagation produces a matrix of weights, such that row $n$ in the lookup table is the $D$-dimensional representation of token $n$ in the embedding space.
+The embedding step creates a matrix with dimensionality $N \times D$, where $N$ is the dimension of the original, sparse vocabulary, and $D$ is the dimension of the dense embedding space (here $N = 10000$ and $D = 300$). Backpropagation produces a matrix of weights, such that row $n$ in the lookup table is the $D$-dimensional representation of token $n$ in the embedding space. During training and backpropagation, the model will learn the optimal embeddings.
 
 ## Position-Wise Encoding
 
-By design, transformers don't consider the order of tokens by default. To combat this, Vaswani et al. used position-wise encoding to reveal token position to the network. An $N \times D$ matrix that encodes position is created and added to the embedding layer before the first self-attention layer.
+Because transformers process tokens in parallel, they need a way of determining the order in a sequence. We can use position-wise encoding (in the same way that Vaswani et al. did in their seminal paper).
+
+An $N \times D$ matrix (where $N = 10000$ and $D = 300$) that encodes position is created and added to the embedding layer before the first self-attention layer. Each element $i, j$ in the matrix will be unique, allowing the model to learn these values during training and backpropagation and to distinguish between different positions.
+
+The position-wise matrix and the embedding matrix have the same dimensions, but this is primarily for convenience. The position $i, j$ in one matrix doesn't impart any information about the position $i, j$ in the other; in fact, the information in each matrix is orthogonal. By introducing this form of "structured noise" into our model, we enable it to learn positional information during training.
+
+The positional encoddings are given by the following equations:
 
 $$
 PE_{pos, 2i} = \sin\left(\frac{pos}{10000^{2i/D}}\right)
@@ -153,11 +158,48 @@ $$
 PE_{pos, 2i+1} = \cos\left(\frac{pos}{10000^{2i/D}}\right)
 $$
 
+This is implemented in the below code:
+
+```
+import torch
+import math
+
+def positional_encoding(max_seq_length, embedding_dim):
+    """ Generate and return positional encoding.
+    Args:
+        max_seq_length (int): Maximum length of the input sequences.
+        embedding_dim (int): The dimensionality of the output embeddings (and positional encodings).
+
+    Returns:
+        torch.Tensor: The positional encodings (max_seq_length, embedding_dim).
+    """
+    # Initialize a matrix of shape [max_seq_length, embedding_dim]
+    position_encoding = torch.zeros(max_seq_length, embedding_dim)
+    
+    # Compute positional encodings
+    for pos in range(max_seq_length):
+        for i in range(0, embedding_dim, 2):
+            position_encoding[pos, i] = math.sin(pos / (10000 ** ((2 * i)/embedding_dim)))
+            if i + 1 < embedding_dim:
+                position_encoding[pos, i + 1] = math.cos(pos / (10000 ** ((2 * i)/embedding_dim)))
+    
+    return position_encoding
+
+# Example usage:
+max_seq_length = 100  # maximum length of sequences
+embedding_dim = 300  # dimensionality of embeddings
+
+pos_encoding = positional_encoding(max_seq_length, embedding_dim)
+print(pos_encoding.size())  # Output the shape of the positional encoding matrix
+```
+
 These formulas assign a unique value to each element of the positional matrix, which is added to the encoding matrix. This allows the transformer to learn to consider position when it's training or performing inference.
 
 ## Self-Attention
 
-This is the fun bit! Self-attention has been driving the AI revolution of the last few years and is the interesting part of large language models (LLMs) like ChatGPT. The process is as follows:
+This is the fun bit! Self-attention has been driving the AI revolution of the last few years and is the interesting part of large language models (LLMs) like ChatGPT. This is the core of the paper by Vaswani et al., the meat and potatoes of most modern LLMs, and has been driving the AI revolution of recent times.
+
+The process is as follows:
 
 1. We take three $D \times D'$ dimensional matrices, $M_Q$, $M_K$, and $M_V$. Often $D' = D$, so we'll use that simplification here.
 2. Recall that our training text is $N \times D$, where $N$ is the number of tokens in the sample data and $D$ is the dimensionality of the vector space. We multiply each of the three matrices $M_Q$, $M_K$, and $M_V$ together, to get the three matrices $Q$, $K$, and $V$, for Query, Key, and Value, respectively. Each of these matrices retains the dimensionality $N \times D$.
@@ -173,22 +215,99 @@ $$
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{D}}\right) \cdot V
 $$
 
-We take the dot product of each token's query and key vectors to get an $N \times N$ matrix. If the $Q$ vector of token $x_1$ and the $K$ vector of token $x_2$ are similar, the value at $(x_1, x_2)$ will be close to 1. We normalize these values using the square root of the embedding space dimensionality, pass them through a softmax function so they sum to 1, and use these values to scale the contribution of each value to the final output.
+We calculate the distance between each token's Q and K vectors via dot product, and we store the result in an $N \times N$ matrix. If the $Q$ vector of token $x_1$ and the $K$ vector of token $x_2$ are similar, the value at $(x_1, x_2)$ will be close to 1. We normalize these values using the square root of the embedding space dimensionality (to ensure that the variance of the dot products of the vectors in $Q$ and $K$ stay equal to 1), pass them through a softmax function so they sum to 1, and use these values to scale the contribution of each value to the final output; then we project the dimensionality of the output back to that of the input by passing through a linear layer.
+
+```
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SelfAttention(nn.Module):
+    def __init__(self, embed_dim):
+        super(SelfAttention, self).__init__()
+
+        # Define linear transformations for Q, K, V
+        self.q_linear = nn.Linear(embed_dim, embed_dim)
+        self.k_linear = nn.Linear(embed_dim, embed_dim)
+        self.v_linear = nn.Linear(embed_dim, embed_dim)
+
+        # Output linear transformation
+        self.out_linear = nn.Linear(embed_dim, embed_dim)
+
+    def forward(self, x):
+        batch_size, seq_len, embed_dim = x.size()
+
+        # Apply linear transformations
+        Q = self.q_linear(x)
+        K = self.k_linear(x)
+        V = self.v_linear(x)
+
+        # Compute scaled dot-product attention
+        attn_scores = torch.matmul(Q, K.transpose(-2, -1)) / torch.sqrt(torch.tensor(embed_dim, dtype=torch.float32))
+        attn_weights = F.softmax(attn_scores, dim=-1)
+        attn_output = torch.matmul(attn_weights, V)
+
+        # Apply final linear transformation
+        output = self.out_linear(attn_output)
+
+        return output
+
+# Example usage
+embed_dim = 64
+seq_len = 10
+batch_size = 32
+
+x = torch.randn(batch_size, seq_len, embed_dim)
+self_attention = SelfAttention(embed_dim)
+output = self_attention(x)
+print(output.shape)  # Should output: torch.Size([32, 10, 64])
+
+```
 
 ## Feed-Forward Neural Network (FFNN)
 
-Values from the attention step are passed into a FFNN. Usually, this neural network has three layers: a linear layer, a ReLU activation, and another linear layer. The FFNN is layer-normalized, and a residual connection bypasses the network to help with stability.
+Values from the attention step are passed into a FFNN. Usually, this neural network has three layers: a linear layer, a ReLU activation, and another linear layer. The linear layer projects the output into a dimensionality that's usually some factor higher than the input (e.g. if the input dimensionality is $d$ the output is $4d$). This allows the network to be able to capture richer and more nuanced variations in the input data. Non-linearity is applied in the ReLU step, and then the dimensionality is projected back down into $d$ for the output layer. The FFNN is layer-normalized, and a residual connection bypasses the network to help with stability.
 
-1. **First Linear Layer**:
-   $$
-   \text{Linear}_1(x) = xW_1 + b_1
-   $$
-   Followed by a ReLU activation.
+```
+import torch
+import torch.nn as nn
 
-2. **Second Linear Layer**:
-   $$
-   \text{Linear}_2(x) = xW_2 + b_2
-   $$
+class FeedForwardNN(nn.Module):
+    def __init__(self, d_model, d_ff):
+        super(FeedForwardNN, self).__init__()
+        self.linear1 = nn.Linear(d_model, d_ff)
+        self.relu = nn.ReLU()
+        self.linear2 = nn.Linear(d_ff, d_model)
+        self.layer_norm = nn.LayerNorm(d_model)
+    
+    def forward(self, x):
+        # Save the original input for the residual connection
+        residual = x
+        # First linear layer followed by ReLU activation
+        out = self.linear1(x)
+        out = self.relu(out)
+        # Second linear layer
+        out = self.linear2(out)
+        # Add the residual connection and apply layer normalization
+        out = self.layer_norm(out + residual)
+        return out
+
+# Example usage:
+d_model = 512  # Input and output dimensionality
+d_ff = 4 * d_model  # Intermediate dimensionality, e.g., 4 times the input size
+
+# Create an instance of the FeedForwardNN
+ffnn = FeedForwardNN(d_model, d_ff)
+
+# Create some dummy input data
+x = torch.randn(10, d_model)  # Batch of 10 samples, each of dimension d_model
+
+# Pass the input through the network
+output = ffnn(x)
+
+print(output.shape)  # Should print: torch.Size([10, 512])
+
+```
 
 ## Residual Connections and Layer Normalization
 
