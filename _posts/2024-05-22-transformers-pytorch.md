@@ -10,7 +10,7 @@ It seems like everywhere you look these days, you see AI - people talking about 
 
 Prior to transformers, NLP was dominated by recurrent neural networks (RNNs) and techniques based on RNNs. These techniques faced several issues that limited their impact:
 
-- **Vanishing/Exploding Gradients**: RNNs are sequential models, and during backpropagation, the gradients are passed back through several time-dependent layers of the neural network. If the magnitudes of these gradients are either too large or too small, they can "explode" (tend towards infinity) or "vanish" (tend towards zero) due to the magnification effect of repeated multiplication. Techniques can mitigate this (e.g., initialization, specific activation functions), but they're not trivial to implement.
+- **Vanishing/Exploding Gradients**: RNNs are sequential models, and during backpropagation, the gradients are passed back through several time-dependent layers of the neural network. If the magnitudes of these gradients are either too large or too small, they can "explode" (become excessively large, leading to instability) or "vanish" (tend towards zero).
 
 - **Sequential Processing**: RNNs are sequential models. This means that the next token is determined based on the previously calculated tokens; weights for token $i$ must be calculated before those for token $i+1$, $i+2$, and so on. This means modern hardware (like GPUs') parallelisation capabilities can't be leveraged, which means training times are long and expensive.
 
@@ -31,6 +31,8 @@ Transformers are mainly used in natural language processing (NLP). The aim is to
 ## Tokenization
 
 ### Byte-Pair Encoding (BPE)
+
+Byte-Pair Encoding (BPE) is a popular tokenization method that balances the granularity between character-level and word-level tokenization, handling rare and common words efficiently.
 
 ```
 import collections
@@ -319,8 +321,7 @@ $$
 
 ## Putting It All Together
 
+Up to this point we've described how we can use a single attention layer to learn the complex interactions between different tokens in input data, which is often language. Because language is complex and nuanced, we find that if we learn several different representations of the attention weights, we can capture more complex dynamics with our model and get better outcomes. This is called *multi-head* attention (as opposed to the *single-head* attention mechanism that we've been describing to this point). We're effectively ensembling several different representations of the attention weights together - randomness during parameter initialisation in the $Q, K and V$ matrices leads to different values after training and backpropagation. We generate $k$ such different sets of attention parameters (we say $k$ different heads), and concatenate these values together before we project them down into our input dimensionality using our linear layer. 
+
 By stacking multiple layers of attention mechanisms and FFNNs, the transformer model can build rich representations of the input data, capturing long-range dependencies and complex interactions between tokens.
 
----
-
-This document provides a comprehensive overview of how transformers and self-attention work, covering their historical context, tokenization, embedding, attention mechanisms, and feed-forward neural networks.
