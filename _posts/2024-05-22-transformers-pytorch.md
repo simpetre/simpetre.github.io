@@ -313,11 +313,69 @@ print(output.shape)  # Should print: torch.Size([10, 512])
 
 ## Residual Connections and Layer Normalization
 
-Additionally, the transformer architecture includes residual connections and layer normalization after each sub-layer (attention and FFNN). These steps help stabilize training and improve convergence:
+Residual connections, also known as skip connections, are used to improve the flow of gradients during backpropagation. This helps to mitigate the vanishing gradient problem, which is especially important in very deep networks. Layer normalization, on the other hand, helps to stabilize and accelerate the training process by normalizing the inputs across the features.
+
+**Residual Connections**
+
+Residual connections allow the input to bypass one or more layers and be added to the output of those layers. This helps in training deep networks by preventing the gradient from becoming too small (vanishing gradient) as it is backpropagated through many layers.
+
+Mathematically, a residual connection can be described as:
 
 $$
-\text{LayerNorm}(x) = \frac{x - \text{mean}(x)}{\text{std}(x)}
+Output = Layer (x) + x
 $$
+
+Where $x$ is the input to the layer, and Layer(x) is the transformation applied by the layer.
+
+**Layer Normalization**
+
+Layer normalization normalizes the inputs across the features for each data sample, ensuring that the mean is 0 and the standard deviation is 1. This is particularly useful for NLP tasks where the input sequences can have varying lengths.
+
+The layer normalization operation can be described by the following formula:
+
+LayerNorm(x) = x − mean(x)std(x)+ϵ⋅γ+β
+
+Where γ and β are learnable parameters that allow the normalized output to be scaled and shifted.
+
+```
+import torch
+import torch.nn as nn
+
+class ResidualLayerNorm(nn.Module):
+    def __init__(self, d_model, d_ff):
+        super(ResidualLayerNorm, self).__init__()
+        self.linear1 = nn.Linear(d_model, d_ff)
+        self.relu = nn.ReLU()
+        self.linear2 = nn.Linear(d_ff, d_model)
+        self.layer_norm = nn.LayerNorm(d_model)
+    
+    def forward(self, x):
+        # Save the original input for the residual connection
+        residual = x
+        # First linear layer followed by ReLU activation
+        out = self.linear1(x)
+        out = self.relu(out)
+        # Second linear layer
+        out = self.linear2(out)
+        # Add the residual connection and apply layer normalization
+        out = self.layer_norm(out + residual)
+        return out
+
+# Example usage:
+d_model = 512  # Input and output dimensionality
+d_ff = 4 * d_model  # Intermediate dimensionality, e.g., 4 times the input size
+
+# Create an instance of the ResidualLayerNorm
+residual_layer_norm = ResidualLayerNorm(d_model, d_ff)
+
+# Create some dummy input data
+x = torch.randn(10, d_model)  # Batch of 10 samples, each of dimension d_model
+
+# Pass the input through the network
+output = residual_layer_norm(x)
+
+print(output.shape)  # Should print: torch.Size([10, 512])
+```
 
 ## Putting It All Together
 
