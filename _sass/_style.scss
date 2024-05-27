@@ -5,13 +5,13 @@ html {
     box-sizing: border-box;
 }
 
- figure {
+figure {
     margin: 0;
     padding: 0;
 }
 
 body {
-	font-family: $base-font-family;
+    font-family: $base-font-family;
     font-size: $base-font-size;
     font-weight: $base-font-weight;
     color: $text-color;
@@ -20,10 +20,14 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: $head-font-family;
 }
 
@@ -35,9 +39,11 @@ a {
     }
 }
 
+
 /**
  * Images
  */
+
 img {
     max-width: 100%;
     vertical-align: middle;
@@ -48,13 +54,12 @@ img {
 /**
  * Blockquotes
  */
-blockquote {
 
+blockquote {
     color: $grey-color;
     border-left: 4px solid $brand-color;
     padding-left: $spacing-unit / 2;
     font-style: italic;
-
     > :last-child {
         margin-bottom: 0;
     }
@@ -83,102 +88,90 @@ code {
 pre {
     padding: 8px 12px;
     overflow-x: auto;
-
-    > code {
+    >code {
         border: 0;
         padding-right: 0;
         padding-left: 0;
     }
 }
 
-
-
-
-
-
-
-
-
 .menu-container {
     position: fixed;
-	width:5rem;
-	height: 5rem;
-	overflow: hidden;
-	left:0;
-	top: 0;
-	transition-delay: .3s;
+    width: 5rem;
+    height: 5rem;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+    transition-delay: .3s;
 }
 
 .menu {
-	position: relative;
-	width: 10rem;
-	height: 10rem;
-	background-color: $brand-color;
-	border-radius: 100%;
-	transform: translate(-50%, -50%);
-	transition: all .3s;
+    position: relative;
+    width: 10rem;
+    height: 10rem;
+    background-color: $brand-color;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    transition: all .3s;
 }
 
 #hamburger {
-	display: none;
+    display: none;
 }
 
 #label-ham {
     position: fixed;
-	width: 10rem;
-	height: 10rem;
-	border-radius: 100%;
-	transform: translate(-50%, -50%);
-	z-index: 2;
-	cursor: pointer;
-	tap-highlight-color:transparent;
-
-	&:before {
-  content: "";
-  position: absolute;
-  top: 65%;
-  left: 65%;
-  width: 1em;
-  height: 0.15em;
-  background: white;
-  box-shadow:
-    0 0.25em 0 0 white,
-    0 0.5em 0 0 white;
-		transform: scale(2);
-}
-}
-
-#hamburger:checked ~ .menu-container {
-    width: 250px;
-	height: 100%;
-	transition-delay: 0s;
-        @include media-query($on-palm) {
-            width: 250px;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    cursor: pointer;
+    tap-highlight-color: transparent;
+    &:before {
+        content: "";
+        position: absolute;
+        top: 65%;
+        left: 65%;
+        width: 1em;
+        height: 0.15em;
+        background: white;
+        box-shadow: 0 0.25em 0 0 white, 0 0.5em 0 0 white;
+        transform: scale(2);
     }
 }
 
-#hamburger:checked ~ .menu-container .menu {
-	width: 250vh;
-	height: 250vh;
-	transition: all .3s;
+#hamburger:checked~.menu-container {
+    width: 250px;
+    height: 100%;
+    transition-delay: 0s;
+    @include media-query($on-palm) {
+        width: 250px;
+    }
+}
+
+#hamburger:checked~.menu-container .menu {
+    width: 250vh;
+    height: 250vh;
+    transition: all .3s;
 }
 
 .menu-container .links {
-	position: absolute;
+    position: absolute;
     left: 143px;
     width: 100%;
     top: 359px;
-	z-index: 3;
-	transform: translate(-50%, -50%);
-	text-align: left;
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    text-align: left;
     @include media-query($on-palm) {
         left: 165px;
     }
-	a {
-		display: block;
-		color: white;
+    a {
+        display: block;
+        color: white;
         font-size: 26px;
-		text-decoration: none;
+        text-decoration: none;
         margin: 2rem 0rem;
         @include media-query($on-palm) {
             font-size: 18px;
@@ -187,59 +180,64 @@ pre {
         &:hover {
             color: #eee;
         }
-	}
+    }
 }
 
 .content {
-	max-width: 650px;
-	transition: all .2s;
-	transition-delay: .1s;
+    max-width: 750px;
+    transition: all .2s;
+    transition-delay: .1s;
     margin: 0 auto;
     @include media-query($on-palm) {
         padding: 1rem 1rem;
         font-size: 1em;
     }
-
-
-	p {
-		margin-bottom: 1em;
-
-	}
+    p {
+        margin-bottom: 1em;
+    }
 }
 
-#hamburger:checked ~ .content {
-	padding-left: 300px;
-	transition: all .2s;
-	transition-delay: 0s;
+#hamburger:checked~.content {
+    padding-left: 300px;
+    transition: all .2s;
+    transition-delay: 0s;
 }
+
 
 /* Site CSS */
- h1.site-title {
+
+h1.site-title {
     font-size: 70px;
     display: inline-block;
     margin: 2em 0 0 0;
     text-transform: uppercase;
     background: transparent;
-     color: $text-color;
-     @include media-query($on-palm) {
-         font-size: 60px;
-         margin: 0 0 0 0;
-     }
+    color: $text-color;
+    @include media-query($on-palm) {
+        font-size: 60px;
+        margin: 0 0 0 0;
+    }
 }
+
+
 /* THIS CHUNK*/
+
 h2.site-description {
-   font-size: 30px;
-   display: inline-block;
-   margin: 0 0 1em 0;
-   text-transform: uppercase;
-   background: transparent;
+    font-size: 30px;
+    display: inline-block;
+    margin: 0 0 1em 0;
+    text-transform: uppercase;
+    background: transparent;
     color: lighten($grey-color, 10%);
     @include media-query($on-palm) {
         font-size: 30px;
         margin: 0 0 1em 0;
     }
 }
+
+
 /* THIS CHUNK*/
+
 header {
     text-align: center;
 }
@@ -251,7 +249,6 @@ header {
         line-height: 1.5em;
         margin-bottom: 0.1em;
     }
-
     .post-image {
         padding-right: 1.4em;
         padding-top: 1em;
@@ -264,7 +261,6 @@ header {
         font-size: 0.8em;
         font-style: italic;
     }
-
     a {
         &:hover {
             color: $brand-color;
@@ -272,8 +268,8 @@ header {
     }
 }
 
-
-.post-index .post-image, .post-index .post-content {
+.post-index .post-image,
+.post-index .post-content {
     display: table-cell;
     vertical-align: top;
 }
@@ -292,10 +288,11 @@ header {
     display: table;
 }
 
-.logo, .title {
-        display: table-cell;
-        vertical-align: middle;
-        color: $brand-color;
+.logo,
+.title {
+    display: table-cell;
+    vertical-align: middle;
+    color: $brand-color;
     h2 {
         font-size: 1.8em;
         margin-bottom: 0;
@@ -310,16 +307,14 @@ header {
         color: $grey-color;
     }
 }
+
 .logo {
     font-size: 400%;
     padding-right: 0.5em;
     @include media-query($on-palm) {
-             font-size: 200%;
-        }
-
+        font-size: 200%;
+    }
 }
-
-
 
 .video {
     width: 100%;
@@ -328,6 +323,7 @@ header {
         height: 160px;
     }
 }
+
 footer {
     text-align: center;
     padding: 2em 0;
