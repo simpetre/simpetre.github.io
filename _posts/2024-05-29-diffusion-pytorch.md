@@ -193,53 +193,41 @@ CLIP uses a contrastive loss known as InfoNCE (Information Noise-Contrastive Est
 
 2. **Normalize Embeddings**:
    - Normalize the embeddings to have unit length. This is done to ensure that the dot product is equivalent to cosine similarity.
-   \[
+   $$
    \mathbf{v}_i \leftarrow \frac{\mathbf{v}_i}{\|\mathbf{v}_i\|}
-   \]
-   \[
    \mathbf{t}_i \leftarrow \frac{\mathbf{t}_i}{\|\mathbf{t}_i\|}
-   \]
+   $$
+
+   This step ensures that the dot product of the vectors will represent the cosine similarity. It helps in stabilizing the training process and makes the similarity computation invariant to the scale of the embeddings.
 
 3. **Compute Similarity Scores**:
    - Compute the pairwise cosine similarity between all image and text embeddings in the batch.
-   \[
+   $$
    S_{ij} = \mathbf{v}_i \cdot \mathbf{t}_j
-   \]
+   $$
    where $ S_{ij} $ is the similarity score between the $i$-th image and the $j$-th text.
+The similarity score $ S_{ij} $ is the dot product between the normalized embeddings of the $i$-th image and the $j$-th text. High scores indicate high similarity.
 
 4. **Compute Logits**:
    - Scale the similarity scores by a temperature parameter $ \tau $ (learnable or fixed).
-   \[
+   $$
    \mathrm{logits}_{ij} = \frac{S_{ij}}{\tau}
-   \]
+   $$
 
 5. **Compute Cross-Entropy Loss**:
    - For the images:
-     \[
+     $$
      L_{\text{img}} = \frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\mathrm{logits}_{ii})}{\sum_{j=1}^N \exp(\mathrm{logits}_{ij})}
-     \]
+     $$
    - For the texts:
-     \[
+     $$
      L_{\text{text}} = \frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\mathrm{logits}_{ii})}{\sum_{j=1}^N \exp(\mathrm{logits}_{ji})}
-     \]
+     $$
    - Combine the losses:
-     \[
+     $$
      L = \frac{1}{2} (L_{\text{img}} + L_{\text{text}})
-     \]
-
-### Detailed Explanation
-
-1. **Normalize Embeddings**:
-   - This step ensures that the dot product of the vectors will represent the cosine similarity. It helps in stabilizing the training process and makes the similarity computation invariant to the scale of the embeddings.
-
-2. **Similarity Scores**:
-   - The similarity score $ S_{ij} $ is the dot product between the normalized embeddings of the $i$-th image and the $j$-th text. High scores indicate high similarity.
-
-3. **Temperature Scaling**:
-   - The temperature parameter $ \tau $ controls the sharpness of the distribution. A lower temperature results in a sharper distribution, making it easier for the model to focus on the correct pairs.
-
-4. **Cross-Entropy Loss**:
-   - For each image $ \mathbf{v}_i $, the model should assign high similarity to the corresponding text $ \mathbf{t}_i $ and low similarity to all other texts $ \mathbf{t}_j $ ($ j \neq i $).
+     $$
+        - For each image $ \mathbf{v}_i $, the model should assign high similarity to the corresponding text $ \mathbf{t}_i $ and low similarity to all other texts $ \mathbf{t}_j $ ($ j \neq i $).
    - The same applies for each text $ \mathbf{t}_i $, where it should assign high similarity to the corresponding image $ \mathbf{v}_i $ and low similarity to all other images $ \mathbf{v}_j $ ($ j \neq i $).
    - The cross-entropy loss computes the discrepancy between the predicted similarity scores and the ideal distribution where only the correct image-text pairs have high similarity.
 
