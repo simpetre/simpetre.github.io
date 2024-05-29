@@ -49,10 +49,10 @@ The text transformer in CLIP is responsible for processing the text input. Here 
 The Vision Transformer processes image inputs and has some unique aspects compared to the text transformer:
 
 1. **Patch Extraction**:
-   - Given an image of dimension \(H \times W \times C\) (height, width, channels), the image is divided into \(P \times P\) patches.
+   - Given an image of dimension $H \times W \times C$ (height, width, channels), the image is divided into $P \times P$ patches.
 
 2. **Patch Embedding**:
-   - Each patch is flattened and embedded into a high-dimensional vector, resulting in vectors of dimension \(P^2 \cdot C\).
+   - Each patch is flattened and embedded into a high-dimensional vector, resulting in vectors of dimension $P^2 \cdot C$.
 
 3. **Positional Embeddings**:
    - Learnable positional embeddings are added to these patch embeddings to encode their spatial positions within the image.
@@ -188,8 +188,8 @@ CLIP uses a contrastive loss known as InfoNCE (Information Noise-Contrastive Est
 ### Steps to Compute InfoNCE Loss for CLIP
 
 1. **Compute Embeddings**:
-   - Let \( \mathbf{v}_i \) be the embedding of the \(i\)-th image.
-   - Let \( \mathbf{t}_i \) be the embedding of the \(i\)-th text.
+   - Let $ \mathbf{v}_i $ be the embedding of the $i$-th image.
+   - Let $ \mathbf{t}_i $ be the embedding of the $i$-th text.
 
 2. **Normalize Embeddings**:
    - Normalize the embeddings to have unit length. This is done to ensure that the dot product is equivalent to cosine similarity.
@@ -205,10 +205,10 @@ CLIP uses a contrastive loss known as InfoNCE (Information Noise-Contrastive Est
    \[
    S_{ij} = \mathbf{v}_i \cdot \mathbf{t}_j
    \]
-   where \( S_{ij} \) is the similarity score between the \(i\)-th image and the \(j\)-th text.
+   where $ S_{ij} $ is the similarity score between the $i$-th image and the $j$-th text.
 
 4. **Compute Logits**:
-   - Scale the similarity scores by a temperature parameter \( \tau \) (learnable or fixed).
+   - Scale the similarity scores by a temperature parameter $ \tau $ (learnable or fixed).
    \[
    \mathrm{logits}_{ij} = \frac{S_{ij}}{\tau}
    \]
@@ -233,14 +233,14 @@ CLIP uses a contrastive loss known as InfoNCE (Information Noise-Contrastive Est
    - This step ensures that the dot product of the vectors will represent the cosine similarity. It helps in stabilizing the training process and makes the similarity computation invariant to the scale of the embeddings.
 
 2. **Similarity Scores**:
-   - The similarity score \( S_{ij} \) is the dot product between the normalized embeddings of the \(i\)-th image and the \(j\)-th text. High scores indicate high similarity.
+   - The similarity score $ S_{ij} $ is the dot product between the normalized embeddings of the $i$-th image and the $j$-th text. High scores indicate high similarity.
 
 3. **Temperature Scaling**:
-   - The temperature parameter \( \tau \) controls the sharpness of the distribution. A lower temperature results in a sharper distribution, making it easier for the model to focus on the correct pairs.
+   - The temperature parameter $ \tau $ controls the sharpness of the distribution. A lower temperature results in a sharper distribution, making it easier for the model to focus on the correct pairs.
 
 4. **Cross-Entropy Loss**:
-   - For each image \( \mathbf{v}_i \), the model should assign high similarity to the corresponding text \( \mathbf{t}_i \) and low similarity to all other texts \( \mathbf{t}_j \) (\( j \neq i \)).
-   - The same applies for each text \( \mathbf{t}_i \), where it should assign high similarity to the corresponding image \( \mathbf{v}_i \) and low similarity to all other images \( \mathbf{v}_j \) (\( j \neq i \)).
+   - For each image $ \mathbf{v}_i $, the model should assign high similarity to the corresponding text $ \mathbf{t}_i $ and low similarity to all other texts $ \mathbf{t}_j $ ($ j \neq i $).
+   - The same applies for each text $ \mathbf{t}_i $, where it should assign high similarity to the corresponding image $ \mathbf{v}_i $ and low similarity to all other images $ \mathbf{v}_j $ ($ j \neq i $).
    - The cross-entropy loss computes the discrepancy between the predicted similarity scores and the ideal distribution where only the correct image-text pairs have high similarity.
 
 ### Implementation in PyTorch
@@ -277,3 +277,16 @@ text_embeddings = torch.randn(32, 512)  # Example text embeddings
 loss = clip_loss(image_embeddings, text_embeddings)
 print(f'CLIP Loss: {loss.item()}')
 ```
+
+## Forward Diffusion
+
+Forward diffusion is the ink dissipating in the water over successive time slices. We take an image, and successively add Gaussian noise to it, sampled from the distribution 
+
+$$
+   q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)
+$$
+   where:
+   - $x_t$ is the noisy data at time step $t$.
+   - $\beta_t$ is a variance schedule, a small positive constant that determines the amount of noise added at each step.
+   - $\mathcal{N}$ denotes a Gaussian distribution.
+   - $I$ is the identity matrix.
