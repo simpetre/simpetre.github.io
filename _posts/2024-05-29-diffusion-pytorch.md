@@ -193,6 +193,7 @@ CLIP uses a contrastive loss known as InfoNCE (Information Noise-Contrastive Est
 
 2. **Normalize Embeddings**:
    - Normalize the embeddings to have unit length. This is done to ensure that the dot product is equivalent to cosine similarity.
+   
    $$
    \mathbf{v}_i \leftarrow \frac{\mathbf{v}_i}{\|\mathbf{v}_i\|}
    \mathbf{t}_i \leftarrow \frac{\mathbf{t}_i}{\|\mathbf{t}_i\|}
@@ -216,17 +217,23 @@ The similarity score $ S_{ij} $ is the dot product between the normalized embedd
 
 5. **Compute Cross-Entropy Loss**:
    - For the images:
+
      $$
      L_{\text{img}} = \frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\mathrm{logits}_{ii})}{\sum_{j=1}^N \exp(\mathrm{logits}_{ij})}
      $$
+
    - For the texts:
+
      $$
      L_{\text{text}} = \frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\mathrm{logits}_{ii})}{\sum_{j=1}^N \exp(\mathrm{logits}_{ji})}
      $$
+
    - Combine the losses:
+
      $$
      L = \frac{1}{2} (L_{\text{img}} + L_{\text{text}})
      $$
+
         - For each image $ \mathbf{v}_i $, the model should assign high similarity to the corresponding text $ \mathbf{t}_i $ and low similarity to all other texts $ \mathbf{t}_j $ ($ j \neq i $).
    - The same applies for each text $ \mathbf{t}_i $, where it should assign high similarity to the corresponding image $ \mathbf{v}_i $ and low similarity to all other images $ \mathbf{v}_j $ ($ j \neq i $).
    - The cross-entropy loss computes the discrepancy between the predicted similarity scores and the ideal distribution where only the correct image-text pairs have high similarity.
