@@ -1,34 +1,312 @@
 ---
-title: Welcome
+title: Simon Petre — AI/ML Engineer
 layout: default
 ---
 
-
-{% for post in site.posts %}
-<div class="list">
-    <div class="post-index">
-        <div class="post-image">
-            <a href="{{post.url}}">
-
-                <i class="fa fa-{{post.icon}} fa-fw"></i>
-
-            </a>
-        </div>
-        <div class="post-content">
-            <p class="post-index-title"><a href="{{site.baseurl}}{{post.url}}">{{post.title}}</a></p>
-            <p>
-
-                <span class="excerpt">{{ post.content | strip_html | strip_newlines | truncate: 90 }}</span>
-
-            </p>
-            <p class="post-detail">{{ post.date | date: '%B %d, %Y' }}
-
-                <a href="{{site.baseurl}}{{post.url}}/index.html#disqus_thread" data-disqus-identifier="{{post.url}}"></a>
-            </p>
-        </div>
+<!-- ── Hero ──────────────────────────────────────────────────── -->
+<section id="hero">
+    <p class="hero-prompt">$ whoami</p>
+    <h1 class="hero-name">Simon Petre</h1>
+    <p class="hero-title">AI/ML Engineer</p>
+    <p class="hero-tagline">
+        Building intelligent systems at the intersection of machine learning,
+        natural language processing, and scalable infrastructure.
+    </p>
+    <div class="hero-cta">
+        <a href="https://github.com/simpetre" class="btn btn-primary" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i> GitHub
+        </a>
+        <a href="https://linkedin.com/in/simon.petre" class="btn btn-outline" target="_blank" rel="noopener">
+            <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="mailto:simpetre@gmail.com" class="btn btn-outline">
+            <i class="fa-regular fa-envelope"></i> Contact
+        </a>
     </div>
-</div>
+</section>
 
+<!-- ── About ─────────────────────────────────────────────────── -->
+<section id="about">
+    <p class="section-label">// about</p>
+    <h2 class="section-title">About Me</h2>
+    <div class="about-grid">
+        <div class="about-text">
+            <p>
+                I'm an AI/ML engineer with a focus on deep learning, natural language processing,
+                and recommendation systems. I enjoy turning research ideas into production-grade
+                systems that create real impact.
+            </p>
+            <p>
+                My work spans transformer-based language models, diffusion models for generative AI,
+                and classical ML pipelines for structured data. I'm equally comfortable exploring
+                cutting-edge papers and shipping reliable, well-tested code.
+            </p>
+            <p>
+                Outside of work I write about ML concepts on this site — covering topics from
+                convolutional networks for audio classification to building LexRank summarizers
+                from scratch.
+            </p>
+        </div>
+        <img
+            src="{{ site.avatar }}"
+            alt="Simon Petre"
+            class="about-photo"
+        >
+    </div>
+</section>
 
+<!-- ── Skills ────────────────────────────────────────────────── -->
+<section id="skills">
+    <p class="section-label">// skills</p>
+    <h2 class="section-title">Technical Skills</h2>
+    <div class="skills-grid">
 
-{% endfor %}
+        <div class="skill-card">
+            <p class="skill-card-title">Languages</p>
+            <div class="skill-tags">
+                <span class="tag">Python</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Bash</span>
+                <span class="tag">JavaScript</span>
+            </div>
+        </div>
+
+        <div class="skill-card">
+            <p class="skill-card-title">ML / DL Frameworks</p>
+            <div class="skill-tags">
+                <span class="tag">PyTorch</span>
+                <span class="tag">Hugging Face</span>
+                <span class="tag">scikit-learn</span>
+                <span class="tag">NumPy</span>
+                <span class="tag">Pandas</span>
+            </div>
+        </div>
+
+        <div class="skill-card">
+            <p class="skill-card-title">NLP &amp; Generative AI</p>
+            <div class="skill-tags">
+                <span class="tag">Transformers</span>
+                <span class="tag">Diffusion Models</span>
+                <span class="tag">LLMs</span>
+                <span class="tag">RLHF</span>
+                <span class="tag">RAG</span>
+            </div>
+        </div>
+
+        <div class="skill-card">
+            <p class="skill-card-title">Infrastructure &amp; Tools</p>
+            <div class="skill-tags">
+                <span class="tag">Docker</span>
+                <span class="tag">Git</span>
+                <span class="tag">Linux</span>
+                <span class="tag">Jupyter</span>
+                <span class="tag">Weights &amp; Biases</span>
+            </div>
+        </div>
+
+        <div class="skill-card">
+            <p class="skill-card-title">Cloud &amp; Data</p>
+            <div class="skill-tags">
+                <span class="tag">AWS</span>
+                <span class="tag">GCP</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Spark</span>
+            </div>
+        </div>
+
+        <div class="skill-card">
+            <p class="skill-card-title">Research Areas</p>
+            <div class="skill-tags">
+                <span class="tag">RecSys</span>
+                <span class="tag">Audio ML</span>
+                <span class="tag">Text Summarization</span>
+                <span class="tag">Computer Vision</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── Projects ──────────────────────────────────────────────── -->
+<section id="projects">
+    <p class="section-label">// projects</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-grid">
+
+        <div class="project-card">
+            <div class="project-header">
+                <i class="fa-solid fa-robot project-icon"></i>
+                <div class="project-links">
+                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <h3 class="project-title">Diffusion Models from Scratch</h3>
+            <p class="project-desc">
+                End-to-end implementation of denoising diffusion probabilistic models (DDPM)
+                in PyTorch. Covers the forward/reverse diffusion processes, noise scheduling,
+                and U-Net architecture with attention blocks.
+            </p>
+            <div class="project-tags">
+                <span class="tag">PyTorch</span>
+                <span class="tag">DDPM</span>
+                <span class="tag">Generative AI</span>
+                <span class="tag">U-Net</span>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <i class="fa-solid fa-brain project-icon"></i>
+                <div class="project-links">
+                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <h3 class="project-title">Transformer Language Models</h3>
+            <p class="project-desc">
+                From-scratch PyTorch implementation of the Transformer architecture including
+                multi-head self-attention, positional encoding, and training on language
+                modelling tasks with modern techniques.
+            </p>
+            <div class="project-tags">
+                <span class="tag">PyTorch</span>
+                <span class="tag">Transformers</span>
+                <span class="tag">NLP</span>
+                <span class="tag">Attention</span>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <i class="fa-solid fa-music project-icon"></i>
+                <div class="project-links">
+                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <h3 class="project-title">Audio Classification with ConvNets</h3>
+            <p class="project-desc">
+                Urban sound classification using convolutional neural networks on mel-spectrogram
+                features. Trained on the UrbanSound8K dataset achieving strong accuracy on
+                10 sound categories.
+            </p>
+            <div class="project-tags">
+                <span class="tag">CNNs</span>
+                <span class="tag">Audio ML</span>
+                <span class="tag">Mel Spectrograms</span>
+                <span class="tag">UrbanSound8K</span>
+            </div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <i class="fa-solid fa-file-lines project-icon"></i>
+                <div class="project-links">
+                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <h3 class="project-title">LexRank Text Summarizer</h3>
+            <p class="project-desc">
+                Graph-based extractive summarisation using the LexRank algorithm. Builds a
+                sentence similarity graph with TF-IDF cosine similarity and applies PageRank
+                to identify the most salient sentences.
+            </p>
+            <div class="project-tags">
+                <span class="tag">NLP</span>
+                <span class="tag">Graph Algorithms</span>
+                <span class="tag">TF-IDF</span>
+                <span class="tag">Summarization</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── Experience ────────────────────────────────────────────── -->
+<section id="experience">
+    <p class="section-label">// experience</p>
+    <h2 class="section-title">Experience</h2>
+    <div class="timeline">
+
+        <div class="timeline-item">
+            <div class="timeline-header">
+                <span class="timeline-title">AI/ML Engineer</span>
+                <span class="timeline-date">2021 — Present</span>
+            </div>
+            <p class="timeline-company">Independent / Freelance</p>
+            <ul class="timeline-desc">
+                <li>Designed and deployed NLP pipelines for text classification and summarisation</li>
+                <li>Implemented transformer and diffusion model architectures in PyTorch</li>
+                <li>Built recommendation systems using collaborative filtering and matrix factorisation</li>
+                <li>Wrote technical articles on ML concepts reaching thousands of readers</li>
+            </ul>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-header">
+                <span class="timeline-title">Data Scientist</span>
+                <span class="timeline-date">2017 — 2021</span>
+            </div>
+            <p class="timeline-company">Previous Role</p>
+            <ul class="timeline-desc">
+                <li>Developed machine learning models for structured and unstructured data</li>
+                <li>Collaborated with product teams to ship ML features end-to-end</li>
+                <li>Built data pipelines and feature engineering workflows at scale</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── Education ─────────────────────────────────────────────── -->
+<section id="education">
+    <p class="section-label">// education</p>
+    <h2 class="section-title">Education</h2>
+    <div class="edu-grid">
+
+        <div class="edu-card">
+            <h3 class="edu-degree">MSc / BSc Computer Science</h3>
+            <p class="edu-school">University</p>
+            <p class="edu-year">Graduated 2016</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── Contact ───────────────────────────────────────────────── -->
+<section id="contact">
+    <p class="section-label">// contact</p>
+    <h2 class="section-title">Get In Touch</h2>
+    <p class="contact-intro">
+        Open to interesting ML engineering roles, research collaborations,
+        and technical consulting. Say hello!
+    </p>
+    <a href="mailto:simpetre@gmail.com" class="contact-email">
+        <i class="fa-regular fa-envelope"></i>
+        simpetre@gmail.com
+    </a>
+    <div class="social-links">
+        <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+        </a>
+        <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+        </a>
+        <a href="https://twitter.com/bigs1m" target="_blank" rel="noopener" aria-label="Twitter">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>
+        Built with <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>
+        &amp; hosted on <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>
+    </p>
+</footer>
