@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <noscript><style>[data-animate],[data-animate-children]>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 
 <body>
@@ -29,6 +30,53 @@
     </nav>
 
     {{ content }}
+
+    <script>
+    (function() {
+        // ── Scroll-triggered reveal ──────────────────────────
+        var animEls = document.querySelectorAll('[data-animate], [data-animate-children]');
+
+        if ('IntersectionObserver' in window) {
+            var revealObs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObs.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            animEls.forEach(function(el) { revealObs.observe(el); });
+        } else {
+            animEls.forEach(function(el) { el.classList.add('visible'); });
+        }
+
+        // ── Active nav link highlighting ─────────────────────
+        var sections = document.querySelectorAll('section[id]');
+        var navLinks = document.querySelectorAll('.nav-links a');
+
+        if ('IntersectionObserver' in window && sections.length) {
+            var navObs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        var id = entry.target.getAttribute('id');
+                        navLinks.forEach(function(link) {
+                            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                        });
+                    }
+                });
+            }, {
+                threshold: 0.3,
+                rootMargin: '-60px 0px -40% 0px'
+            });
+
+            sections.forEach(function(s) { navObs.observe(s); });
+        }
+    })();
+    </script>
 
     {% include analytics.html %}
 </body>

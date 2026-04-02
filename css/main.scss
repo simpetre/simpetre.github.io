@@ -14,6 +14,11 @@ $text:          #e6edf3;
 $muted:         #8b949e;
 $green:         #3fb950;
 
+// ── Glow / animation tokens ──────────────────────────────────
+$glow-accent:   rgba(88, 166, 255, 0.4);
+$glow-green:    rgba(63, 185, 80, 0.4);
+$gradient-text: linear-gradient(135deg, $accent, #79c0ff, $green);
+
 // ── Typography ─────────────────────────────────────────────────
 $mono:    'JetBrains Mono', 'Space Mono', monospace;
 $sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
