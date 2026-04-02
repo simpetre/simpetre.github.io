@@ -3,21 +3,21 @@
 ---
 @charset "utf-8";
 
-// ── Color palette ──────────────────────────────────────────────
-$bg:            #0d1117;
-$surface:       #161b22;
-$surface-2:     #21262d;
-$border:        #30363d;
-$accent:        #58a6ff;
-$accent-hover:  #79b8ff;
-$text:          #e6edf3;
-$muted:         #8b949e;
-$green:         #3fb950;
+// ── Color palette (web 2.0 indigo/coral) ──────────────────────
+$bg:            #0f0d1a;
+$surface:       #1a1726;
+$surface-2:     #242033;
+$border:        #352f4a;
+$accent:        #7c5cfc;
+$accent-hover:  #9b82ff;
+$text:          #eae8f0;
+$muted:         #9590a8;
+$green:         #34d399;
 
 // ── Glow / animation tokens ──────────────────────────────────
-$glow-accent:   rgba(88, 166, 255, 0.4);
-$glow-green:    rgba(63, 185, 80, 0.4);
-$gradient-text: linear-gradient(135deg, $accent, #79c0ff, $green);
+$glow-accent:   rgba(124, 92, 252, 0.4);
+$glow-green:    rgba(52, 211, 153, 0.4);
+$gradient-text: linear-gradient(135deg, #7c5cfc, #e879a8, #f5b87a);
 
 // ── Typography ─────────────────────────────────────────────────
 $mono:    'JetBrains Mono', 'Space Mono', monospace;

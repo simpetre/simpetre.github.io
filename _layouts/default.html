@@ -33,6 +33,14 @@
 
     <script>
     (function() {
+        // ── Force scroll to top on page load ─────────────────
+        if (window.location.hash === '' || window.location.hash === '#hero') {
+            window.scrollTo(0, 0);
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+        }
+
         // ── Scroll-triggered reveal ──────────────────────────
         var animEls = document.querySelectorAll('[data-animate], [data-animate-children]');
 
