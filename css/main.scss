@@ -3,25 +3,26 @@
 ---
 @charset "utf-8";
 
-// ── Color palette (web 2.0 indigo/coral) ──────────────────────
-$bg:            #0f0d1a;
-$surface:       #1a1726;
-$surface-2:     #242033;
-$border:        #352f4a;
-$accent:        #7c5cfc;
-$accent-hover:  #9b82ff;
-$text:          #eae8f0;
-$muted:         #9590a8;
-$green:         #34d399;
+// ── Color palette (CRT phosphor green) ──────────────────────
+$bg:            #0a0a0a;
+$surface:       #0f1a0f;
+$surface-2:     #142014;
+$border:        #1a3a1a;
+$accent:        #33ff33;
+$accent-hover:  #66ff66;
+$accent-dim:    #20cc20;
+$text:          #33ff33;
+$muted:         #1a9a1a;
+$amber:         #ffaa00;
 
 // ── Glow / animation tokens ──────────────────────────────────
-$glow-accent:   rgba(124, 92, 252, 0.4);
-$glow-green:    rgba(52, 211, 153, 0.4);
-$gradient-text: linear-gradient(135deg, #7c5cfc, #e879a8, #f5b87a);
+$glow-accent:   rgba(51, 255, 51, 0.4);
+$glow-strong:   rgba(51, 255, 51, 0.6);
+$gradient-text: linear-gradient(135deg, #33ff33, #66ff66, #33ff33);
 
 // ── Typography ─────────────────────────────────────────────────
-$mono:    'JetBrains Mono', 'Space Mono', monospace;
-$sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$mono:    'VT323', 'JetBrains Mono', 'Courier New', monospace;
+$sans:    'VT323', 'JetBrains Mono', 'Courier New', monospace;
 
 // ── Spacing / breakpoints ──────────────────────────────────────
 $spacing:   30px;
