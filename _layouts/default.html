@@ -11,78 +11,324 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <noscript><style>[data-animate],[data-animate-children]>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 
 <body>
 
-    <nav class="top-nav">
-        <div class="nav-inner">
-            <a class="nav-logo" href="#hero">{{ site.title }}</a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- ── CRT Boot Sequence ─────────────────────────────────── -->
+    <div id="boot-screen">
+        <div id="boot-text"></div>
+    </div>
 
-    {{ content }}
+    <!-- ── Desktop ───────────────────────────────────────────── -->
+    <div id="desktop">
+
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-window="win-about">
+                <i class="fa-regular fa-file-lines icon"></i>
+                <span>about.txt</span>
+            </div>
+            <div class="desktop-icon" data-window="win-skills">
+                <i class="fa-solid fa-microchip icon"></i>
+                <span>skills.exe</span>
+            </div>
+            <div class="desktop-icon" data-window="win-projects">
+                <i class="fa-regular fa-folder-open icon"></i>
+                <span>projects/</span>
+            </div>
+            <div class="desktop-icon" data-window="win-experience">
+                <i class="fa-solid fa-terminal icon"></i>
+                <span>experience.log</span>
+            </div>
+            <div class="desktop-icon" data-window="win-education">
+                <i class="fa-regular fa-file icon"></i>
+                <span>education.dat</span>
+            </div>
+            <div class="desktop-icon" data-window="win-contact">
+                <i class="fa-solid fa-satellite-dish icon"></i>
+                <span>contact.sh</span>
+            </div>
+        </div>
+
+        {{ content }}
+
+    </div>
+
+    <!-- ── Taskbar ───────────────────────────────────────────── -->
+    <div class="taskbar">
+        <button class="start-btn" id="start-btn">
+            <i class="fa-solid fa-terminal"></i> PETRE-OS
+        </button>
+        <div class="taskbar-windows" id="taskbar-windows"></div>
+        <div class="taskbar-tray">
+            <span class="taskbar-clock" id="taskbar-clock"></span>
+        </div>
+    </div>
+
+    <!-- ── Start Menu ────────────────────────────────────────── -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header">PETRE-OS v3.3</div>
+        <div class="start-menu-items">
+            <div class="start-menu-item" data-window="win-about"><i class="fa-regular fa-file-lines"></i> about.txt</div>
+            <div class="start-menu-item" data-window="win-skills"><i class="fa-solid fa-microchip"></i> skills.exe</div>
+            <div class="start-menu-item" data-window="win-projects"><i class="fa-regular fa-folder-open"></i> projects/</div>
+            <div class="start-menu-item" data-window="win-experience"><i class="fa-solid fa-terminal"></i> experience.log</div>
+            <div class="start-menu-item" data-window="win-education"><i class="fa-regular fa-file"></i> education.dat</div>
+            <div class="start-menu-item" data-window="win-contact"><i class="fa-solid fa-satellite-dish"></i> contact.sh</div>
+            <div class="start-menu-divider"></div>
+            <div class="start-menu-item" id="start-github"><i class="fa-brands fa-github"></i> GitHub</div>
+            <div class="start-menu-item" id="start-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
+        </div>
+    </div>
+
+    <!-- ── Scanlines + Vignette overlays ─────────────────────── -->
+    <div class="crt-scanlines"></div>
+    <div class="crt-vignette"></div>
 
     <script>
     (function() {
-        // ── Force scroll to top on page load ─────────────────
-        if (window.location.hash === '' || window.location.hash === '#hero') {
-            window.scrollTo(0, 0);
-            if ('scrollRestoration' in history) {
-                history.scrollRestoration = 'manual';
-            }
+        // ── Boot sequence ────────────────────────────────────
+        var bootScreen = document.getElementById('boot-screen');
+        var bootText = document.getElementById('boot-text');
+        var desktop = document.getElementById('desktop');
+        var taskbar = document.querySelector('.taskbar');
+
+        var bootLines = [
+            'PETRE-OS v3.3 BIOS',
+            'Copyright (c) 2024 Simon Petre Systems Inc.',
+            '',
+            'Memory test... 65536K OK',
+            'Detecting hardware...',
+            '  CPU: Neural Processing Unit x86_ML',
+            '  GPU: Tensor Core Array [OK]',
+            '  NET: Satellite uplink [CONNECTED]',
+            '',
+            'Loading kernel modules...',
+            '  pytorch.ko          [OK]',
+            '  transformer.ko      [OK]',
+            '  attention.ko        [OK]',
+            '  diffusion.ko        [OK]',
+            '',
+            'Mounting /dev/brain... done.',
+            'Starting PETRE-OS...',
+            ''
+        ];
+
+        var skipBoot = sessionStorage.getItem('petre-os-booted');
+
+        function showDesktop() {
+            bootScreen.style.display = 'none';
+            desktop.classList.add('active');
+            taskbar.classList.add('active');
+            sessionStorage.setItem('petre-os-booted', '1');
+            startClock();
+            openWindow('win-about');
         }
 
-        // ── Scroll-triggered reveal ──────────────────────────
-        var animEls = document.querySelectorAll('[data-animate], [data-animate-children]');
-
-        if ('IntersectionObserver' in window) {
-            var revealObs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        revealObs.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -40px 0px'
-            });
-
-            animEls.forEach(function(el) { revealObs.observe(el); });
+        if (skipBoot) {
+            showDesktop();
         } else {
-            animEls.forEach(function(el) { el.classList.add('visible'); });
+            var lineIdx = 0;
+            function typeLine() {
+                if (lineIdx < bootLines.length) {
+                    var line = document.createElement('div');
+                    line.textContent = bootLines[lineIdx] || '\u00A0';
+                    bootText.appendChild(line);
+                    bootText.scrollTop = bootText.scrollHeight;
+                    lineIdx++;
+                    setTimeout(typeLine, bootLines[lineIdx - 1] === '' ? 200 : 60 + Math.random() * 80);
+                } else {
+                    setTimeout(showDesktop, 600);
+                }
+            }
+            typeLine();
         }
 
-        // ── Active nav link highlighting ─────────────────────
-        var sections = document.querySelectorAll('section[id]');
-        var navLinks = document.querySelectorAll('.nav-links a');
+        // ── Clock ────────────────────────────────────────────
+        var clockEl = document.getElementById('taskbar-clock');
+        function startClock() {
+            function update() {
+                var d = new Date();
+                clockEl.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            }
+            update();
+            setInterval(update, 10000);
+        }
 
-        if ('IntersectionObserver' in window && sections.length) {
-            var navObs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        var id = entry.target.getAttribute('id');
-                        navLinks.forEach(function(link) {
-                            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-                        });
+        // ── Window management ────────────────────────────────
+        var windows = document.querySelectorAll('.window');
+        var zIndex = 10;
+        var activeWindow = null;
+
+        function focusWindow(win) {
+            if (activeWindow) activeWindow.classList.remove('focused');
+            win.classList.add('focused');
+            win.style.zIndex = ++zIndex;
+            activeWindow = win;
+            updateTaskbar();
+        }
+
+        function openWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.add('open');
+            win.classList.remove('minimized');
+            focusWindow(win);
+            // stagger position for newly opened windows
+            if (!win.dataset.positioned) {
+                var openCount = document.querySelectorAll('.window.open').length;
+                var offsetX = 60 + ((openCount - 1) * 30);
+                var offsetY = 40 + ((openCount - 1) * 30);
+                win.style.left = offsetX + 'px';
+                win.style.top = offsetY + 'px';
+                win.dataset.positioned = '1';
+            }
+            updateTaskbar();
+        }
+
+        function closeWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.remove('open', 'focused', 'minimized');
+            if (activeWindow === win) activeWindow = null;
+            updateTaskbar();
+        }
+
+        function minimizeWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.add('minimized');
+            if (activeWindow === win) activeWindow = null;
+            updateTaskbar();
+        }
+
+        function updateTaskbar() {
+            var tb = document.getElementById('taskbar-windows');
+            tb.innerHTML = '';
+            windows.forEach(function(win) {
+                if (!win.classList.contains('open')) return;
+                var btn = document.createElement('button');
+                btn.className = 'taskbar-win-btn';
+                if (win.classList.contains('focused') && !win.classList.contains('minimized')) {
+                    btn.classList.add('active');
+                }
+                btn.textContent = win.querySelector('.window-title').textContent;
+                btn.addEventListener('click', function() {
+                    if (win.classList.contains('minimized')) {
+                        win.classList.remove('minimized');
+                        focusWindow(win);
+                    } else if (win.classList.contains('focused')) {
+                        minimizeWindow(win.id);
+                    } else {
+                        focusWindow(win);
                     }
                 });
-            }, {
-                threshold: 0.3,
-                rootMargin: '-60px 0px -40% 0px'
+                tb.appendChild(btn);
+            });
+        }
+
+        // ── Desktop icon clicks ──────────────────────────────
+        document.querySelectorAll('.desktop-icon').forEach(function(icon) {
+            icon.addEventListener('dblclick', function() {
+                openWindow(this.dataset.window);
+            });
+            // mobile: single tap
+            icon.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                openWindow(this.dataset.window);
+            });
+        });
+
+        // ── Window title bar buttons ─────────────────────────
+        windows.forEach(function(win) {
+            var titlebar = win.querySelector('.window-titlebar');
+            var closeBtn = win.querySelector('.win-close');
+            var minBtn = win.querySelector('.win-minimize');
+            var maxBtn = win.querySelector('.win-maximize');
+
+            titlebar.addEventListener('mousedown', function() {
+                focusWindow(win);
             });
 
-            sections.forEach(function(s) { navObs.observe(s); });
-        }
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeWindow(win.id);
+            });
+
+            minBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                minimizeWindow(win.id);
+            });
+
+            if (maxBtn) {
+                maxBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    win.classList.toggle('maximized');
+                });
+            }
+
+            // Click window body to focus
+            win.addEventListener('mousedown', function() {
+                focusWindow(win);
+            });
+
+            // ── Drag ─────────────────────────────────────────
+            var dragging = false, dragX, dragY;
+            titlebar.addEventListener('mousedown', function(e) {
+                if (e.target.closest('.win-btn')) return;
+                if (win.classList.contains('maximized')) return;
+                dragging = true;
+                dragX = e.clientX - win.offsetLeft;
+                dragY = e.clientY - win.offsetTop;
+                win.classList.add('dragging');
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!dragging) return;
+                win.style.left = (e.clientX - dragX) + 'px';
+                win.style.top = (e.clientY - dragY) + 'px';
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (dragging) {
+                    dragging = false;
+                    win.classList.remove('dragging');
+                }
+            });
+        });
+
+        // ── Start menu ───────────────────────────────────────
+        var startBtn = document.getElementById('start-btn');
+        var startMenu = document.getElementById('start-menu');
+
+        startBtn.addEventListener('click', function() {
+            startMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
+                startMenu.classList.remove('open');
+            }
+        });
+
+        document.querySelectorAll('.start-menu-item[data-window]').forEach(function(item) {
+            item.addEventListener('click', function() {
+                openWindow(this.dataset.window);
+                startMenu.classList.remove('open');
+            });
+        });
+
+        document.getElementById('start-github').addEventListener('click', function() {
+            window.open('https://github.com/simpetre', '_blank');
+            startMenu.classList.remove('open');
+        });
+        document.getElementById('start-linkedin').addEventListener('click', function() {
+            window.open('https://linkedin.com/in/simon.petre', '_blank');
+            startMenu.classList.remove('open');
+        });
+
     })();
     </script>
 

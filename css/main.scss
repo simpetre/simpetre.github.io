@@ -5,27 +5,22 @@
 
 // ── Color palette (CRT phosphor green) ──────────────────────
 $bg:            #0a0a0a;
-$surface:       #0f1a0f;
-$surface-2:     #142014;
+$surface:       #0d120d;
 $border:        #1a3a1a;
-$accent:        #33ff33;
-$accent-hover:  #66ff66;
-$accent-dim:    #20cc20;
-$text:          #33ff33;
-$muted:         #1a9a1a;
+$green:         #33ff33;
+$green-dim:     #1a9a1a;
+$green-bright:  #66ff66;
+$green-dark:    #0d3d0d;
 $amber:         #ffaa00;
 
-// ── Glow / animation tokens ──────────────────────────────────
-$glow-accent:   rgba(51, 255, 51, 0.4);
+// ── Glow tokens ─────────────────────────────────────────────
+$glow:          rgba(51, 255, 51, 0.4);
 $glow-strong:   rgba(51, 255, 51, 0.6);
-$gradient-text: linear-gradient(135deg, #33ff33, #66ff66, #33ff33);
 
 // ── Typography ─────────────────────────────────────────────────
-$mono:    'VT323', 'JetBrains Mono', 'Courier New', monospace;
-$sans:    'VT323', 'JetBrains Mono', 'Courier New', monospace;
+$mono: 'VT323', 'Courier New', monospace;
 
-// ── Spacing / breakpoints ──────────────────────────────────────
-$spacing:   30px;
+// ── Breakpoints ────────────────────────────────────────────────
 $on-palm:   600px;
 $on-laptop: 900px;
 
@@ -37,5 +32,4 @@ $on-laptop: 900px;
     @media screen and (max-width: $on-laptop) { @content; }
 }
 
-// ── Import partials ────────────────────────────────────────────
 @import "style";
