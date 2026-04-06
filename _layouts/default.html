@@ -18,6 +18,7 @@
     <!-- ── CRT Boot Sequence ─────────────────────────────────── -->
     <div id="boot-screen">
         <div id="boot-text"></div>
+        <div class="boot-skip" id="boot-skip">[ Press any key to skip ]</div>
     </div>
 
     <!-- ── Desktop ───────────────────────────────────────────── -->
@@ -49,6 +50,10 @@
                 <i class="fa-solid fa-satellite-dish icon"></i>
                 <span>contact.sh</span>
             </div>
+            <div class="desktop-icon" id="icon-resume">
+                <i class="fa-regular fa-file-pdf icon"></i>
+                <span>resume.pdf</span>
+            </div>
         </div>
 
         {{ content }}
@@ -77,6 +82,7 @@
             <div class="start-menu-item" data-window="win-education"><i class="fa-regular fa-file"></i> education.dat</div>
             <div class="start-menu-item" data-window="win-contact"><i class="fa-solid fa-satellite-dish"></i> contact.sh</div>
             <div class="start-menu-divider"></div>
+            <div class="start-menu-item" id="start-resume"><i class="fa-regular fa-file-pdf"></i> resume.pdf</div>
             <div class="start-menu-item" id="start-github"><i class="fa-brands fa-github"></i> GitHub</div>
             <div class="start-menu-item" id="start-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
         </div>
@@ -91,8 +97,10 @@
         // ── Boot sequence ────────────────────────────────────
         var bootScreen = document.getElementById('boot-screen');
         var bootText = document.getElementById('boot-text');
+        var bootSkip = document.getElementById('boot-skip');
         var desktop = document.getElementById('desktop');
         var taskbar = document.querySelector('.taskbar');
+        var bootDone = false;
 
         var bootLines = [
             'PETRE-OS v3.3 BIOS',
@@ -118,19 +126,43 @@
         var skipBoot = sessionStorage.getItem('petre-os-booted');
 
         function showDesktop() {
+            if (bootDone) return;
+            bootDone = true;
             bootScreen.style.display = 'none';
             desktop.classList.add('active');
             taskbar.classList.add('active');
             sessionStorage.setItem('petre-os-booted', '1');
             startClock();
+            // Center the about window on screen
+            var win = document.getElementById('win-about');
+            var vw = window.innerWidth;
+            var vh = window.innerHeight - 40; // minus taskbar
+            var ww = Math.min(600, vw - 40);
+            win.style.width = ww + 'px';
+            win.style.left = Math.max(20, (vw - ww) / 2) + 'px';
+            win.style.top = Math.max(20, (vh - 420) / 2) + 'px';
+            win.dataset.positioned = '1';
             openWindow('win-about');
         }
 
         if (skipBoot) {
             showDesktop();
         } else {
+            // Press any key to skip boot
+            function skipHandler(e) {
+                if (bootDone) return;
+                document.removeEventListener('keydown', skipHandler);
+                document.removeEventListener('click', skipHandler);
+                document.removeEventListener('touchstart', skipHandler);
+                showDesktop();
+            }
+            document.addEventListener('keydown', skipHandler);
+            document.addEventListener('click', skipHandler);
+            document.addEventListener('touchstart', skipHandler);
+
             var lineIdx = 0;
             function typeLine() {
+                if (bootDone) return;
                 if (lineIdx < bootLines.length) {
                     var line = document.createElement('div');
                     line.textContent = bootLines[lineIdx] || '\u00A0';
@@ -178,8 +210,12 @@
             // stagger position for newly opened windows
             if (!win.dataset.positioned) {
                 var openCount = document.querySelectorAll('.window.open').length;
-                var offsetX = 60 + ((openCount - 1) * 30);
-                var offsetY = 40 + ((openCount - 1) * 30);
+                var vw = window.innerWidth;
+                var vh = window.innerHeight - 40;
+                // Center with slight offset per window
+                var ww = parseInt(win.style.width) || 520;
+                var offsetX = Math.max(20, (vw - ww) / 2 + (openCount - 1) * 25);
+                var offsetY = Math.max(20, vh * 0.12 + (openCount - 1) * 25);
                 win.style.left = offsetX + 'px';
                 win.style.top = offsetY + 'px';
                 win.dataset.positioned = '1';
@@ -229,16 +265,27 @@
         }
 
         // ── Desktop icon clicks ──────────────────────────────
-        document.querySelectorAll('.desktop-icon').forEach(function(icon) {
+        document.querySelectorAll('.desktop-icon[data-window]').forEach(function(icon) {
             icon.addEventListener('dblclick', function() {
                 openWindow(this.dataset.window);
             });
-            // mobile: single tap
             icon.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 openWindow(this.dataset.window);
             });
         });
+
+        // Resume icon — opens PDF link (update href when you have one)
+        var resumeIcon = document.getElementById('icon-resume');
+        if (resumeIcon) {
+            resumeIcon.addEventListener('dblclick', function() {
+                window.open('/resume.pdf', '_blank');
+            });
+            resumeIcon.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                window.open('/resume.pdf', '_blank');
+            });
+        }
 
         // ── Window title bar buttons ─────────────────────────
         windows.forEach(function(win) {
@@ -268,7 +315,6 @@
                 });
             }
 
-            // Click window body to focus
             win.addEventListener('mousedown', function() {
                 focusWindow(win);
             });
@@ -320,6 +366,10 @@
             });
         });
 
+        document.getElementById('start-resume').addEventListener('click', function() {
+            window.open('/resume.pdf', '_blank');
+            startMenu.classList.remove('open');
+        });
         document.getElementById('start-github').addEventListener('click', function() {
             window.open('https://github.com/simpetre', '_blank');
             startMenu.classList.remove('open');
@@ -332,8 +382,8 @@
         // ── Easter egg: type "adventure" to launch game ──────
         var secretBuffer = '';
         document.addEventListener('keydown', function(e) {
-            // don't capture if typing in the adventure input
             if (e.target.id === 'adventure-input') return;
+            if (bootDone === false) return; // don't capture during boot skip
             secretBuffer += e.key.toLowerCase();
             if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
             if (secretBuffer.includes('adventure')) {
@@ -436,7 +486,7 @@
                 etc: {
                     name: '/etc/secrets',
                     desc: function() {
-                        if (!inventory.includes('keycard') && !flags.etcUnlocked) return null; // can't enter
+                        if (!inventory.includes('keycard') && !flags.etcUnlocked) return null;
                         flags.etcUnlocked = true;
                         return 'A hidden vault. The air is cold and still. Rows of encrypted files glow behind reinforced glass.\n\nA WEIGHT_GAMMA floats in a containment field at the center of the room.';
                     },
@@ -489,14 +539,12 @@
                 var noun = parts.slice(1).join('_');
                 var room = rooms[currentRoom];
 
-                // ── Movement ──
                 var dirs = { n: 'north', s: 'south', e: 'east', w: 'west', north: 'north', south: 'south', east: 'east', west: 'west' };
                 if (verb === 'go' && dirs[noun]) verb = dirs[noun];
                 if (dirs[verb]) {
                     var dir = dirs[verb];
                     if (room.exits[dir]) {
                         var dest = rooms[room.exits[dir]];
-                        // check locked
                         if (dest.locked && !flags.etcUnlocked) {
                             if (inventory.includes('keycard')) {
                                 print('You swipe the KEYCARD. The lock disengages with a heavy clank.', 'adv-action');
@@ -520,13 +568,8 @@
                     return;
                 }
 
-                // ── Look ──
                 if (verb === 'look' || verb === 'l' || verb === 'examine' || verb === 'x') {
-                    if (!noun) {
-                        print('', 'adv-desc');
-                        printRoom();
-                        return;
-                    }
+                    if (!noun) { print('', 'adv-desc'); printRoom(); return; }
                     if (room.look && room.look[noun]) {
                         var desc = room.look[noun];
                         print(typeof desc === 'function' ? desc() : desc, 'adv-desc');
@@ -536,7 +579,6 @@
                     return;
                 }
 
-                // ── Take / Get ──
                 if (verb === 'take' || verb === 'get' || verb === 'grab' || verb === 'pick') {
                     if (noun === 'up' && parts.length > 2) noun = parts.slice(2).join('_');
                     if (room.items && room.items.includes(noun)) {
@@ -549,7 +591,6 @@
                     return;
                 }
 
-                // ── Inventory ──
                 if (verb === 'inventory' || verb === 'inv' || verb === 'i') {
                     if (inventory.length === 0) {
                         print('You\'re not carrying anything.', 'adv-desc');
@@ -562,7 +603,6 @@
                     return;
                 }
 
-                // ── Use / Install ──
                 if (verb === 'use' || verb === 'install' || verb === 'insert' || verb === 'place') {
                     if (currentRoom === 'dev' && (noun.indexOf('weight') !== -1 || noun === 'all' || noun === 'weights')) {
                         var installed = false;
@@ -577,10 +617,7 @@
                                 installed = true;
                             }
                         });
-                        if (!installed) {
-                            print('You don\'t have that.', 'adv-error');
-                            return;
-                        }
+                        if (!installed) { print('You don\'t have that.', 'adv-error'); return; }
                         if (flags.weight1 && flags.weight2 && flags.weight3) {
                             print('', 'adv-desc');
                             print('The console roars to life. Light floods the chamber.', 'adv-special');
@@ -600,29 +637,20 @@
                     return;
                 }
 
-                // ── Kill (for the frozen process) ──
                 if (verb === 'kill') {
                     if (currentRoom === 'proc' && (noun === 'process' || noun === '8088' || noun === 'pid')) {
-                        if (flags.processKilled) {
-                            print('It\'s already dead.', 'adv-desc');
-                        } else {
+                        if (flags.processKilled) { print('It\'s already dead.', 'adv-desc'); }
+                        else {
                             print('$ kill -9 8088', 'adv-input-echo');
                             print('Process 8088 terminated. The passage clears.', 'adv-action');
                             flags.processKilled = true;
                         }
-                    } else {
-                        print('Kill what?', 'adv-error');
-                    }
+                    } else { print('Kill what?', 'adv-error'); }
                     return;
                 }
 
-                // ── Restart ──
                 if (verb === 'restart') {
-                    inventory = [];
-                    flags = {};
-                    currentRoom = 'root';
-                    moveCount = 0;
-                    // reset room items
+                    inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
                     rooms.root.items = ['note'];
                     rooms.proc.items = ['weight_alpha'];
                     rooms.var.items = ['weight_beta'];
@@ -633,24 +661,14 @@
                     return;
                 }
 
-                // ── Help ──
                 if (verb === 'help' || verb === '?') {
                     print('Commands: go [n/s/e/w], look [thing], take [item],', 'adv-desc');
                     print('  inventory, use [item], kill [target], help, restart', 'adv-desc');
                     return;
                 }
 
-                // ── Sudo ──
-                if (verb === 'sudo') {
-                    print('Nice try. You\'re already root.', 'adv-action');
-                    return;
-                }
-
-                // ── Misc ──
-                if (verb === 'xyzzy') {
-                    print('A hollow voice says "Fool."', 'adv-desc');
-                    return;
-                }
+                if (verb === 'sudo') { print('Nice try. You\'re already root.', 'adv-action'); return; }
+                if (verb === 'xyzzy') { print('A hollow voice says "Fool."', 'adv-desc'); return; }
 
                 print('I don\'t understand "' + cmd + '". Type HELP for commands.', 'adv-error');
             }
@@ -663,28 +681,21 @@
                 printRoom();
             }
 
-            // Start game when window first opens
             var gameStarted = false;
             var observer = new MutationObserver(function() {
                 var win = document.getElementById('win-adventure');
                 if (win.classList.contains('open') && !gameStarted) {
                     gameStarted = true;
                     startGame();
-                    setTimeout(function() {
-                        input.focus();
-                    }, 50);
+                    setTimeout(function() { input.focus(); }, 50);
                 }
             });
             observer.observe(document.getElementById('win-adventure'), { attributes: true, attributeFilter: ['class'] });
 
             input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    doCommand(input.value);
-                    input.value = '';
-                }
+                if (e.key === 'Enter') { doCommand(input.value); input.value = ''; }
             });
 
-            // Focus input when clicking the adventure window body
             document.querySelector('.adventure-body').addEventListener('click', function() {
                 input.focus();
             });

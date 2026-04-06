@@ -3,22 +3,27 @@
 ---
 @charset "utf-8";
 
-// ── Color palette (CRT phosphor green) ──────────────────────
+// ── Color palette (CRT dual phosphor: green + amber) ────────
 $bg:            #0a0a0a;
 $surface:       #0d120d;
 $border:        #1a3a1a;
-$green:         #33ff33;
-$green-dim:     #1a9a1a;
-$green-bright:  #66ff66;
+$green:         #4af626;
+$green-dim:     #2abf2a;
+$green-bright:  #7aff7a;
 $green-dark:    #0d3d0d;
+$green-muted:   #1a8a1a;
 $amber:         #ffaa00;
+$amber-dim:     #cc8800;
+$amber-bright:  #ffcc44;
 
 // ── Glow tokens ─────────────────────────────────────────────
-$glow:          rgba(51, 255, 51, 0.4);
-$glow-strong:   rgba(51, 255, 51, 0.6);
+$glow:          rgba(74, 246, 38, 0.3);
+$glow-strong:   rgba(74, 246, 38, 0.5);
+$glow-amber:    rgba(255, 170, 0, 0.4);
 
 // ── Typography ─────────────────────────────────────────────────
-$mono: 'VT323', 'Courier New', monospace;
+$mono-system: 'VT323', 'Courier New', monospace;
+$mono-body:   'JetBrains Mono', 'Courier New', monospace;
 
 // ── Breakpoints ────────────────────────────────────────────────
 $on-palm:   600px;

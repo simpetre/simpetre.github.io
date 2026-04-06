@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// PETRE-OS — CRT Green Phosphor Desktop
+// PETRE-OS — CRT Dual Phosphor Desktop (Green + Amber)
 // ══════════════════════════════════════════════════════════════
 
 // ── Reset ──────────────────────────────────────────────────────
@@ -14,14 +14,14 @@ html {
 }
 
 body {
-    font-family: $mono;
+    font-family: $mono-system;
     font-size: 20px;
     color: $green;
     background: $bg;
     line-height: 1.6;
     overflow: hidden;
     height: 100vh;
-    text-shadow: 0 0 8px $glow;
+    text-shadow: 0 0 6px $glow;
     cursor: default;
     user-select: none;
 }
@@ -30,8 +30,8 @@ a {
     color: $green-bright;
     text-decoration: none;
     &:hover {
-        color: #99ff99;
-        text-shadow: 0 0 12px $glow-strong;
+        color: #aaffaa;
+        text-shadow: 0 0 10px $glow-strong;
     }
 }
 
@@ -46,8 +46,8 @@ a {
         0deg,
         transparent,
         transparent 2px,
-        rgba(0, 0, 0, 0.12) 2px,
-        rgba(0, 0, 0, 0.12) 4px
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
     );
 }
 
@@ -60,19 +60,19 @@ a {
     background: radial-gradient(
         ellipse at center,
         transparent 55%,
-        rgba(0, 0, 0, 0.65) 100%
+        rgba(0, 0, 0, 0.6) 100%
     );
 }
 
 // ── Keyframes ──────────────────────────────────────────────────
 @keyframes flicker {
     0%   { opacity: 1; }
-    3%   { opacity: 0.87; }
+    3%   { opacity: 0.88; }
     6%   { opacity: 1; }
-    7.5% { opacity: 0.92; }
+    7.5% { opacity: 0.93; }
     9%   { opacity: 1; }
     55%  { opacity: 1; }
-    57%  { opacity: 0.94; }
+    57%  { opacity: 0.95; }
     58%  { opacity: 1; }
     100% { opacity: 1; }
 }
@@ -80,11 +80,6 @@ a {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0; }
-}
-
-@keyframes bootFade {
-    from { opacity: 1; }
-    to   { opacity: 0; }
 }
 
 body {
@@ -104,17 +99,26 @@ body {
     padding: 3rem;
     overflow: hidden;
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 #boot-text {
     font-size: 18px;
     line-height: 1.5;
-    max-height: 100%;
+    flex: 1;
     overflow: hidden;
     div {
         white-space: pre;
     }
+}
+
+.boot-skip {
+    font-size: 14px;
+    color: $green-muted;
+    text-align: center;
+    padding: 1rem;
+    animation: blink 2s step-end infinite;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -152,7 +156,7 @@ body {
     transition: background 0.1s;
 
     &:hover {
-        background: rgba(51, 255, 51, 0.08);
+        background: rgba(74, 246, 38, 0.08);
         border-color: $border;
     }
 
@@ -163,6 +167,7 @@ body {
     }
 
     span {
+        font-family: $mono-system;
         font-size: 14px;
         color: $green-dim;
         line-height: 1.2;
@@ -178,7 +183,7 @@ body {
     display: none;
     width: 520px;
     max-height: 70vh;
-    border: 1px solid $green-dim;
+    border: 1px solid $green-muted;
     background: $bg;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 2px $glow;
     flex-direction: column;
@@ -193,7 +198,7 @@ body {
 
     &.focused {
         border-color: $green;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 8px $glow;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 6px $glow;
     }
 
     &.dragging {
@@ -209,6 +214,11 @@ body {
     }
 }
 
+// About window is larger
+#win-about {
+    width: 600px;
+}
+
 .wide-window {
     width: 640px;
 }
@@ -220,9 +230,10 @@ body {
     height: 28px;
     padding: 0 6px 0 8px;
     background: $green-dark;
-    border-bottom: 1px solid $green-dim;
+    border-bottom: 1px solid $green-muted;
     cursor: move;
     flex-shrink: 0;
+    font-family: $mono-system;
 }
 
 .window-title-area {
@@ -234,10 +245,11 @@ body {
 
 .window-icon {
     font-size: 12px;
-    color: $green-dim;
+    color: $green-muted;
 }
 
 .window-title {
+    font-family: $mono-system;
     font-size: 16px;
     color: $green;
     white-space: nowrap;
@@ -255,9 +267,9 @@ body {
     width: 22px;
     height: 20px;
     background: transparent;
-    border: 1px solid $green-dim;
-    color: $green-dim;
-    font-family: $mono;
+    border: 1px solid $green-muted;
+    color: $green-muted;
+    font-family: $mono-system;
     font-size: 14px;
     cursor: pointer;
     display: flex;
@@ -284,9 +296,11 @@ body {
 .window-body {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
-    font-size: 18px;
-    line-height: 1.5;
+    padding: 16px 20px;
+    font-family: $mono-body;
+    font-size: 14px;
+    line-height: 1.7;
+    text-shadow: 0 0 4px $glow;
 
     // scrollbar
     &::-webkit-scrollbar {
@@ -298,7 +312,7 @@ body {
     }
     &::-webkit-scrollbar-thumb {
         background: $green-dark;
-        border: 1px solid $green-dim;
+        border: 1px solid $green-muted;
         &:hover {
             background: $border;
         }
@@ -311,25 +325,31 @@ body {
 }
 
 .prompt-line {
-    color: $green-dim;
+    font-family: $mono-system;
+    font-size: 16px;
+    color: $green-muted;
 }
 
 .content-heading {
-    font-size: 28px;
-    color: $green-bright;
-    text-shadow: 0 0 15px $glow, 0 0 30px rgba(51, 255, 51, 0.2);
+    font-family: $mono-system;
+    font-size: 32px;
+    color: $amber;
+    text-shadow: 0 0 15px $glow-amber, 0 0 30px rgba(255, 170, 0, 0.15);
     letter-spacing: 0.1em;
 }
 
 .content-subheading {
+    font-family: $mono-system;
     font-size: 22px;
-    color: $green;
+    color: $amber-dim;
     letter-spacing: 0.05em;
+    text-shadow: 0 0 8px $glow-amber;
 }
 
 .status-line {
-    color: $green-dim;
-    font-size: 16px;
+    font-family: $mono-system;
+    color: $green-muted;
+    font-size: 14px;
 }
 
 .blink-cursor {
@@ -342,22 +362,26 @@ body {
     width: 100%;
 
     tr {
-        border-bottom: 1px solid rgba(51, 255, 51, 0.1);
+        border-bottom: 1px solid rgba(74, 246, 38, 0.08);
     }
 
     td {
         padding: 6px 0;
         vertical-align: top;
-        font-size: 18px;
+        font-family: $mono-body;
+        font-size: 14px;
+        color: $green-dim;
     }
 
     .skill-cat {
-        color: $green-bright;
+        font-family: $mono-system;
+        color: $amber;
         white-space: nowrap;
         padding-right: 20px;
         width: 1%;
         font-size: 16px;
         letter-spacing: 0.05em;
+        text-shadow: 0 0 6px $glow-amber;
     }
 }
 
@@ -370,7 +394,7 @@ body {
 
 .file-entry {
     padding: 10px 0;
-    border-bottom: 1px solid rgba(51, 255, 51, 0.1);
+    border-bottom: 1px solid rgba(74, 246, 38, 0.08);
     &:last-child { border-bottom: none; }
 }
 
@@ -383,32 +407,38 @@ body {
 }
 
 .file-perms {
-    color: $green-dim;
-    font-size: 14px;
+    font-family: $mono-system;
+    color: $green-muted;
+    font-size: 13px;
 }
 
 .file-name {
-    color: $green-bright;
+    font-family: $mono-system;
+    color: $amber;
     font-size: 20px;
+    text-shadow: 0 0 6px $glow-amber;
 }
 
 .file-link {
+    font-family: $mono-system;
     font-size: 14px;
-    color: $green-dim;
+    color: $green-muted;
     &:hover { color: $green-bright; }
 }
 
 .file-desc {
+    font-family: $mono-body;
     color: $green-dim;
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.6;
     white-space: pre-wrap;
     margin-bottom: 6px;
 }
 
 .file-tags {
-    font-size: 14px;
-    color: rgba(51, 255, 51, 0.35);
+    font-family: $mono-body;
+    font-size: 12px;
+    color: $green-muted;
     letter-spacing: 0.05em;
 }
 
@@ -418,29 +448,31 @@ body {
 }
 
 .log-timestamp {
-    color: $green-dim;
-    font-size: 16px;
+    font-family: $mono-system;
+    color: $green-muted;
+    font-size: 14px;
     letter-spacing: 0.05em;
 }
 
 .log-title {
-    color: $green-bright;
+    font-family: $mono-system;
+    color: $amber;
     font-size: 22px;
+    text-shadow: 0 0 6px $glow-amber;
 }
 
 .log-org {
+    font-family: $mono-body;
     color: $green;
-    font-size: 18px;
+    font-size: 14px;
     margin-bottom: 6px;
 }
 
 .log-line {
+    font-family: $mono-body;
     color: $green-dim;
-    font-size: 16px;
+    font-size: 13px;
     padding-left: 0;
-    &::before {
-        content: '';
-    }
 }
 
 // ── Education fields ──────────────────────────────────────────
@@ -450,13 +482,17 @@ body {
 
 .edu-field,
 .contact-field {
-    font-size: 18px;
-    margin-bottom: 2px;
+    font-family: $mono-body;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
 .field-label {
-    color: $green-dim;
+    font-family: $mono-system;
+    color: $amber-dim;
     margin-right: 8px;
+    font-size: 16px;
+    text-shadow: 0 0 4px $glow-amber;
 }
 
 // ── Adventure game ────────────────────────────────────────────
@@ -471,14 +507,17 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 12px 16px;
-    font-size: 16px;
-    line-height: 1.5;
+    font-family: $mono-body;
+    font-size: 14px;
+    line-height: 1.6;
     user-select: text;
 
     .adv-room {
-        color: $green-bright;
+        font-family: $mono-system;
+        color: $amber;
         font-size: 18px;
         margin-top: 8px;
+        text-shadow: 0 0 8px $glow-amber;
     }
     .adv-desc {
         color: $green-dim;
@@ -491,16 +530,17 @@ body {
     }
     .adv-item {
         color: $amber;
+        text-shadow: 0 0 6px $glow-amber;
     }
     .adv-input-echo {
-        color: rgba(51, 255, 51, 0.35);
+        color: $green-muted;
         &::before {
             content: '> ';
         }
     }
     .adv-special {
-        color: $green-bright;
-        text-shadow: 0 0 15px $glow-strong;
+        color: $amber-bright;
+        text-shadow: 0 0 12px $glow-amber;
     }
 
     &::-webkit-scrollbar {
@@ -511,7 +551,7 @@ body {
     }
     &::-webkit-scrollbar-thumb {
         background: $green-dark;
-        border: 1px solid $green-dim;
+        border: 1px solid $green-muted;
     }
 }
 
@@ -527,6 +567,7 @@ body {
 .adventure-prompt {
     color: $green;
     margin-right: 8px;
+    font-family: $mono-system;
     font-size: 18px;
 }
 
@@ -536,9 +577,9 @@ body {
     border: none;
     outline: none;
     color: $green;
-    font-family: $mono;
-    font-size: 18px;
-    text-shadow: 0 0 8px $glow;
+    font-family: $mono-body;
+    font-size: 14px;
+    text-shadow: 0 0 6px $glow;
     caret-color: $green;
 }
 
@@ -553,7 +594,7 @@ body {
     right: 0;
     height: 40px;
     background: $surface;
-    border-top: 1px solid $green-dim;
+    border-top: 1px solid $green-muted;
     display: none;
     align-items: center;
     padding: 0 4px;
@@ -567,16 +608,16 @@ body {
     height: 30px;
     padding: 0 12px;
     background: $green-dark;
-    border: 1px solid $green-dim;
+    border: 1px solid $green-muted;
     color: $green;
-    font-family: $mono;
+    font-family: $mono-system;
     font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
-    text-shadow: 0 0 8px $glow;
+    text-shadow: 0 0 6px $glow;
 
     &:hover {
         background: $green;
@@ -601,8 +642,8 @@ body {
     padding: 0 10px;
     background: transparent;
     border: 1px solid $border;
-    color: $green-dim;
-    font-family: $mono;
+    color: $green-muted;
+    font-family: $mono-system;
     font-size: 14px;
     cursor: pointer;
     white-space: nowrap;
@@ -610,15 +651,15 @@ body {
     flex-shrink: 0;
 
     &:hover {
-        border-color: $green-dim;
+        border-color: $green-muted;
         color: $green;
     }
 
     &.active {
         background: $green-dark;
-        border-color: $green-dim;
+        border-color: $green-muted;
         color: $green;
-        text-shadow: 0 0 8px $glow;
+        text-shadow: 0 0 6px $glow;
     }
 }
 
@@ -632,8 +673,9 @@ body {
 }
 
 .taskbar-clock {
+    font-family: $mono-system;
     font-size: 16px;
-    color: $green-dim;
+    color: $green-muted;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -646,7 +688,7 @@ body {
     left: 4px;
     width: 240px;
     background: $surface;
-    border: 1px solid $green-dim;
+    border: 1px solid $green-muted;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 4px $glow;
     z-index: 600;
     display: none;
@@ -657,11 +699,12 @@ body {
 .start-menu-header {
     padding: 10px 12px;
     background: $green-dark;
-    border-bottom: 1px solid $green-dim;
+    border-bottom: 1px solid $green-muted;
+    font-family: $mono-system;
     font-size: 18px;
-    color: $green;
+    color: $amber;
     letter-spacing: 0.1em;
-    text-shadow: 0 0 10px $glow;
+    text-shadow: 0 0 8px $glow-amber;
 }
 
 .start-menu-items {
@@ -670,6 +713,7 @@ body {
 
 .start-menu-item {
     padding: 6px 14px;
+    font-family: $mono-system;
     font-size: 16px;
     color: $green-dim;
     cursor: pointer;
@@ -703,25 +747,19 @@ body {
 @include mobile {
     body {
         font-size: 16px;
+        overflow-y: auto;
+        height: auto;
     }
 
     .desktop-icons {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        position: static;
-        padding: 12px;
-        gap: 4px;
-    }
-
-    .desktop-icon {
-        width: auto;
-        .icon { font-size: 1.5rem; }
-        span { font-size: 12px; }
+        display: none;
     }
 
     #desktop {
-        overflow-y: auto;
-        position: fixed;
+        position: relative;
+        height: auto;
+        overflow: visible;
+        padding-bottom: 50px;
     }
 
     .window {
@@ -733,13 +771,12 @@ body {
         margin: 0;
         border-left: none;
         border-right: none;
+        display: flex !important;
 
-        &.open {
-            display: flex;
-        }
-
-        &.minimized {
+        // hide adventure on mobile by default (easter egg)
+        &#win-adventure {
             display: none !important;
+            &.open { display: flex !important; }
         }
     }
 
@@ -751,13 +788,17 @@ body {
         cursor: default;
     }
 
+    .win-minimize, .win-maximize {
+        display: none;
+    }
+
     .window-body {
-        font-size: 16px;
-        max-height: 60vh;
+        font-size: 13px;
+        max-height: none;
     }
 
     .content-heading {
-        font-size: 22px;
+        font-size: 24px;
     }
 
     .content-subheading {
@@ -765,7 +806,7 @@ body {
     }
 
     .skills-table td {
-        font-size: 15px;
+        font-size: 13px;
     }
 
     .skills-table .skill-cat {
@@ -777,7 +818,11 @@ body {
     }
 
     .file-desc {
-        font-size: 14px;
+        font-size: 12px;
+    }
+
+    .log-title {
+        font-size: 18px;
     }
 
     .start-btn {
