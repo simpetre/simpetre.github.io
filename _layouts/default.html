@@ -15,6 +15,9 @@
 
 <body>
 
+    <!-- ── Matrix Rain (behind everything) ───────────────────── -->
+    <canvas id="matrix-rain"></canvas>
+
     <!-- ── CRT Boot Sequence ─────────────────────────────────── -->
     <div id="boot-screen">
         <div id="boot-text"></div>
@@ -67,6 +70,11 @@
         </button>
         <div class="taskbar-windows" id="taskbar-windows"></div>
         <div class="taskbar-tray">
+            <div class="tray-status">
+                <span>CPU: OK</span>
+                <span class="tray-net">NET: ▲</span>
+                <span>MEM: 64K</span>
+            </div>
             <span class="taskbar-clock" id="taskbar-clock"></span>
         </div>
     </div>
@@ -94,10 +102,64 @@
 
     <script>
     (function() {
+        // ══════════════════════════════════════════════════════
+        // ── Matrix Rain ──────────────────────────────────────
+        // ══════════════════════════════════════════════════════
+        var canvas = document.getElementById('matrix-rain');
+        var ctx = canvas.getContext('2d');
+        var isMobile = window.innerWidth <= 600;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+        var fontSize = 16;
+        var columns = Math.floor(canvas.width / (fontSize * 6)); // sparse columns
+        var drops = [];
+        var columnX = [];
+
+        for (var i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -50;
+            columnX[i] = Math.floor(Math.random() * canvas.width);
+        }
+
+        function drawMatrix() {
+            if (isMobile) return;
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#4af626';
+            ctx.font = fontSize + 'px monospace';
+
+            for (var i = 0; i < drops.length; i++) {
+                if (drops[i] < 0) {
+                    drops[i] += 0.3;
+                    continue;
+                }
+                var char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, columnX[i], drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    drops[i] = Math.random() * -30;
+                    columnX[i] = Math.floor(Math.random() * canvas.width);
+                }
+                drops[i] += 0.4 + Math.random() * 0.3;
+            }
+            requestAnimationFrame(drawMatrix);
+        }
+
+        if (!isMobile) {
+            requestAnimationFrame(drawMatrix);
+        }
+
+        // ══════════════════════════════════════════════════════
         // ── Boot sequence ────────────────────────────────────
+        // ══════════════════════════════════════════════════════
         var bootScreen = document.getElementById('boot-screen');
         var bootText = document.getElementById('boot-text');
-        var bootSkip = document.getElementById('boot-skip');
         var desktop = document.getElementById('desktop');
         var taskbar = document.querySelector('.taskbar');
         var bootDone = false;
@@ -133,22 +195,37 @@
             taskbar.classList.add('active');
             sessionStorage.setItem('petre-os-booted', '1');
             startClock();
-            // Center the about window on screen
-            var win = document.getElementById('win-about');
+
+            // Center about window
             var vw = window.innerWidth;
-            var vh = window.innerHeight - 40; // minus taskbar
-            var ww = Math.min(600, vw - 40);
-            win.style.width = ww + 'px';
-            win.style.left = Math.max(20, (vw - ww) / 2) + 'px';
-            win.style.top = Math.max(20, (vh - 420) / 2) + 'px';
-            win.dataset.positioned = '1';
+            var vh = window.innerHeight - 40;
+            var aboutWin = document.getElementById('win-about');
+            var aw = Math.min(620, vw - 40);
+            aboutWin.style.width = aw + 'px';
+            aboutWin.style.left = Math.max(20, (vw - aw) / 2) + 'px';
+            aboutWin.style.top = Math.max(20, (vh - 440) / 2) + 'px';
+            aboutWin.dataset.positioned = '1';
             openWindow('win-about');
+
+            // Open projects peeking behind, offset right and down
+            var projWin = document.getElementById('win-projects');
+            var pw = Math.min(640, vw - 60);
+            projWin.style.width = pw + 'px';
+            projWin.style.left = Math.max(40, (vw - pw) / 2 + 60) + 'px';
+            projWin.style.top = Math.max(40, (vh - 440) / 2 + 50) + 'px';
+            projWin.dataset.positioned = '1';
+            openWindow('win-projects');
+
+            // Re-focus about on top
+            focusWindow(aboutWin);
+
+            // Typing animation on name
+            typeHeroName();
         }
 
         if (skipBoot) {
             showDesktop();
         } else {
-            // Press any key to skip boot
             function skipHandler(e) {
                 if (bootDone) return;
                 document.removeEventListener('keydown', skipHandler);
@@ -177,6 +254,29 @@
             typeLine();
         }
 
+        // ── Typing animation for hero name ───────────────────
+        var heroTyped = false;
+        function typeHeroName() {
+            if (heroTyped) return;
+            heroTyped = true;
+            var el = document.getElementById('hero-name');
+            if (!el) return;
+            var name = 'SIMON PETRE';
+            var i = 0;
+            el.innerHTML = '<span class="typing-cursor">█</span>';
+
+            var interval = setInterval(function() {
+                if (i < name.length) {
+                    el.innerHTML = name.substring(0, i + 1) + '<span class="typing-cursor">█</span>';
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    // Keep cursor blinking at end
+                    el.innerHTML = name + '<span class="typing-cursor">█</span>';
+                }
+            }, 80);
+        }
+
         // ── Clock ────────────────────────────────────────────
         var clockEl = document.getElementById('taskbar-clock');
         function startClock() {
@@ -188,7 +288,9 @@
             setInterval(update, 10000);
         }
 
+        // ══════════════════════════════════════════════════════
         // ── Window management ────────────────────────────────
+        // ══════════════════════════════════════════════════════
         var windows = document.querySelectorAll('.window');
         var zIndex = 10;
         var activeWindow = null;
@@ -204,16 +306,14 @@
         function openWindow(id) {
             var win = document.getElementById(id);
             if (!win) return;
+            win.classList.remove('minimized', 'closing', 'minimizing');
             win.classList.add('open');
-            win.classList.remove('minimized');
             focusWindow(win);
-            // stagger position for newly opened windows
             if (!win.dataset.positioned) {
-                var openCount = document.querySelectorAll('.window.open').length;
                 var vw = window.innerWidth;
                 var vh = window.innerHeight - 40;
-                // Center with slight offset per window
                 var ww = parseInt(win.style.width) || 520;
+                var openCount = document.querySelectorAll('.window.open').length;
                 var offsetX = Math.max(20, (vw - ww) / 2 + (openCount - 1) * 25);
                 var offsetY = Math.max(20, vh * 0.12 + (openCount - 1) * 25);
                 win.style.left = offsetX + 'px';
@@ -226,16 +326,26 @@
         function closeWindow(id) {
             var win = document.getElementById(id);
             if (!win) return;
-            win.classList.remove('open', 'focused', 'minimized');
+            win.classList.add('closing');
+            win.classList.remove('focused');
             if (activeWindow === win) activeWindow = null;
+            setTimeout(function() {
+                win.classList.remove('open', 'closing', 'minimized');
+                updateTaskbar();
+            }, 100);
             updateTaskbar();
         }
 
         function minimizeWindow(id) {
             var win = document.getElementById(id);
             if (!win) return;
-            win.classList.add('minimized');
+            win.classList.add('minimizing');
             if (activeWindow === win) activeWindow = null;
+            setTimeout(function() {
+                win.classList.remove('minimizing');
+                win.classList.add('minimized');
+                updateTaskbar();
+            }, 150);
             updateTaskbar();
         }
 
@@ -246,7 +356,7 @@
                 if (!win.classList.contains('open')) return;
                 var btn = document.createElement('button');
                 btn.className = 'taskbar-win-btn';
-                if (win.classList.contains('focused') && !win.classList.contains('minimized')) {
+                if (win.classList.contains('focused') && !win.classList.contains('minimized') && !win.classList.contains('minimizing')) {
                     btn.classList.add('active');
                 }
                 btn.textContent = win.querySelector('.window-title').textContent;
@@ -275,7 +385,6 @@
             });
         });
 
-        // Resume icon — opens PDF link (update href when you have one)
         var resumeIcon = document.getElementById('icon-resume');
         if (resumeIcon) {
             resumeIcon.addEventListener('dblclick', function() {
@@ -294,9 +403,7 @@
             var minBtn = win.querySelector('.win-minimize');
             var maxBtn = win.querySelector('.win-maximize');
 
-            titlebar.addEventListener('mousedown', function() {
-                focusWindow(win);
-            });
+            titlebar.addEventListener('mousedown', function() { focusWindow(win); });
 
             closeBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -315,9 +422,7 @@
                 });
             }
 
-            win.addEventListener('mousedown', function() {
-                focusWindow(win);
-            });
+            win.addEventListener('mousedown', function() { focusWindow(win); });
 
             // ── Drag ─────────────────────────────────────────
             var dragging = false, dragX, dragY;
@@ -349,9 +454,7 @@
         var startBtn = document.getElementById('start-btn');
         var startMenu = document.getElementById('start-menu');
 
-        startBtn.addEventListener('click', function() {
-            startMenu.classList.toggle('open');
-        });
+        startBtn.addEventListener('click', function() { startMenu.classList.toggle('open'); });
 
         document.addEventListener('click', function(e) {
             if (!startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
@@ -383,7 +486,7 @@
         var secretBuffer = '';
         document.addEventListener('keydown', function(e) {
             if (e.target.id === 'adventure-input') return;
-            if (bootDone === false) return; // don't capture during boot skip
+            if (!bootDone) return;
             secretBuffer += e.key.toLowerCase();
             if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
             if (secretBuffer.includes('adventure')) {
@@ -521,11 +624,8 @@
                 var room = rooms[currentRoom];
                 var desc = typeof room.desc === 'function' ? room.desc() : room.desc;
                 print(room.name, 'adv-room');
-                desc.split('\n').forEach(function(line) {
-                    print(line, 'adv-desc');
-                });
-                var exits = Object.keys(room.exits);
-                print('Exits: ' + exits.join(', '), 'adv-desc');
+                desc.split('\n').forEach(function(line) { print(line, 'adv-desc'); });
+                print('Exits: ' + Object.keys(room.exits).join(', '), 'adv-desc');
             }
 
             function doCommand(cmd) {
@@ -533,7 +633,6 @@
                 if (!cmd) return;
                 print(cmd, 'adv-input-echo');
                 moveCount++;
-
                 var parts = cmd.split(/\s+/);
                 var verb = parts[0];
                 var noun = parts.slice(1).join('_');
@@ -549,66 +648,41 @@
                             if (inventory.includes('keycard')) {
                                 print('You swipe the KEYCARD. The lock disengages with a heavy clank.', 'adv-action');
                                 flags.etcUnlocked = true;
-                            } else {
-                                print('The door is locked. You need some kind of access card.', 'adv-error');
-                                return;
-                            }
+                            } else { print('The door is locked. You need some kind of access card.', 'adv-error'); return; }
                         }
                         var descCheck = typeof dest.desc === 'function' ? dest.desc() : dest.desc;
-                        if (descCheck === null) {
-                            print('The door is locked. You need some kind of access card.', 'adv-error');
-                            return;
-                        }
+                        if (descCheck === null) { print('The door is locked. You need some kind of access card.', 'adv-error'); return; }
                         currentRoom = room.exits[dir];
                         print('', 'adv-desc');
                         printRoom();
-                    } else {
-                        print('You can\'t go that way.', 'adv-error');
-                    }
+                    } else { print('You can\'t go that way.', 'adv-error'); }
                     return;
                 }
-
                 if (verb === 'look' || verb === 'l' || verb === 'examine' || verb === 'x') {
                     if (!noun) { print('', 'adv-desc'); printRoom(); return; }
                     if (room.look && room.look[noun]) {
-                        var desc = room.look[noun];
-                        print(typeof desc === 'function' ? desc() : desc, 'adv-desc');
-                    } else {
-                        print('You don\'t see that here.', 'adv-error');
-                    }
+                        var d = room.look[noun]; print(typeof d === 'function' ? d() : d, 'adv-desc');
+                    } else { print('You don\'t see that here.', 'adv-error'); }
                     return;
                 }
-
                 if (verb === 'take' || verb === 'get' || verb === 'grab' || verb === 'pick') {
                     if (noun === 'up' && parts.length > 2) noun = parts.slice(2).join('_');
                     if (room.items && room.items.includes(noun)) {
                         room.items.splice(room.items.indexOf(noun), 1);
                         inventory.push(noun);
                         print('Taken: ' + (itemNames[noun] || noun), 'adv-item');
-                    } else {
-                        print('You can\'t take that.', 'adv-error');
-                    }
+                    } else { print('You can\'t take that.', 'adv-error'); }
                     return;
                 }
-
                 if (verb === 'inventory' || verb === 'inv' || verb === 'i') {
-                    if (inventory.length === 0) {
-                        print('You\'re not carrying anything.', 'adv-desc');
-                    } else {
-                        print('You are carrying:', 'adv-desc');
-                        inventory.forEach(function(item) {
-                            print('  ' + (itemNames[item] || item), 'adv-item');
-                        });
-                    }
+                    if (inventory.length === 0) { print('You\'re not carrying anything.', 'adv-desc'); }
+                    else { print('You are carrying:', 'adv-desc'); inventory.forEach(function(item) { print('  ' + (itemNames[item] || item), 'adv-item'); }); }
                     return;
                 }
-
                 if (verb === 'use' || verb === 'install' || verb === 'insert' || verb === 'place') {
                     if (currentRoom === 'dev' && (noun.indexOf('weight') !== -1 || noun === 'all' || noun === 'weights')) {
                         var installed = false;
-                        var toInstall = noun === 'all' || noun === 'weights'
-                            ? ['weight_alpha', 'weight_beta', 'weight_gamma']
-                            : [noun];
+                        var toInstall = noun === 'all' || noun === 'weights' ? ['weight_alpha', 'weight_beta', 'weight_gamma'] : [noun];
                         toInstall.forEach(function(w) {
                             if (inventory.includes(w)) {
                                 inventory.splice(inventory.indexOf(w), 1);
@@ -631,45 +705,30 @@
                             print('Type RESTART to play again.', 'adv-desc');
                             flags.brainActive = true;
                         }
-                    } else {
-                        print('You can\'t use that here.', 'adv-error');
-                    }
+                    } else { print('You can\'t use that here.', 'adv-error'); }
                     return;
                 }
-
                 if (verb === 'kill') {
                     if (currentRoom === 'proc' && (noun === 'process' || noun === '8088' || noun === 'pid')) {
                         if (flags.processKilled) { print('It\'s already dead.', 'adv-desc'); }
-                        else {
-                            print('$ kill -9 8088', 'adv-input-echo');
-                            print('Process 8088 terminated. The passage clears.', 'adv-action');
-                            flags.processKilled = true;
-                        }
+                        else { print('$ kill -9 8088', 'adv-input-echo'); print('Process 8088 terminated. The passage clears.', 'adv-action'); flags.processKilled = true; }
                     } else { print('Kill what?', 'adv-error'); }
                     return;
                 }
-
                 if (verb === 'restart') {
                     inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
-                    rooms.root.items = ['note'];
-                    rooms.proc.items = ['weight_alpha'];
-                    rooms.var.items = ['weight_beta'];
-                    rooms.tmp.items = ['keycard'];
-                    rooms.etc.items = ['weight_gamma'];
-                    output.innerHTML = '';
-                    startGame();
-                    return;
+                    rooms.root.items = ['note']; rooms.proc.items = ['weight_alpha'];
+                    rooms.var.items = ['weight_beta']; rooms.tmp.items = ['keycard'];
+                    rooms.etc.items = ['weight_gamma']; output.innerHTML = '';
+                    startGame(); return;
                 }
-
                 if (verb === 'help' || verb === '?') {
                     print('Commands: go [n/s/e/w], look [thing], take [item],', 'adv-desc');
                     print('  inventory, use [item], kill [target], help, restart', 'adv-desc');
                     return;
                 }
-
                 if (verb === 'sudo') { print('Nice try. You\'re already root.', 'adv-action'); return; }
                 if (verb === 'xyzzy') { print('A hollow voice says "Fool."', 'adv-desc'); return; }
-
                 print('I don\'t understand "' + cmd + '". Type HELP for commands.', 'adv-error');
             }
 
@@ -685,20 +744,13 @@
             var observer = new MutationObserver(function() {
                 var win = document.getElementById('win-adventure');
                 if (win.classList.contains('open') && !gameStarted) {
-                    gameStarted = true;
-                    startGame();
+                    gameStarted = true; startGame();
                     setTimeout(function() { input.focus(); }, 50);
                 }
             });
             observer.observe(document.getElementById('win-adventure'), { attributes: true, attributeFilter: ['class'] });
-
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') { doCommand(input.value); input.value = ''; }
-            });
-
-            document.querySelector('.adventure-body').addEventListener('click', function() {
-                input.focus();
-            });
+            input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { doCommand(input.value); input.value = ''; } });
+            document.querySelector('.adventure-body').addEventListener('click', function() { input.focus(); });
         })();
 
     })();

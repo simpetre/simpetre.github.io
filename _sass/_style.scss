@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-// PETRE-OS — CRT Dual Phosphor Desktop (Green + Amber)
+// PETRE-OS — CRT Green Phosphor Desktop
 // ══════════════════════════════════════════════════════════════
 
 // ── Reset ──────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ a {
     }
 }
 
-// ── CRT Overlays (fixed, above everything) ────────────────────
+// ── CRT Overlays ──────────────────────────────────────────────
 .crt-scanlines {
     position: fixed;
     top: 0; left: 0;
@@ -64,6 +64,16 @@ a {
     );
 }
 
+// ── Matrix rain canvas ────────────────────────────────────────
+#matrix-rain {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+}
+
 // ── Keyframes ──────────────────────────────────────────────────
 @keyframes flicker {
     0%   { opacity: 1; }
@@ -82,8 +92,47 @@ a {
     50%      { opacity: 0; }
 }
 
+@keyframes netBlink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95%      { opacity: 0.3; }
+}
+
 body {
     animation: flicker 6s infinite;
+}
+
+// ── Window animations ─────────────────────────────────────────
+@keyframes windowOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes windowClose {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+}
+
+@keyframes windowMinimize {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.7) translateY(60px);
+    }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -130,6 +179,7 @@ body {
     top: 0; left: 0;
     width: 100%; height: calc(100% - 40px);
     display: none;
+    z-index: 1;
     &.active { display: block; }
 }
 
@@ -169,7 +219,7 @@ body {
     span {
         font-family: $mono-system;
         font-size: 14px;
-        color: $green-dim;
+        color: $green-muted;
         line-height: 1.2;
     }
 }
@@ -190,6 +240,17 @@ body {
 
     &.open {
         display: flex;
+        animation: windowOpen 0.15s ease-out forwards;
+    }
+
+    &.closing {
+        display: flex;
+        animation: windowClose 0.1s ease-in forwards;
+    }
+
+    &.minimizing {
+        display: flex;
+        animation: windowMinimize 0.15s ease-in forwards;
     }
 
     &.minimized {
@@ -203,6 +264,7 @@ body {
 
     &.dragging {
         opacity: 0.9;
+        transition: none;
     }
 
     &.maximized {
@@ -214,9 +276,8 @@ body {
     }
 }
 
-// About window is larger
 #win-about {
-    width: 600px;
+    width: 620px;
 }
 
 .wide-window {
@@ -302,7 +363,6 @@ body {
     line-height: 1.7;
     text-shadow: 0 0 4px $glow;
 
-    // scrollbar
     &::-webkit-scrollbar {
         width: 12px;
     }
@@ -313,9 +373,7 @@ body {
     &::-webkit-scrollbar-thumb {
         background: $green-dark;
         border: 1px solid $green-muted;
-        &:hover {
-            background: $border;
-        }
+        &:hover { background: $border; }
     }
 }
 
@@ -332,18 +390,44 @@ body {
 
 .content-heading {
     font-family: $mono-system;
-    font-size: 32px;
-    color: $amber;
-    text-shadow: 0 0 15px $glow-amber, 0 0 30px rgba(255, 170, 0, 0.15);
+    font-size: 36px;
+    color: $green-bright;
+    text-shadow: 0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
     letter-spacing: 0.1em;
+    // Typing cursor appended by JS
+    .typing-cursor {
+        display: inline-block;
+        animation: blink 0.7s step-end infinite;
+    }
 }
 
 .content-subheading {
     font-family: $mono-system;
     font-size: 22px;
-    color: $amber-dim;
+    color: $green;
     letter-spacing: 0.05em;
-    text-shadow: 0 0 8px $glow-amber;
+    text-shadow: 0 0 8px $glow;
+}
+
+.hero-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    a {
+        font-family: $mono-system;
+        font-size: 16px;
+        color: $green-dim;
+        border: 1px solid $green-muted;
+        padding: 4px 12px;
+        transition: all 0.15s;
+        &:hover {
+            color: $bg;
+            background: $green;
+            border-color: $green;
+            text-shadow: none;
+        }
+    }
 }
 
 .status-line {
@@ -375,13 +459,13 @@ body {
 
     .skill-cat {
         font-family: $mono-system;
-        color: $amber;
+        color: $green-bright;
         white-space: nowrap;
         padding-right: 20px;
         width: 1%;
         font-size: 16px;
         letter-spacing: 0.05em;
-        text-shadow: 0 0 6px $glow-amber;
+        text-shadow: 0 0 6px $glow;
     }
 }
 
@@ -414,9 +498,9 @@ body {
 
 .file-name {
     font-family: $mono-system;
-    color: $amber;
+    color: $green-bright;
     font-size: 20px;
-    text-shadow: 0 0 6px $glow-amber;
+    text-shadow: 0 0 6px $glow;
 }
 
 .file-link {
@@ -456,9 +540,9 @@ body {
 
 .log-title {
     font-family: $mono-system;
-    color: $amber;
+    color: $green-bright;
     font-size: 22px;
-    text-shadow: 0 0 6px $glow-amber;
+    text-shadow: 0 0 6px $glow;
 }
 
 .log-org {
@@ -489,10 +573,10 @@ body {
 
 .field-label {
     font-family: $mono-system;
-    color: $amber-dim;
+    color: $green-bright;
     margin-right: 8px;
     font-size: 16px;
-    text-shadow: 0 0 4px $glow-amber;
+    text-shadow: 0 0 4px $glow;
 }
 
 // ── Adventure game ────────────────────────────────────────────
@@ -514,41 +598,29 @@ body {
 
     .adv-room {
         font-family: $mono-system;
-        color: $amber;
+        color: $green-bright;
         font-size: 18px;
         margin-top: 8px;
-        text-shadow: 0 0 8px $glow-amber;
+        text-shadow: 0 0 8px $glow;
     }
-    .adv-desc {
-        color: $green-dim;
-    }
-    .adv-action {
-        color: $green;
-    }
-    .adv-error {
-        color: #cc5555;
-    }
+    .adv-desc { color: $green-dim; }
+    .adv-action { color: $green; }
+    .adv-error { color: #cc5555; }
     .adv-item {
-        color: $amber;
-        text-shadow: 0 0 6px $glow-amber;
+        color: $green-bright;
+        text-shadow: 0 0 6px $glow;
     }
     .adv-input-echo {
         color: $green-muted;
-        &::before {
-            content: '> ';
-        }
+        &::before { content: '> '; }
     }
     .adv-special {
-        color: $amber-bright;
-        text-shadow: 0 0 12px $glow-amber;
+        color: $green-bright;
+        text-shadow: 0 0 12px $glow-strong;
     }
 
-    &::-webkit-scrollbar {
-        width: 12px;
-    }
-    &::-webkit-scrollbar-track {
-        background: $bg;
-    }
+    &::-webkit-scrollbar { width: 12px; }
+    &::-webkit-scrollbar-track { background: $bg; }
     &::-webkit-scrollbar-thumb {
         background: $green-dark;
         border: 1px solid $green-muted;
@@ -600,7 +672,6 @@ body {
     padding: 0 4px;
     z-index: 500;
     gap: 4px;
-
     &.active { display: flex; }
 }
 
@@ -666,16 +737,34 @@ body {
 .taskbar-tray {
     display: flex;
     align-items: center;
+    gap: 12px;
     padding: 0 10px;
     border-left: 1px solid $border;
     height: 100%;
     flex-shrink: 0;
+    font-family: $mono-system;
+    font-size: 13px;
+    color: $green-muted;
+}
+
+.tray-status {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+
+    span {
+        white-space: nowrap;
+    }
+
+    .tray-net {
+        animation: netBlink 4s ease-in-out infinite;
+    }
 }
 
 .taskbar-clock {
     font-family: $mono-system;
-    font-size: 16px;
-    color: $green-muted;
+    font-size: 14px;
+    color: $green-dim;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -692,7 +781,6 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 4px $glow;
     z-index: 600;
     display: none;
-
     &.open { display: block; }
 }
 
@@ -702,9 +790,9 @@ body {
     border-bottom: 1px solid $green-muted;
     font-family: $mono-system;
     font-size: 18px;
-    color: $amber;
+    color: $green-bright;
     letter-spacing: 0.1em;
-    text-shadow: 0 0 8px $glow-amber;
+    text-shadow: 0 0 8px $glow;
 }
 
 .start-menu-items {
@@ -751,6 +839,20 @@ body {
         height: auto;
     }
 
+    .crt-scanlines {
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.06) 2px,
+            rgba(0, 0, 0, 0.06) 4px
+        );
+    }
+
+    #matrix-rain {
+        display: none;
+    }
+
     .desktop-icons {
         display: none;
     }
@@ -772,8 +874,8 @@ body {
         border-left: none;
         border-right: none;
         display: flex !important;
+        animation: none !important;
 
-        // hide adventure on mobile by default (easter egg)
         &#win-adventure {
             display: none !important;
             &.open { display: flex !important; }
@@ -798,50 +900,31 @@ body {
     }
 
     .content-heading {
-        font-size: 24px;
+        font-size: 26px;
     }
 
     .content-subheading {
         font-size: 18px;
     }
 
-    .skills-table td {
-        font-size: 13px;
-    }
-
-    .skills-table .skill-cat {
+    .hero-links a {
         font-size: 14px;
+        padding: 3px 8px;
     }
 
-    .file-name {
-        font-size: 17px;
-    }
+    .skills-table td { font-size: 13px; }
+    .skills-table .skill-cat { font-size: 14px; }
+    .file-name { font-size: 17px; }
+    .file-desc { font-size: 12px; }
+    .log-title { font-size: 18px; }
 
-    .file-desc {
-        font-size: 12px;
-    }
+    .start-btn { font-size: 14px; padding: 0 8px; }
+    .taskbar-win-btn { font-size: 12px; padding: 0 6px; }
 
-    .log-title {
-        font-size: 18px;
-    }
+    .tray-status { display: none; }
 
-    .start-btn {
-        font-size: 14px;
-        padding: 0 8px;
-    }
-
-    .taskbar-win-btn {
-        font-size: 12px;
-        padding: 0 6px;
-    }
-
-    #boot-screen {
-        padding: 1.5rem;
-    }
-
-    #boot-text {
-        font-size: 14px;
-    }
+    #boot-screen { padding: 1.5rem; }
+    #boot-text { font-size: 14px; }
 }
 
 // ── Reduced motion ─────────────────────────────────────────────

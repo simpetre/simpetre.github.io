@@ -3,23 +3,19 @@
 ---
 @charset "utf-8";
 
-// ── Color palette (CRT dual phosphor: green + amber) ────────
+// ── Color palette (single green phosphor) ───────────────────
 $bg:            #0a0a0a;
 $surface:       #0d120d;
-$border:        #1a3a1a;
+$border:        #0d5a0d;
 $green:         #4af626;
 $green-dim:     #2abf2a;
 $green-bright:  #7aff7a;
 $green-dark:    #0d3d0d;
 $green-muted:   #1a8a1a;
-$amber:         #ffaa00;
-$amber-dim:     #cc8800;
-$amber-bright:  #ffcc44;
 
 // ── Glow tokens ─────────────────────────────────────────────
 $glow:          rgba(74, 246, 38, 0.3);
 $glow-strong:   rgba(74, 246, 38, 0.5);
-$glow-amber:    rgba(255, 170, 0, 0.4);
 
 // ── Typography ─────────────────────────────────────────────────
 $mono-system: 'VT323', 'Courier New', monospace;
