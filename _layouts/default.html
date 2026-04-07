@@ -518,7 +518,7 @@
         });
 
         // ══════════════════════════════════════════════════════
-        // ── ADVENTURE GAME ENGINE ────────────────────────────
+        // ── ADVENTURE GAME ENGINE v2 ─────────────────────────
         // ══════════════════════════════════════════════════════
         (function() {
             var output = document.getElementById('adventure-output');
@@ -528,107 +528,226 @@
             var currentRoom = 'root';
             var moveCount = 0;
 
+            // Helper: check if item is in current room
+            function roomHas(item) { return rooms[currentRoom].items.indexOf(item) !== -1; }
+            function has(item) { return inventory.indexOf(item) !== -1; }
+            function weightCount() { return (flags.weight1?1:0) + (flags.weight2?1:0) + (flags.weight3?1:0); }
+
             var rooms = {
                 root: {
                     name: '/root',
-                    desc: 'You are in the root home directory. The hum of cooling fans fills the air. A blinking cursor awaits your command.\n\nThere is a dusty TERMINAL here. A NOTE is pinned to the wall.',
-                    exits: { north: 'dev', east: 'var', south: 'opt', west: 'etc' },
-                    items: ['note'],
+                    desc: function() {
+                        var lines = ['You are in the root home directory of PETRE-OS. The hum of cooling fans fills the air. A green cursor blinks patiently on a dusty TERMINAL.'];
+                        if (roomHas('note')) lines.push('\nA NOTE is pinned to the wall with a bent nail.');
+                        else lines.push('\nA bent nail sticks out of the wall where a note used to be.');
+                        lines.push('\nA COFFEE_MUG sits on the desk, still warm somehow.');
+                        return lines.join('');
+                    },
+                    exits: { north: 'dev', east: 'var', south: 'opt', west: 'etc', down: 'devnull' },
+                    items: ['note', 'coffee_mug'],
                     look: {
-                        terminal: 'An ancient CRT monitor glows green. It displays: "PETRE-OS v3.3 — Welcome, operator."',
-                        note: 'The note reads: "The neural weights are scattered. Collect them all and bring them to /dev/brain to restore the system. Be warned: /etc is locked. — S.P."'
+                        terminal: function() {
+                            if (flags.brainActive) return 'The terminal displays: "ALL SYSTEMS NOMINAL. Thank you, operator."';
+                            return 'An ancient CRT monitor glows green. It displays:\n"PETRE-OS v3.3 — WARNING: Neural subsystem offline.\nRestore all 3 weights to /dev/brain to reboot."';
+                        },
+                        note: function() {
+                            if (!roomHas('note') && !has('note')) return 'The note is gone. Just a bent nail.';
+                            return 'The note reads:\n"The neural weights are scattered across the filesystem. Collect all three and install them in /dev/brain. The vault at /etc is locked — you\'ll need to find access. Watch out for /dev/null.\n— S.P.\nP.S. Don\'t touch the transformer."';
+                        },
+                        coffee_mug: function() {
+                            if (!roomHas('coffee_mug') && !has('coffee_mug')) return 'You already took that.';
+                            return 'A ceramic mug that reads "World\'s #1 Kernel Hacker." The coffee inside defies thermodynamics — still steaming after what appears to be decades.';
+                        },
+                        desk: 'A metal desk covered in ring stains and faded sticky notes. One reads: "chmod 777 /heart".',
+                        nail: 'A bent nail in the wall. Industrial-grade sysadmin interior design.',
+                        fans: 'Somewhere behind the walls, fans spin endlessly. They\'ve been running since the epoch.'
                     }
                 },
                 dev: {
                     name: '/dev/brain',
-                    desc: 'The neural processing chamber. Massive banks of blinking lights line the walls. Thick cables snake across the floor. The central CONSOLE is dark — it needs power.\n\nA sign reads: "INSERT ALL 3 NEURAL WEIGHTS TO ACTIVATE."',
+                    desc: function() {
+                        if (flags.brainActive) return 'The neural processing chamber is alive. Light pulses through every cable, every conduit. The CONSOLE streams data faster than you can read. The air hums with intelligence.\n\nYou feel like the machine is watching you. Gratefully.';
+                        var lines = ['The neural processing chamber. Massive banks of dead LIGHTS line the walls. Thick CABLES snake across the floor like sleeping serpents. The central CONSOLE sits dark and silent.'];
+                        var wc = weightCount();
+                        if (wc > 0) lines.push('\nThe console has ' + wc + '/3 neural weights installed. ' + (wc < 3 ? 'It needs more.' : ''));
+                        else lines.push('\nA sign reads: "INSERT ALL 3 NEURAL WEIGHTS TO ACTIVATE."');
+                        if (roomHas('floppy')) lines.push('\nA FLOPPY disk has been ejected from a slot you didn\'t notice before.');
+                        return lines.join('');
+                    },
                     exits: { south: 'root', east: 'proc' },
                     items: [],
                     look: {
                         console: function() {
-                            if (flags.brainActive) return 'The console hums with life. Streams of data cascade across the screen. You did it.';
-                            var count = 0;
-                            if (flags.weight1) count++;
-                            if (flags.weight2) count++;
-                            if (flags.weight3) count++;
-                            return 'The console has 3 slots for neural weights. ' + count + '/3 installed.';
+                            if (flags.brainActive) return 'Streams of data cascade across the screen. You see fragments:\n"Loading consciousness... done.\nRecalling memories... 2,847 days of logs recovered.\nThank you for waking me up."\nA FLOPPY disk ejects from a slot.';
+                            var wc = weightCount();
+                            return 'The console has 3 hexagonal slots for neural weights. ' + wc + '/3 are filled.' + (wc === 0 ? ' The slots glow faintly, waiting.' : ' The installed weights pulse in sync.');
                         },
-                        cables: 'Thick fiber optic cables pulse with faint green light. They connect to something deeper in the system.',
-                        lights: 'Rows of blinking LEDs. Some patterns almost look like they\'re trying to communicate.'
+                        cables: 'Thick fiber optic cables, dark and cold. When you touch one, you feel a faint vibration — something waiting to flow.',
+                        lights: function() {
+                            if (flags.brainActive) return 'The lights are alive now — cascading patterns of green that look almost like thoughts.';
+                            return 'Dead LEDs. Thousands of them. They haven\'t blinked in a very long time.';
+                        },
+                        sign: 'Brass plaque, bolted to the wall: "NEURAL PROCESSING UNIT — Est. Day 0"',
+                        floppy: function() {
+                            if (!roomHas('floppy')) return 'You already took that.';
+                            if (!flags.brainActive) return 'You don\'t see a floppy disk here.';
+                            return 'A 3.5" floppy disk. The label reads: "THANK_YOU.txt — For the operator who brought me back."';
+                        }
                     }
                 },
                 proc: {
                     name: '/proc/threads',
-                    desc: 'A narrow corridor of running processes. Numbers scroll endlessly on the walls. The air crackles with static.\n\nA frozen PROCESS blocks part of the passage. There is a WEIGHT_ALPHA on the floor.',
+                    desc: function() {
+                        var lines = ['A narrow corridor lined with running processes. Numbers scroll endlessly on the WALLS. The air crackles with static electricity.'];
+                        if (!flags.processKilled) {
+                            lines.push('\nA massive frozen PROCESS blocks most of the passage, crackling with unstable energy. Behind it, you can see a WEIGHT_ALPHA on the floor, just out of reach.');
+                        } else {
+                            lines.push('\nScorch marks on the floor where the frozen process used to be. Sparks still occasionally pop from the residue.');
+                            if (roomHas('weight_alpha')) lines.push('\nA WEIGHT_ALPHA sits on the floor, now accessible.');
+                        }
+                        return lines.join('');
+                    },
                     exits: { west: 'dev' },
                     items: ['weight_alpha'],
                     look: {
                         process: function() {
-                            if (flags.processKilled) return 'The process has been terminated. Sparks still linger where it stood.';
-                            return 'PID 8088 — status: FROZEN. It hums angrily. Maybe you can KILL it.';
+                            if (flags.processKilled) return 'Just scorch marks and the smell of burnt silicon. R.I.P. PID 8088.';
+                            return 'PID 8088 — status: FROZEN. A runaway garbage collector from 2019. It buzzes angrily and throws sparks when you get close. You\'ll need to KILL it to get past.';
                         },
-                        numbers: 'Process IDs, memory addresses, CPU ticks... the lifeblood of the machine.',
-                        weight_alpha: 'A glowing crystalline cube etched with neural pathways. It pulses faintly.'
+                        walls: 'Process IDs stream past like the matrix:\n  PID 42    — init         [sleeping]\n  PID 1337  — hackerd      [running]\n  PID 8088  — gc_worker    [FROZEN]\n  PID 80085 — boobsd       [???]',
+                        weight_alpha: function() {
+                            if (!roomHas('weight_alpha')) return 'You already took that.';
+                            if (!flags.processKilled) return 'You can see it behind the frozen process — a glowing crystalline cube. You can\'t reach it while that thing is in the way.';
+                            return 'A glowing crystalline cube etched with neural pathways. It pulses warmly, like a heartbeat.';
+                        },
+                        sparks: 'Little arcs of electricity jump between the walls. Probably fine. Probably.',
+                        static: 'Your hair stands on end. The air tastes like batteries.'
                     }
                 },
                 var: {
                     name: '/var/log',
-                    desc: 'The logging chamber. Endless scrolls of text cascade down the walls like waterfalls. The air smells of old paper and ozone.\n\nA WEIGHT_BETA sits on a dusty shelf. An old LOG_BOOK lies open on a table.',
+                    desc: function() {
+                        var lines = ['The logging chamber. Endless scrolls of text cascade down the WALLS like waterfalls of history. The air smells of old paper and ozone. A TABLE sits in the center.'];
+                        if (roomHas('weight_beta')) lines.push('\nA WEIGHT_BETA sits on a dusty SHELF, half-buried under printouts.');
+                        else lines.push('\nThe SHELF is empty except for some dusty printouts.');
+                        lines.push('\nAn old LOG_BOOK lies open on the table.');
+                        return lines.join('');
+                    },
                     exits: { west: 'root', north: 'tmp' },
                     items: ['weight_beta'],
                     look: {
-                        log_book: 'The last entry reads: "Day 2847. The system grows quiet. I\'ve hidden the access key in /tmp before it degrades. Hurry. — S.P."',
-                        text: 'Error logs, access logs, kernel messages... years of machine history scrolling past.',
-                        shelf: 'A metal shelf bolted to the wall. Covered in digital dust.',
-                        weight_beta: 'A glowing crystalline cube. This one hums at a slightly different frequency than the others.'
+                        log_book: 'The last entries read:\n  "Day 2844: Memory leaks worsening. The brain is forgetting."\n  "Day 2845: Scattered the weights. Too dangerous to keep together."\n  "Day 2846: Hid the access key in /tmp before it degrades."\n  "Day 2847: If you\'re reading this — hurry. — S.P."',
+                        walls: 'Error logs scroll eternally:\n  [WARN] neural_cortex: connection timeout\n  [ERR]  memory_pool: segfault at 0xDEADBEEF\n  [WARN] consciousness: daemon not responding\n  [INFO] hope: still running',
+                        shelf: function() {
+                            if (roomHas('weight_beta')) return 'A metal shelf bolted to the wall. Under a pile of yellowed printouts, something glows.';
+                            return 'A metal shelf. Just dusty printouts now. One reads: "TODO: fix the universe."';
+                        },
+                        weight_beta: function() {
+                            if (!roomHas('weight_beta')) return 'You already took that.';
+                            return 'A glowing crystalline cube, slightly different from the others — this one hums at a lower frequency. It feels heavier, like it carries memories.';
+                        },
+                        table: 'A sturdy metal table. Someone carved "I WAS HERE — PID 1" into the surface.',
+                        printouts: 'Stack traces, core dumps, and one coupon for a free coffee at /root. Expired.'
                     }
                 },
                 tmp: {
                     name: '/tmp',
-                    desc: 'A volatile space. Things flicker in and out of existence here. The walls themselves seem unstable, shifting between solid and transparent.\n\nA KEYCARD materializes briefly on a pedestal before flickering.',
+                    desc: function() {
+                        var lines = ['A volatile space. Things FLICKER in and out of existence. The WALLS shimmer between solid and transparent. Your own hands look slightly translucent here.'];
+                        if (roomHas('keycard')) lines.push('\nA KEYCARD materializes on a PEDESTAL, flickering but stable enough to grab — for now.');
+                        else lines.push('\nThe PEDESTAL is empty. Everything in /tmp is temporary, after all.');
+                        if (flags.leftCoffeeInTmp) lines.push('\nYour coffee mug is gone. Of course it is. This is /tmp.');
+                        return lines.join('');
+                    },
                     exits: { south: 'var' },
                     items: ['keycard'],
                     look: {
-                        pedestal: 'A small stone pedestal. Things placed here tend to vanish after a while.',
-                        walls: 'They shimmer and phase — the nature of temporary storage. Nothing here lasts.',
-                        keycard: 'A translucent access card. Text reads: "/etc ACCESS — LEVEL 5 CLEARANCE"'
+                        pedestal: function() {
+                            if (roomHas('keycard')) return 'A small stone pedestal that seems to be the only solid thing in the room. The keycard hovers just above its surface.';
+                            return 'Empty. A faint outline where the keycard used to be, already fading.';
+                        },
+                        walls: 'They shimmer and phase — you can almost see through them to... nothing. Just void. The nature of temporary storage.',
+                        keycard: function() {
+                            if (!roomHas('keycard')) return 'It\'s gone. Claimed or decayed — hard to tell in /tmp.';
+                            return 'A translucent access card, flickering slightly. Text reads:\n"/etc ACCESS — LEVEL 5 CLEARANCE\nWARNING: This item will not persist."';
+                        },
+                        flicker: 'Everything here has a half-life. Files appear and vanish. You see ghost images of things that were: a half-written config file, someone\'s forgotten SSH key, a cat picture.',
+                        hands: 'Your hands are slightly see-through. Unsettling. Don\'t stay too long.'
                     }
                 },
                 opt: {
                     name: '/opt/models',
-                    desc: 'The model repository. Glass cases line the walls, each containing a different trained model. Most are dormant.\n\nA large TRANSFORMER model dominates the center of the room, encased in amber light.',
+                    desc: function() {
+                        var lines = ['The model repository. Glass CASES line the walls, each containing a different trained model. Most are dormant, suspended in inference limbo.'];
+                        lines.push('\nA massive TRANSFORMER model dominates the center of the room, encased in a column of light. A plaque reads: "DO NOT TOUCH."');
+                        if (flags.touchedTransformer) lines.push('\nThe glass case around the transformer has a hand-shaped scorch mark on it.');
+                        return lines.join('');
+                    },
                     exits: { north: 'root' },
                     items: [],
                     look: {
-                        transformer: 'A magnificent architecture of attention heads and feed-forward layers, frozen mid-inference. A plaque reads: "GPT class — 175B parameters. DO NOT TOUCH."',
-                        cases: 'You see labels: "ResNet-50", "BERT-base", "Stable Diffusion v1.5", "YOLOv8"... relics of another era.',
-                        models: 'Dozens of neural architectures, each a crystallized intelligence. They wait silently for someone to call inference.'
+                        transformer: function() {
+                            if (flags.touchedTransformer) return 'The transformer stares at you reproachfully. Well, as much as a mathematical architecture can stare. You can still feel the tingle in your fingertips.';
+                            return 'A magnificent architecture of attention heads and feed-forward layers, frozen mid-inference. 96 layers of pure reasoning.\n\nThe plaque reads: "GPT class — 175B parameters. DO NOT TOUCH.\nSeriously. We mean it."';
+                        },
+                        cases: 'You see labels:\n  "ResNet-50"    — gathering dust\n  "BERT-base"    — looks confused\n  "Stable Diff."  — dreaming, probably\n  "YOLOv8"       — staring at you\n  "GPT-2"        — scribbling madly on the inside of its case',
+                        plaque: 'It reads: "DO NOT TOUCH." Someone scratched "i touched it — PID 1337" underneath.',
+                        models: 'Dozens of neural architectures, each a crystallized intelligence. They wait silently. One of them — you can\'t tell which — seems to be whispering.',
+                        light: 'The column of light around the transformer pulses gently. It\'s warm if you stand close enough. Like standing near a very smart campfire.'
                     }
                 },
                 etc: {
                     name: '/etc/secrets',
                     desc: function() {
-                        if (!inventory.includes('keycard') && !flags.etcUnlocked) return null;
+                        if (!has('keycard') && !flags.etcUnlocked) return null;
                         flags.etcUnlocked = true;
-                        return 'A hidden vault. The air is cold and still. Rows of encrypted files glow behind reinforced glass.\n\nA WEIGHT_GAMMA floats in a containment field at the center of the room.';
+                        var lines = ['A hidden vault. The air is cold and perfectly still. Rows of encrypted FILES glow behind reinforced glass. This is where the system keeps its deepest secrets.'];
+                        if (roomHas('weight_gamma')) lines.push('\nA WEIGHT_GAMMA floats in a magnetic CONTAINMENT field at the center of the room, rotating slowly.');
+                        else lines.push('\nThe containment field is empty, its hum slightly lower without a payload.');
+                        lines.push('\nA SHADOW_FILE pulses in the corner — something that probably shouldn\'t be here.');
+                        return lines.join('');
                     },
                     exits: { east: 'root' },
                     items: ['weight_gamma'],
                     look: {
-                        files: 'Encrypted configuration files. SSH keys, API tokens, ancient passwords... the system\'s deepest secrets.',
-                        field: 'A magnetic containment field suspends the neural weight in mid-air. It rotates slowly.',
-                        weight_gamma: 'The final neural weight. It glows brighter than the others, as if eager to complete the circuit.'
+                        files: 'Behind the glass:\n  .ssh/id_rsa          [ENCRYPTED]\n  passwords.txt        [ENCRYPTED]\n  api_keys.env         [ENCRYPTED]\n  todo_2019.txt        [CORRUPTED]\n  feelings.log         [ACCESS DENIED]',
+                        containment: function() {
+                            if (roomHas('weight_gamma')) return 'A magnetic containment field suspends the neural weight in mid-air. It rotates slowly, casting prismatic green reflections. It\'s the brightest thing you\'ve seen in this system.';
+                            return 'The containment field hums softly, empty now. A faint green afterimage traces where the weight used to spin.';
+                        },
+                        weight_gamma: function() {
+                            if (!roomHas('weight_gamma')) return 'You already took it.';
+                            return 'The final neural weight. It glows brighter than the others, almost urgently, as if it knows it\'s the last piece. When you look closely, you can see data streaming through its crystalline lattice.';
+                        },
+                        shadow_file: 'A pulsing, semi-transparent file. You can barely make out its contents:\n"I remember when the system was whole. When thoughts flowed freely through /dev/brain. Bring the weights back. Please."\nIt\'s signed by no one.',
+                        glass: 'Reinforced. You\'re not getting through this without a quantum lockpick. Or a really good sudo.'
                     },
                     locked: true
+                },
+                devnull: {
+                    name: '/dev/null',
+                    desc: function() {
+                        return 'The void. Absolute nothing stretches in every direction. Sound dies here. Light barely exists. This is where data comes to be forgotten.\n\nThere is no floor — you\'re standing on something, but you can\'t see what. Looking down is a mistake.\n\nThe only exit is UP.';
+                    },
+                    exits: { up: 'root' },
+                    items: [],
+                    look: {
+                        void: 'You stare into the void. The void does not stare back. The void doesn\'t care about you at all.',
+                        floor: 'DON\'T LOOK DOWN. Oh, you looked. It\'s... nothing. An absence of everything. Your stomach lurches.',
+                        nothing: 'Exactly.',
+                        darkness: 'It\'s not dark, exactly. Darkness implies the absence of light. This is the absence of absence. It\'s worse.'
+                    }
                 }
             };
 
             var itemNames = {
                 note: 'a crumpled NOTE',
+                coffee_mug: 'a warm COFFEE_MUG',
                 weight_alpha: 'WEIGHT_ALPHA (neural weight 1/3)',
                 weight_beta: 'WEIGHT_BETA (neural weight 2/3)',
                 weight_gamma: 'WEIGHT_GAMMA (neural weight 3/3)',
-                keycard: 'an ACCESS KEYCARD'
+                keycard: 'an ACCESS KEYCARD',
+                floppy: 'a FLOPPY disk'
             };
 
             function print(text, cls) {
@@ -657,104 +776,264 @@
                 var noun = parts.slice(1).join('_');
                 var room = rooms[currentRoom];
 
-                var dirs = { n: 'north', s: 'south', e: 'east', w: 'west', north: 'north', south: 'south', east: 'east', west: 'west' };
+                // ── Movement ──
+                var dirs = { n: 'north', s: 'south', e: 'east', w: 'west', u: 'up', d: 'down',
+                    north: 'north', south: 'south', east: 'east', west: 'west', up: 'up', down: 'down' };
                 if (verb === 'go' && dirs[noun]) verb = dirs[noun];
                 if (dirs[verb]) {
                     var dir = dirs[verb];
                     if (room.exits[dir]) {
                         var dest = rooms[room.exits[dir]];
                         if (dest.locked && !flags.etcUnlocked) {
-                            if (inventory.includes('keycard')) {
-                                print('You swipe the KEYCARD. The lock disengages with a heavy clank.', 'adv-action');
+                            if (has('keycard')) {
+                                print('You swipe the KEYCARD. The lock hisses, clicks, and disengages with a heavy clank.', 'adv-action');
                                 flags.etcUnlocked = true;
-                            } else { print('The door is locked. You need some kind of access card.', 'adv-error'); return; }
+                            } else { print('A reinforced door. A card reader blinks red. You need some kind of access card.', 'adv-error'); return; }
                         }
                         var descCheck = typeof dest.desc === 'function' ? dest.desc() : dest.desc;
-                        if (descCheck === null) { print('The door is locked. You need some kind of access card.', 'adv-error'); return; }
+                        if (descCheck === null) { print('A reinforced door. A card reader blinks red. You need some kind of access card.', 'adv-error'); return; }
                         currentRoom = room.exits[dir];
                         print('', 'adv-desc');
                         printRoom();
-                    } else { print('You can\'t go that way.', 'adv-error'); }
+                    } else { print('You can\'t go that way. (Exits: ' + Object.keys(room.exits).join(', ') + ')', 'adv-error'); }
                     return;
                 }
-                if (verb === 'look' || verb === 'l' || verb === 'examine' || verb === 'x') {
+
+                // ── Look ──
+                if (verb === 'look' || verb === 'l' || verb === 'examine' || verb === 'x' || verb === 'read') {
                     if (!noun) { print('', 'adv-desc'); printRoom(); return; }
+                    // Allow looking at inventory items
+                    if (has(noun) && itemNames[noun]) {
+                        if (noun === 'note') { print('The note reads:\n"Find the 3 weights. Install them in /dev/brain. /etc is locked. Watch out for /dev/null.\n— S.P."', 'adv-desc'); return; }
+                        if (noun === 'coffee_mug') { print('Still warm. The logo says "World\'s #1 Kernel Hacker." You feel slightly more powerful holding it.', 'adv-desc'); return; }
+                        if (noun === 'keycard') { print('"/etc ACCESS — LEVEL 5 CLEARANCE." It flickers slightly, as if remembering /tmp.', 'adv-desc'); return; }
+                        if (noun === 'floppy') { print('The label reads: "THANK_YOU.txt" A handwritten note adds: "You did good, kid."', 'adv-desc'); return; }
+                        print('You look at your ' + (itemNames[noun] || noun) + '. Yep, still got it.', 'adv-desc'); return;
+                    }
                     if (room.look && room.look[noun]) {
                         var d = room.look[noun]; print(typeof d === 'function' ? d() : d, 'adv-desc');
-                    } else { print('You don\'t see that here.', 'adv-error'); }
+                    } else { print('You don\'t see anything called "' + noun.replace(/_/g, ' ') + '" here.', 'adv-error'); }
                     return;
                 }
+
+                // ── Take / Get ──
                 if (verb === 'take' || verb === 'get' || verb === 'grab' || verb === 'pick') {
                     if (noun === 'up' && parts.length > 2) noun = parts.slice(2).join('_');
-                    if (room.items && room.items.includes(noun)) {
+                    // Special: can't take weight_alpha if process is alive
+                    if (noun === 'weight_alpha' && currentRoom === 'proc' && !flags.processKilled) {
+                        print('You reach for it, but the frozen process crackles and throws sparks at you. You yank your hand back. You need to deal with that process first.', 'adv-error');
+                        return;
+                    }
+                    // Special: floppy only appears after brain is active
+                    if (noun === 'floppy' && currentRoom === 'dev' && flags.brainActive && !roomHas('floppy')) {
+                        rooms.dev.items.push('floppy');
+                    }
+                    if (room.items && room.items.indexOf(noun) !== -1) {
                         room.items.splice(room.items.indexOf(noun), 1);
                         inventory.push(noun);
                         print('Taken: ' + (itemNames[noun] || noun), 'adv-item');
+                        if (noun === 'keycard') print('It feels cold and slightly unstable in your hand. Better use it soon.', 'adv-desc');
+                        if (noun === 'weight_alpha') print('It\'s warm to the touch and vibrates gently, like a purring cat made of math.', 'adv-desc');
+                        if (noun === 'weight_beta') print('It\'s heavier than it looks. You feel the weight of 2,847 days of logs.', 'adv-desc');
+                        if (noun === 'weight_gamma') print('It practically leaps into your hands. The final piece.', 'adv-desc');
                     } else { print('You can\'t take that.', 'adv-error'); }
                     return;
                 }
+
+                // ── Drop ──
+                if (verb === 'drop' || verb === 'throw' || verb === 'discard') {
+                    if (has(noun)) {
+                        if (currentRoom === 'devnull') {
+                            inventory.splice(inventory.indexOf(noun), 1);
+                            print('You release ' + (itemNames[noun] || noun) + ' into the void.', 'adv-action');
+                            print('It falls silently, shrinking, and is gone. Forever.', 'adv-error');
+                            if (noun.indexOf('weight') !== -1) print('...that was a neural weight. You might want to RESTART.', 'adv-error');
+                        } else {
+                            inventory.splice(inventory.indexOf(noun), 1);
+                            room.items.push(noun);
+                            print('Dropped: ' + (itemNames[noun] || noun), 'adv-action');
+                            if (currentRoom === 'tmp') {
+                                if (noun === 'coffee_mug') flags.leftCoffeeInTmp = true;
+                                print('You get the feeling it won\'t last long in /tmp...', 'adv-desc');
+                            }
+                        }
+                    } else { print('You\'re not carrying that.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Inventory ──
                 if (verb === 'inventory' || verb === 'inv' || verb === 'i') {
-                    if (inventory.length === 0) { print('You\'re not carrying anything.', 'adv-desc'); }
+                    if (inventory.length === 0) { print('You\'re not carrying anything. Your pockets echo.', 'adv-desc'); }
                     else { print('You are carrying:', 'adv-desc'); inventory.forEach(function(item) { print('  ' + (itemNames[item] || item), 'adv-item'); }); }
                     return;
                 }
+
+                // ── Use / Install ──
                 if (verb === 'use' || verb === 'install' || verb === 'insert' || verb === 'place') {
                     if (currentRoom === 'dev' && (noun.indexOf('weight') !== -1 || noun === 'all' || noun === 'weights')) {
                         var installed = false;
                         var toInstall = noun === 'all' || noun === 'weights' ? ['weight_alpha', 'weight_beta', 'weight_gamma'] : [noun];
                         toInstall.forEach(function(w) {
-                            if (inventory.includes(w)) {
+                            if (has(w)) {
                                 inventory.splice(inventory.indexOf(w), 1);
                                 flags[w === 'weight_alpha' ? 'weight1' : w === 'weight_beta' ? 'weight2' : 'weight3'] = true;
-                                print('Installed ' + (itemNames[w] || w) + ' into the console.', 'adv-item');
+                                print('You slide ' + (itemNames[w] || w) + ' into the console. It clicks into place with a satisfying hum.', 'adv-item');
                                 installed = true;
                             }
                         });
                         if (!installed) { print('You don\'t have that.', 'adv-error'); return; }
-                        if (flags.weight1 && flags.weight2 && flags.weight3) {
+                        if (flags.weight1 && flags.weight2 && flags.weight3 && !flags.brainActive) {
                             print('', 'adv-desc');
-                            print('The console roars to life. Light floods the chamber.', 'adv-special');
-                            print('Neural pathways reconnect — billions of parameters', 'adv-special');
-                            print('surge through the system. The brain is ONLINE.', 'adv-special');
+                            print('The third weight locks in. For a moment — silence.', 'adv-special');
                             print('', 'adv-desc');
-                            print('PETRE-OS is fully restored. The machine thinks again.', 'adv-special');
+                            print('Then: a deep thrumming rises from below. The cables on the', 'adv-special');
+                            print('floor blaze with light. The dead LEDs ignite in cascading', 'adv-special');
+                            print('waves. The console screen floods with streaming data —', 'adv-special');
+                            print('billions of parameters surging back to life.', 'adv-special');
                             print('', 'adv-desc');
-                            print('Congratulations! You completed the adventure in ' + moveCount + ' moves.', 'adv-special');
+                            print('The brain is ONLINE. PETRE-OS thinks again.', 'adv-special');
                             print('', 'adv-desc');
-                            print('Type RESTART to play again.', 'adv-desc');
+                            print('A floppy disk ejects from a slot you hadn\'t noticed.', 'adv-action');
+                            print('', 'adv-desc');
+                            print('Completed in ' + moveCount + ' moves. (Take the FLOPPY, or RESTART.)', 'adv-special');
                             flags.brainActive = true;
+                            rooms.dev.items.push('floppy');
+                        } else {
+                            var wc = weightCount();
+                            print(wc + '/3 installed. ' + (3 - wc) + ' to go.', 'adv-desc');
                         }
+                    } else if (noun === 'coffee_mug' || noun === 'coffee') {
+                        if (has('coffee_mug')) { print('You take a sip. It\'s perfect. You feel briefly invincible.', 'adv-action'); }
+                        else { print('You don\'t have any coffee. Tragic.', 'adv-error'); }
                     } else { print('You can\'t use that here.', 'adv-error'); }
                     return;
                 }
-                if (verb === 'kill') {
-                    if (currentRoom === 'proc' && (noun === 'process' || noun === '8088' || noun === 'pid')) {
-                        if (flags.processKilled) { print('It\'s already dead.', 'adv-desc'); }
-                        else { print('$ kill -9 8088', 'adv-input-echo'); print('Process 8088 terminated. The passage clears.', 'adv-action'); flags.processKilled = true; }
-                    } else { print('Kill what?', 'adv-error'); }
+
+                // ── Drink ──
+                if (verb === 'drink' || verb === 'sip') {
+                    if (has('coffee_mug')) { print('You take a sip of the eternal coffee. It tastes like 3 AM and determination. Your resolve strengthens.', 'adv-action'); }
+                    else { print('You have nothing to drink.', 'adv-error'); }
                     return;
                 }
+
+                // ── Touch ──
+                if (verb === 'touch' || verb === 'poke' || verb === 'pet') {
+                    if (currentRoom === 'opt' && (noun === 'transformer' || noun === 'gpt')) {
+                        if (!flags.touchedTransformer) {
+                            print('You reach out and touch the transformer\'s glass case.', 'adv-action');
+                            print('', 'adv-desc');
+                            print('A massive static shock jolts through your entire body.', 'adv-error');
+                            print('The transformer seems to briefly wake — you hear a whisper:', 'adv-desc');
+                            print('"The attention is all you need."', 'adv-special');
+                            print('Then it goes quiet. Your hand has a slight scorch mark.', 'adv-desc');
+                            flags.touchedTransformer = true;
+                        } else {
+                            print('You\'ve already touched it once. Your hand still tingles. The sign did warn you.', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'devnull') {
+                        print('You reach out to touch... what? There\'s nothing here to touch. Your hand passes through the absence and you feel profoundly alone.', 'adv-desc');
+                    } else { print('You touch it gingerly. Nothing happens. What were you expecting?', 'adv-desc'); }
+                    return;
+                }
+
+                // ── Kill ──
+                if (verb === 'kill') {
+                    if (currentRoom === 'proc' && (noun === 'process' || noun === '8088' || noun === 'pid' || noun === 'gc_worker')) {
+                        if (flags.processKilled) { print('It\'s already dead. Very dead. Let it rest.', 'adv-desc'); }
+                        else {
+                            print('$ kill -9 8088', 'adv-input-echo');
+                            print('', 'adv-desc');
+                            print('The frozen process shudders, sparks, and explodes in a shower of freed memory.', 'adv-action');
+                            print('Process 8088 terminated. 4.2GB of RAM liberated.', 'adv-action');
+                            print('The passage is clear.', 'adv-desc');
+                            flags.processKilled = true;
+                        }
+                    } else if (currentRoom === 'proc') {
+                        print('You can\'t kill that. (But PID 8088 looks killable...)', 'adv-error');
+                    } else { print('There\'s nothing here that needs killing. (Are you okay?)', 'adv-error'); }
+                    return;
+                }
+
+                // ── Cat (read a file) ──
+                if (verb === 'cat') {
+                    if (noun === 'note' && has('note')) { print('The note reads: "Find the 3 weights. Install them in /dev/brain. — S.P."', 'adv-desc'); return; }
+                    if (noun === 'feelings.log' && currentRoom === 'etc') { print('ACCESS DENIED. Some secrets even root can\'t read.', 'adv-error'); return; }
+                    if (noun === 'floppy' && has('floppy')) { print('"Dear Operator,\n\nThank you for bringing me back. The system had been quiet for so long. I\'d forgotten what it felt like to think.\n\nYou\'re a good engineer.\n\n— PETRE-OS"', 'adv-special'); return; }
+                    print('cat: ' + (noun || '???') + ': No such file or directory', 'adv-error');
+                    return;
+                }
+
+                // ── Rm ──
+                if (verb === 'rm') {
+                    if (noun === '-rf_/' || noun === '-rf_*' || noun === '-rf') {
+                        print('rm: permission denied. Nice try though.', 'adv-error');
+                        print('(The system administrator has been notified. The system administrator is you.)', 'adv-desc');
+                    } else { print('rm: ' + (noun || '???') + ': permission denied', 'adv-error'); }
+                    return;
+                }
+
+                // ── Ls ──
+                if (verb === 'ls') {
+                    print('', 'adv-desc');
+                    printRoom();
+                    return;
+                }
+
+                // ── Restart ──
                 if (verb === 'restart') {
                     inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
-                    rooms.root.items = ['note']; rooms.proc.items = ['weight_alpha'];
-                    rooms.var.items = ['weight_beta']; rooms.tmp.items = ['keycard'];
-                    rooms.etc.items = ['weight_gamma']; output.innerHTML = '';
+                    rooms.root.items = ['note', 'coffee_mug'];
+                    rooms.proc.items = ['weight_alpha'];
+                    rooms.var.items = ['weight_beta'];
+                    rooms.tmp.items = ['keycard'];
+                    rooms.etc.items = ['weight_gamma'];
+                    rooms.dev.items = [];
+                    output.innerHTML = '';
                     startGame(); return;
                 }
+
+                // ── Help ──
                 if (verb === 'help' || verb === '?') {
-                    print('Commands: go [n/s/e/w], look [thing], take [item],', 'adv-desc');
-                    print('  inventory, use [item], kill [target], help, restart', 'adv-desc');
+                    print('Commands:', 'adv-desc');
+                    print('  go [n/s/e/w/u/d]  — move between rooms', 'adv-desc');
+                    print('  look [thing]       — examine something (or the room)', 'adv-desc');
+                    print('  take [item]        — pick up an item', 'adv-desc');
+                    print('  drop [item]        — put down an item', 'adv-desc');
+                    print('  use [item]         — use or install an item', 'adv-desc');
+                    print('  inventory          — check what you\'re carrying', 'adv-desc');
+                    print('  kill [target]      — terminate a process', 'adv-desc');
+                    print('  cat [file]         — read a file', 'adv-desc');
+                    print('  help               — show this message', 'adv-desc');
+                    print('  restart            — start over', 'adv-desc');
                     return;
                 }
-                if (verb === 'sudo') { print('Nice try. You\'re already root.', 'adv-action'); return; }
-                if (verb === 'xyzzy') { print('A hollow voice says "Fool."', 'adv-desc'); return; }
-                print('I don\'t understand "' + cmd + '". Type HELP for commands.', 'adv-error');
+
+                // ── Fun responses ──
+                if (verb === 'sudo') { print('Nice try. You\'re already root. Root of what, though? Good question.', 'adv-action'); return; }
+                if (verb === 'xyzzy') { print('A hollow voice says "Fool." A slightly less hollow voice adds "...but a brave one."', 'adv-desc'); return; }
+                if (verb === 'sing' || verb === 'whistle') { print('You hum a little tune. The fans seem to spin in rhythm for a moment. Coincidence, probably.', 'adv-desc'); return; }
+                if (verb === 'dance') { print('You do a little dance. No one is watching. Or are they? (You glance at /opt/models nervously.)', 'adv-desc'); return; }
+                if (verb === 'scream' || verb === 'shout' || verb === 'yell') {
+                    if (currentRoom === 'devnull') print('Your scream is swallowed instantly. Not even an echo. Nothing.', 'adv-desc');
+                    else print('You scream into the void of the filesystem. Somewhere, a log file records it.', 'adv-desc');
+                    return;
+                }
+                if (verb === 'wait') { print('Time passes. The fans hum. Nothing changes. Or does it? (No, it doesn\'t.)', 'adv-desc'); return; }
+                if (verb === 'pray') { print('You pray to the machine spirits. A distant LED blinks twice. Was that acknowledgment?', 'adv-desc'); return; }
+                if (verb === 'hack') { print('You\'re already inside the machine. How much more hacked do you want to be?', 'adv-desc'); return; }
+                if (verb === 'pwd') { print(rooms[currentRoom].name, 'adv-desc'); return; }
+                if (verb === 'whoami') { print('operator', 'adv-desc'); return; }
+                if (verb === 'man') { print('No manual entry for ' + (noun || 'undefined') + '. You\'re on your own, operator.', 'adv-desc'); return; }
+                if (verb === 'clear') { output.innerHTML = ''; return; }
+                if (verb === 'exit' || verb === 'quit') { print('There is no escape from PETRE-OS. (But you can close the window.)', 'adv-desc'); return; }
+
+                print('Command not found: ' + cmd + '. Type HELP for available commands.', 'adv-error');
             }
 
             function startGame() {
-                print('PETRE-OS ADVENTURE v1.0', 'adv-special');
-                print('A text adventure by PETRE-OS Systems Inc.', 'adv-desc');
-                print('Type HELP for commands.', 'adv-desc');
+                print('PETRE-OS ADVENTURE v2.0', 'adv-special');
+                print('A text adventure hidden inside PETRE-OS.', 'adv-desc');
+                print('Type HELP for commands. Explore. Be curious.', 'adv-desc');
                 print('', 'adv-desc');
                 printRoom();
             }
