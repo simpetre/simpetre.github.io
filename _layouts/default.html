@@ -56,7 +56,7 @@
                 <span>contact.sh</span>
             </div>
             <div class="desktop-icon" id="icon-resume">
-                <i class="fa-solid fa-file-pdf icon"></i>
+                <i class="fa-regular fa-file icon"></i>
                 <span>resume.pdf</span>
             </div>
         </div>
@@ -98,7 +98,7 @@
             <div class="start-menu-item" data-window="win-education"><i class="fa-regular fa-file"></i> education.dat</div>
             <div class="start-menu-item" data-window="win-contact"><i class="fa-solid fa-satellite-dish"></i> contact.sh</div>
             <div class="start-menu-divider"></div>
-            <div class="start-menu-item" id="start-resume"><i class="fa-regular fa-file-pdf"></i> resume.pdf</div>
+            <div class="start-menu-item" id="start-resume"><i class="fa-regular fa-file"></i> resume.pdf</div>
             <div class="start-menu-item" id="start-github"><i class="fa-brands fa-github"></i> GitHub</div>
             <div class="start-menu-item" id="start-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
         </div>
@@ -320,7 +320,7 @@
             if (!win.dataset.positioned) {
                 var vw = window.innerWidth;
                 var vh = window.innerHeight - 40;
-                var ww = parseInt(win.style.width) || 520;
+                var ww = win.offsetWidth || 520;
                 var openCount = document.querySelectorAll('.window.open').length;
                 var offsetX = Math.max(20, (vw - ww) / 2 + (openCount - 1) * 25);
                 var offsetY = Math.max(20, vh * 0.12 + (openCount - 1) * 25);
