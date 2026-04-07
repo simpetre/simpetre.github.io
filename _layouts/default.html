@@ -63,6 +63,12 @@
 
         {{ content }}
 
+        <!-- Recycle Bin (bottom-right) -->
+        <div class="desktop-icon recycle-bin" data-window="win-recycle">
+            <i class="fa-solid fa-trash-can icon"></i>
+            <span>Recycle Bin</span>
+        </div>
+
     </div>
 
     <!-- ── Taskbar ───────────────────────────────────────────── -->
@@ -482,6 +488,17 @@
         document.getElementById('start-linkedin').addEventListener('click', function() {
             window.open('https://linkedin.com/in/simon.petre', '_blank');
             startMenu.classList.remove('open');
+        });
+
+        // ── Recycle bin item clicks ───────────────────────────
+        document.querySelectorAll('.recycle-item[data-window]').forEach(function(item) {
+            item.addEventListener('dblclick', function() {
+                openWindow(this.dataset.window);
+            });
+            item.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                openWindow(this.dataset.window);
+            });
         });
 
         // ── Easter egg: type "adventure" to launch game ──────

@@ -224,6 +224,42 @@ body {
     }
 }
 
+// ── Recycle Bin (bottom-right) ─────────────────────────────────
+.recycle-bin {
+    position: absolute !important;
+    bottom: 20px;
+    right: 20px;
+    top: auto !important;
+    left: auto !important;
+}
+
+.recycle-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: $mono-system;
+    font-size: 16px;
+    color: $green-dim;
+
+    i {
+        color: $green-muted;
+        font-size: 14px;
+    }
+
+    .file-perms {
+        margin-left: auto;
+    }
+
+    &:hover {
+        background: rgba(74, 246, 38, 0.08);
+        border-color: $border;
+        color: $green;
+    }
+}
+
 // ══════════════════════════════════════════════════════════════
 // ── Windows ─────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════
@@ -580,11 +616,16 @@ body {
 }
 
 // ── Adventure game ────────────────────────────────────────────
+#win-adventure {
+    width: 700px;
+    max-height: 80vh;
+}
+
 .adventure-body {
     display: flex;
     flex-direction: column;
     padding: 0 !important;
-    height: 400px;
+    height: 500px;
 }
 
 .adventure-output {
@@ -854,6 +895,10 @@ body {
     }
 
     .desktop-icons {
+        display: none;
+    }
+
+    .recycle-bin {
         display: none;
     }
 
