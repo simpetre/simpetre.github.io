@@ -618,7 +618,8 @@ body {
 // ── Adventure game ────────────────────────────────────────────
 #win-adventure {
     width: 700px;
-    max-height: 80vh;
+    max-height: none;
+    height: 550px;
 }
 
 .adventure-body {
