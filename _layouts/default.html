@@ -541,6 +541,7 @@
                         if (roomHas('note')) lines.push('\nA NOTE is pinned to the wall with a bent nail.');
                         else lines.push('\nA bent nail sticks out of the wall where a note used to be.');
                         lines.push('\nA COFFEE_MUG sits on the desk, still warm somehow.');
+                        lines.push('\nIn the corner, a TOILET. Because even /root needs one.');
                         return lines.join('');
                     },
                     exits: { north: 'dev', east: 'var', south: 'opt', west: 'etc', down: 'devnull' },
@@ -560,7 +561,9 @@
                         },
                         desk: 'A metal desk covered in ring stains and faded sticky notes. One reads: "chmod 777 /heart".',
                         nail: 'A bent nail in the wall. Industrial-grade sysadmin interior design.',
-                        fans: 'Somewhere behind the walls, fans spin endlessly. They\'ve been running since the epoch.'
+                        fans: 'Somewhere behind the walls, fans spin endlessly. They\'ve been running since the epoch.',
+                        toilet: 'A standard-issue PETRE-OS porcelain terminal. There\'s a roll of TOILET_PAPER mounted on the wall next to it.',
+                        toilet_paper: 'The label reads: "Mate Rick\'s Multi-ply — For All Your Dense Operations."\n\nYou groan. Then you grudgingly admit that\'s pretty good.'
                     }
                 },
                 dev: {
@@ -601,6 +604,9 @@
                         var lines = ['A narrow corridor lined with running processes. Numbers scroll endlessly on the WALLS. The air crackles with static electricity.'];
                         if (!flags.processKilled) {
                             lines.push('\nA massive frozen PROCESS blocks most of the passage, crackling with unstable energy. Behind it, you can see a WEIGHT_ALPHA on the floor, just out of reach.');
+                        } else if (!flags.firewall_solved && roomHas('weight_alpha')) {
+                            lines.push('\nScorch marks on the floor where the frozen process used to be.');
+                            lines.push('\nA FIREWALL terminal has activated in front of the WEIGHT_ALPHA. Its screen glows with a question, waiting for an ANSWER.');
                         } else {
                             lines.push('\nScorch marks on the floor where the frozen process used to be. Sparks still occasionally pop from the residue.');
                             if (roomHas('weight_alpha')) lines.push('\nA WEIGHT_ALPHA sits on the floor, now accessible.');
@@ -614,10 +620,16 @@
                             if (flags.processKilled) return 'Just scorch marks and the smell of burnt silicon. R.I.P. PID 8088.';
                             return 'PID 8088 — status: FROZEN. A runaway garbage collector from 2019. It buzzes angrily and throws sparks when you get close. You\'ll need to KILL it to get past.';
                         },
+                        firewall: function() {
+                            if (!flags.processKilled) return 'You can\'t see past the frozen process.';
+                            if (flags.firewall_solved) return 'The firewall terminal is dark. "ACCESS GRANTED" still glows faintly on the screen.';
+                            return 'FIREWALL v2.1 — IDENTITY CHECK\n\n"A neural network\'s weights are updated by subtracting\nthe product of the learning rate and the _____ of the\nloss function."\n\nType: answer [your answer]';
+                        },
                         walls: 'Process IDs stream past like the matrix:\n  PID 42    — init         [sleeping]\n  PID 1337  — hackerd      [running]\n  PID 8088  — gc_worker    [FROZEN]\n  PID 80085 — boobsd       [???]',
                         weight_alpha: function() {
                             if (!roomHas('weight_alpha')) return 'You already took that.';
                             if (!flags.processKilled) return 'You can see it behind the frozen process — a glowing crystalline cube. You can\'t reach it while that thing is in the way.';
+                            if (!flags.firewall_solved) return 'The weight glows behind the FIREWALL terminal. You need to answer its question first.';
                             return 'A glowing crystalline cube etched with neural pathways. It pulses warmly, like a heartbeat.';
                         },
                         sparks: 'Little arcs of electricity jump between the walls. Probably fine. Probably.',
@@ -628,8 +640,13 @@
                     name: '/var/log',
                     desc: function() {
                         var lines = ['The logging chamber. Endless scrolls of text cascade down the WALLS like waterfalls of history. The air smells of old paper and ozone. A TABLE sits in the center.'];
-                        if (roomHas('weight_beta')) lines.push('\nA WEIGHT_BETA sits on a dusty SHELF, half-buried under printouts.');
-                        else lines.push('\nThe SHELF is empty except for some dusty printouts.');
+                        if (roomHas('weight_beta') && !flags.cipher_solved) {
+                            lines.push('\nA WEIGHT_BETA is visible on the SHELF, but it\'s encased in a LOG_CIPHER — a cryptographic lock pulsing with dim light. It demands an ANSWER.');
+                        } else if (roomHas('weight_beta')) {
+                            lines.push('\nA WEIGHT_BETA sits freed on the SHELF, ready to take.');
+                        } else {
+                            lines.push('\nThe SHELF is empty except for some dusty printouts.');
+                        }
                         lines.push('\nAn old LOG_BOOK lies open on the table.');
                         return lines.join('');
                     },
@@ -638,12 +655,20 @@
                     look: {
                         log_book: 'The last entries read:\n  "Day 2844: Memory leaks worsening. The brain is forgetting."\n  "Day 2845: Scattered the weights. Too dangerous to keep together."\n  "Day 2846: Hid the access key in /tmp before it degrades."\n  "Day 2847: If you\'re reading this — hurry. — S.P."',
                         walls: 'Error logs scroll eternally:\n  [WARN] neural_cortex: connection timeout\n  [ERR]  memory_pool: segfault at 0xDEADBEEF\n  [WARN] consciousness: daemon not responding\n  [INFO] hope: still running',
+                        log_cipher: function() {
+                            if (flags.cipher_solved) return 'The cipher is broken. Just a dead husk of encryption now.';
+                            if (!roomHas('weight_beta')) return 'The cipher dissolved when you solved it.';
+                            return 'LOG_CIPHER — DECRYPT TO RELEASE\n\n"I map any real number to a value between 0 and 1.\nI\'m shaped like an S. Neural networks use me to\nsquash their outputs. What function am I?"\n\nType: answer [your answer]';
+                        },
+                        cipher: function() { return rooms.var.look.log_cipher(); },
                         shelf: function() {
-                            if (roomHas('weight_beta')) return 'A metal shelf bolted to the wall. Under a pile of yellowed printouts, something glows.';
+                            if (roomHas('weight_beta') && !flags.cipher_solved) return 'A metal shelf bolted to the wall. The weight is trapped inside a LOG_CIPHER — examine it.';
+                            if (roomHas('weight_beta')) return 'A metal shelf bolted to the wall. The freed weight glows gently.';
                             return 'A metal shelf. Just dusty printouts now. One reads: "TODO: fix the universe."';
                         },
                         weight_beta: function() {
                             if (!roomHas('weight_beta')) return 'You already took that.';
+                            if (!flags.cipher_solved) return 'It\'s locked inside the LOG_CIPHER. You need to answer the cipher\'s question first.';
                             return 'A glowing crystalline cube, slightly different from the others — this one hums at a lower frequency. It feels heavier, like it carries memories.';
                         },
                         table: 'A sturdy metal table. Someone carved "I WAS HERE — PID 1" into the surface.',
@@ -702,8 +727,13 @@
                         if (!has('keycard') && !flags.etcUnlocked) return null;
                         flags.etcUnlocked = true;
                         var lines = ['A hidden vault. The air is cold and perfectly still. Rows of encrypted FILES glow behind reinforced glass. This is where the system keeps its deepest secrets.'];
-                        if (roomHas('weight_gamma')) lines.push('\nA WEIGHT_GAMMA floats in a magnetic CONTAINMENT field at the center of the room, rotating slowly.');
-                        else lines.push('\nThe containment field is empty, its hum slightly lower without a payload.');
+                        if (roomHas('weight_gamma') && !flags.containment_solved) {
+                            lines.push('\nA WEIGHT_GAMMA floats in a magnetic CONTAINMENT field at the center of the room. A CONSOLE next to it demands final clearance — an ANSWER to release the lock.');
+                        } else if (roomHas('weight_gamma')) {
+                            lines.push('\nA WEIGHT_GAMMA floats free, the containment field deactivated. Ready to take.');
+                        } else {
+                            lines.push('\nThe containment field is empty, its hum slightly lower without a payload.');
+                        }
                         lines.push('\nA SHADOW_FILE pulses in the corner — something that probably shouldn\'t be here.');
                         return lines.join('');
                     },
@@ -711,12 +741,19 @@
                     items: ['weight_gamma'],
                     look: {
                         files: 'Behind the glass:\n  .ssh/id_rsa          [ENCRYPTED]\n  passwords.txt        [ENCRYPTED]\n  api_keys.env         [ENCRYPTED]\n  todo_2019.txt        [CORRUPTED]\n  feelings.log         [ACCESS DENIED]',
+                        console: function() {
+                            if (flags.containment_solved) return 'The console reads: "CLEARANCE GRANTED." The containment field is down.';
+                            if (!roomHas('weight_gamma')) return 'The console is dark. Its job is done.';
+                            return 'CONTAINMENT LOCK — FINAL CLEARANCE\n\n"In a transformer, after computing attention scores,\nthey are divided by the square root of this value\nbefore applying softmax. What is being divided by?"\n\nType: answer [your answer]';
+                        },
                         containment: function() {
-                            if (roomHas('weight_gamma')) return 'A magnetic containment field suspends the neural weight in mid-air. It rotates slowly, casting prismatic green reflections. It\'s the brightest thing you\'ve seen in this system.';
+                            if (roomHas('weight_gamma') && !flags.containment_solved) return 'A magnetic containment field suspends the neural weight in mid-air. The CONSOLE next to it controls the lock.';
+                            if (roomHas('weight_gamma')) return 'The containment field is down. The weight floats gently, free to take.';
                             return 'The containment field hums softly, empty now. A faint green afterimage traces where the weight used to spin.';
                         },
                         weight_gamma: function() {
                             if (!roomHas('weight_gamma')) return 'You already took it.';
+                            if (!flags.containment_solved) return 'The final weight spins inside the containment field. The CONSOLE must be answered to release it.';
                             return 'The final neural weight. It glows brighter than the others, almost urgently, as if it knows it\'s the last piece. When you look closely, you can see data streaming through its crystalline lattice.';
                         },
                         shadow_file: 'A pulsing, semi-transparent file. You can barely make out its contents:\n"I remember when the system was whole. When thoughts flowed freely through /dev/brain. Bring the weights back. Please."\nIt\'s signed by no one.',
@@ -822,6 +859,19 @@
                     // Special: can't take weight_alpha if process is alive
                     if (noun === 'weight_alpha' && currentRoom === 'proc' && !flags.processKilled) {
                         print('You reach for it, but the frozen process crackles and throws sparks at you. You yank your hand back. You need to deal with that process first.', 'adv-error');
+                        return;
+                    }
+                    // Puzzle gates for weights
+                    if (noun === 'weight_alpha' && currentRoom === 'proc' && !flags.firewall_solved) {
+                        print('The FIREWALL terminal blocks your path. It demands an answer before it will let you pass. Try: look firewall', 'adv-error');
+                        return;
+                    }
+                    if (noun === 'weight_beta' && currentRoom === 'var' && !flags.cipher_solved) {
+                        print('The weight is sealed inside the LOG_CIPHER. You need to solve its riddle first. Try: look log_cipher', 'adv-error');
+                        return;
+                    }
+                    if (noun === 'weight_gamma' && currentRoom === 'etc' && !flags.containment_solved) {
+                        print('The containment field holds the weight in place. The CONSOLE demands final clearance. Try: look console', 'adv-error');
                         return;
                     }
                     // Special: floppy only appears after brain is active
@@ -954,6 +1004,59 @@
                     return;
                 }
 
+                // ── Answer (puzzle solving) ──
+                if (verb === 'answer' || verb === 'solve') {
+                    var ans = noun.replace(/_/g, ' ').replace(/[^a-z0-9 ]/g, '').trim();
+                    if (currentRoom === 'proc' && flags.processKilled && !flags.firewall_solved && roomHas('weight_alpha')) {
+                        if (ans === 'gradient' || ans === 'gradients') {
+                            print('FIREWALL v2.1: "... correct."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The firewall terminal powers down with a satisfied hum. The barrier dissolves. The crystalline weight floats free.', 'adv-action');
+                            flags.firewall_solved = true;
+                        } else {
+                            print('FIREWALL v2.1: "DENIED."', 'adv-error');
+                            print('Think about how a neural network learns from its mistakes. What does it compute from the loss?', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'var' && !flags.cipher_solved && roomHas('weight_beta')) {
+                        if (ans === 'sigmoid' || ans === 'logistic' || ans === 'sigmoid function' || ans === 'logistic function') {
+                            print('LOG_CIPHER: "DECRYPTED."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The cipher crackles, fractures, and dissolves into a shower of freed bits. The weight drops onto the shelf with a satisfying clink.', 'adv-action');
+                            flags.cipher_solved = true;
+                        } else {
+                            print('LOG_CIPHER: "INCORRECT."', 'adv-error');
+                            print('Think S-shaped curve... squashes any input to the range [0, 1]...', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'etc' && !flags.containment_solved && roomHas('weight_gamma')) {
+                        if (ans === 'dk' || ans === 'd k' || ans === 'dimension' || ans === 'key dimension' || ans === 'key size' || ans === 'dim' || ans === 'sqrt dk' || ans === 'sqrtdk' || ans === 'the key dimension' || ans === 'the dimension') {
+                            print('CONTAINMENT LOCK: "CLEARANCE GRANTED."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The magnetic field flickers and releases. The weight descends gently, the last lock in the system undone.', 'adv-action');
+                            flags.containment_solved = true;
+                        } else {
+                            print('CONTAINMENT LOCK: "DENIED."', 'adv-error');
+                            print('Think about scaled dot-product attention... why is it called "scaled"? What are you dividing by?', 'adv-desc');
+                        }
+                    } else {
+                        print('There\'s no puzzle to answer here.', 'adv-error');
+                    }
+                    return;
+                }
+
+                // ── Hint ──
+                if (verb === 'hint') {
+                    if (currentRoom === 'proc' && flags.processKilled && !flags.firewall_solved && roomHas('weight_alpha')) {
+                        print('The firewall asks about backpropagation. When the network makes an error, what does it compute to know which direction to adjust?', 'adv-desc');
+                    } else if (currentRoom === 'var' && !flags.cipher_solved && roomHas('weight_beta')) {
+                        print('The cipher asks about an activation function. It\'s one of the oldest ones — named after the shape of its curve, from the Greek letter sigma.', 'adv-desc');
+                    } else if (currentRoom === 'etc' && !flags.containment_solved && roomHas('weight_gamma')) {
+                        print('The console asks about the "Attention Is All You Need" paper. The dot product of Q and K gets large with high dimensions, so they divide by something to stabilize...', 'adv-desc');
+                    } else {
+                        print('No puzzle here. Try exploring.', 'adv-desc');
+                    }
+                    return;
+                }
+
                 // ── Cat (read a file) ──
                 if (verb === 'cat') {
                     if (noun === 'note' && has('note')) { print('The note reads: "Find the 3 weights. Install them in /dev/brain. — S.P."', 'adv-desc'); return; }
@@ -981,7 +1084,7 @@
 
                 // ── Restart ──
                 if (verb === 'restart') {
-                    inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
+                    inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0; // resets all puzzle flags too
                     rooms.root.items = ['note', 'coffee_mug'];
                     rooms.proc.items = ['weight_alpha'];
                     rooms.var.items = ['weight_beta'];
@@ -1001,6 +1104,8 @@
                     print('  drop [item]        — put down an item', 'adv-desc');
                     print('  use [item]         — use or install an item', 'adv-desc');
                     print('  inventory          — check what you\'re carrying', 'adv-desc');
+                    print('  answer [text]      — solve a puzzle', 'adv-desc');
+                    print('  hint               — get a nudge on the current puzzle', 'adv-desc');
                     print('  kill [target]      — terminate a process', 'adv-desc');
                     print('  cat [file]         — read a file', 'adv-desc');
                     print('  help               — show this message', 'adv-desc');
