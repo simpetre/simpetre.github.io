@@ -383,8 +383,18 @@
         }
 
         // ── Desktop icon clicks ──────────────────────────────
+        function deselectAllIcons() {
+            document.querySelectorAll('.desktop-icon').forEach(function(ic) { ic.classList.remove('selected'); });
+        }
+
         document.querySelectorAll('.desktop-icon[data-window]').forEach(function(icon) {
+            icon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                deselectAllIcons();
+                this.classList.add('selected');
+            });
             icon.addEventListener('dblclick', function() {
+                deselectAllIcons();
                 openWindow(this.dataset.window);
             });
             icon.addEventListener('touchend', function(e) {
@@ -393,9 +403,20 @@
             });
         });
 
+        // Click on desktop background deselects icons
+        desktop.addEventListener('click', function(e) {
+            if (e.target === desktop) deselectAllIcons();
+        });
+
         var resumeIcon = document.getElementById('icon-resume');
         if (resumeIcon) {
+            resumeIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                deselectAllIcons();
+                this.classList.add('selected');
+            });
             resumeIcon.addEventListener('dblclick', function() {
+                deselectAllIcons();
                 window.open('/resume.pdf', '_blank');
             });
             resumeIcon.addEventListener('touchend', function(e) {
