@@ -232,7 +232,7 @@
         }
 
         if (skipBoot) {
-            showDesktop();
+            setTimeout(showDesktop, 0);
         } else {
             function skipHandler(e) {
                 if (bootDone) return;

@@ -408,10 +408,11 @@ body {
 }
 
 .win-close:hover {
-    background: #ccffcc;
-    border-color: #ccffcc;
+    background: #ddffd8;
+    border-color: #ddffd8;
     color: $bg;
     text-shadow: none;
+    box-shadow: 0 0 6px rgba(200, 255, 200, 0.4);
 }
 
 .window-body {
