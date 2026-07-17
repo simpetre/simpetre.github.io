@@ -33,4 +33,13 @@ $on-laptop: 900px;
     @media screen and (max-width: $on-laptop) { @content; }
 }
 
+// Chromatic aberration: red/cyan fringe under a green phosphor glow.
+// Pass the glow layers you want stacked on top of the RGB split.
+@mixin chroma($glow-layers...) {
+    text-shadow:
+        -1px 0 rgba(255, 40, 60, 0.3),
+        1px 0 rgba(40, 200, 255, 0.3),
+        $glow-layers;
+}
+
 @import "style";

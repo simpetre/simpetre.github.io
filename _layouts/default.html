@@ -17,6 +17,9 @@
 
 <body>
 
+    <!-- ── CRT power-on flash (removed by JS after it plays) ──── -->
+    <div id="power-on"></div>
+
     <!-- ── Matrix Rain (behind everything) ───────────────────── -->
     <canvas id="matrix-rain"></canvas>
 
@@ -104,7 +107,8 @@
         </div>
     </div>
 
-    <!-- ── Scanlines + Vignette overlays ─────────────────────── -->
+    <!-- ── Scanlines + Vignette + rolling-scan overlays ──────── -->
+    <div class="crt-rollbar"></div>
     <div class="crt-scanlines"></div>
     <div class="crt-vignette"></div>
 
@@ -173,27 +177,62 @@
         var bootDone = false;
 
         var bootLines = [
-            'PETRE-OS v3.3 BIOS',
+            ' ___ ___ _____ ___ ___    ___  ___',
+            '| _ \\ __|_   _| _ \\ __|  / _ \\/ __|',
+            '|  _/ _|  | | |   / _|  | (_) \\__ \\',
+            '|_| |___| |_| |_|_\\___|  \\___/|___/',
+            '',
+            'PETRE-OS v3.3 BIOS  —  Neural Desktop Environment',
             'Copyright (c) 2024 Simon Petre Systems Inc.',
             '',
             'Memory test... 65536K OK',
             'Detecting hardware...',
-            '  CPU: Neural Processing Unit x86_ML',
-            '  GPU: Tensor Core Array [OK]',
-            '  NET: Satellite uplink [CONNECTED]',
+            '  CPU: Neural Processing Unit x86_ML   [OK]',
+            '  GPU: Tensor Core Array               [OK]',
+            '  NET: Satellite uplink          [CONNECTED]',
             '',
             'Loading kernel modules...',
             '  pytorch.ko          [OK]',
             '  transformer.ko      [OK]',
             '  attention.ko        [OK]',
             '  diffusion.ko        [OK]',
+            '  consciousness.ko    [OK]',
             '',
             'Mounting /dev/brain... done.',
+            'Calibrating phosphor... done.',
             'Starting PETRE-OS...',
             ''
         ];
 
         var skipBoot = sessionStorage.getItem('petre-os-booted');
+
+        // ── CRT power-on flash ───────────────────────────────
+        var powerOn = document.getElementById('power-on');
+        if (powerOn) {
+            if (skipBoot) powerOn.classList.add('quick');
+            var removePowerOn = function() { if (powerOn && powerOn.parentNode) powerOn.parentNode.removeChild(powerOn); };
+            powerOn.addEventListener('animationend', removePowerOn);
+            setTimeout(removePowerOn, 1200); // safety net if animationend never fires
+        }
+
+        // Animated boot progress bar, then callback
+        function runBootProgress(done) {
+            var bar = document.createElement('div');
+            bootText.appendChild(bar);
+            var pct = 0;
+            (function step() {
+                if (bootDone) return;
+                var filled = Math.round(pct / 5); // 20-cell bar
+                var blocks = '';
+                for (var b = 0; b < 20; b++) blocks += (b < filled ? '█' : '░');
+                bar.textContent = '[' + blocks + '] ' + pct + '%';
+                bootText.scrollTop = bootText.scrollHeight;
+                if (pct >= 100) { setTimeout(done, 350); return; }
+                pct += 5 + Math.floor(Math.random() * 9);
+                if (pct > 100) pct = 100;
+                setTimeout(step, 45);
+            })();
+        }
 
         function showDesktop() {
             if (bootDone) return;
@@ -256,7 +295,7 @@
                     lineIdx++;
                     setTimeout(typeLine, bootLines[lineIdx - 1] === '' ? 200 : 60 + Math.random() * 80);
                 } else {
-                    setTimeout(showDesktop, 600);
+                    runBootProgress(showDesktop);
                 }
             }
             typeLine();
@@ -548,11 +587,36 @@
             var flags = {};
             var currentRoom = 'root';
             var moveCount = 0;
+            var visited = { root: true };
+            var STORAGE_KEY = 'petre-os-adv-save';
 
             // Helper: check if item is in current room
             function roomHas(item) { return rooms[currentRoom].items.indexOf(item) !== -1; }
             function has(item) { return inventory.indexOf(item) !== -1; }
             function weightCount() { return (flags.weight1?1:0) + (flags.weight2?1:0) + (flags.weight3?1:0); }
+            function puzzleCount() {
+                return (flags.firewall_solved?1:0) + (flags.cipher_solved?1:0) + (flags.containment_solved?1:0) + (flags.usrSolved?1:0);
+            }
+            function secretCount() {
+                return (flags.touchedTransformer?1:0) + (flags.heartFound?1:0) + (flags.readFloppy?1:0);
+            }
+            function computeRank() {
+                var score = 0;
+                if (flags.brainActive) score += 100;
+                score += (typeof visited === 'object' ? Object.keys(visited).length : 0) * 6;
+                score += puzzleCount() * 15;
+                score += secretCount() * 20;
+                score -= Math.floor(moveCount / 6);
+                if (score < 0) score = 0;
+                var rank;
+                if (flags.brainActive && flags.heartFound && flags.readFloppy && score >= 230) rank = 'KERNEL WHISPERER (S+)';
+                else if (score >= 200) rank = 'SENIOR OPERATOR (S)';
+                else if (score >= 150) rank = 'SYSTEM ENGINEER (A)';
+                else if (score >= 100) rank = 'JUNIOR SYSADMIN (B)';
+                else if (score >= 50) rank = 'INTERN (C)';
+                else rank = 'SCRIPT KIDDIE (D)';
+                return { score: score, rank: rank };
+            }
 
             var rooms = {
                 root: {
@@ -596,9 +660,10 @@
                         if (wc > 0) lines.push('\nThe console has ' + wc + '/3 neural weights installed. ' + (wc < 3 ? 'It needs more.' : ''));
                         else lines.push('\nA sign reads: "INSERT ALL 3 NEURAL WEIGHTS TO ACTIVATE."');
                         if (roomHas('floppy')) lines.push('\nA FLOPPY disk has been ejected from a slot you didn\'t notice before.');
+                        lines.push('\nA maintenance ladder leads NORTH to /usr/bin, where the system tools live.');
                         return lines.join('');
                     },
-                    exits: { south: 'root', east: 'proc' },
+                    exits: { south: 'root', east: 'proc', north: 'usr' },
                     items: [],
                     look: {
                         console: function() {
@@ -703,9 +768,10 @@
                         if (roomHas('keycard')) lines.push('\nA KEYCARD materializes on a PEDESTAL, flickering but stable enough to grab — for now.');
                         else lines.push('\nThe PEDESTAL is empty. Everything in /tmp is temporary, after all.');
                         if (flags.leftCoffeeInTmp) lines.push('\nYour coffee mug is gone. Of course it is. This is /tmp.');
+                        lines.push('\nTo the NORTH, a cable snakes up into a mounted SATELLITE dish humming with uplink traffic — /mnt/net.');
                         return lines.join('');
                     },
-                    exits: { south: 'var' },
+                    exits: { south: 'var', north: 'net' },
                     items: ['keycard'],
                     look: {
                         pedestal: function() {
@@ -727,9 +793,10 @@
                         var lines = ['The model repository. Glass CASES line the walls, each containing a different trained model. Most are dormant, suspended in inference limbo.'];
                         lines.push('\nA massive TRANSFORMER model dominates the center of the room, encased in a column of light. A plaque reads: "DO NOT TOUCH."');
                         if (flags.touchedTransformer) lines.push('\nThe glass case around the transformer has a hand-shaped scorch mark on it.');
+                        lines.push('\nA doorway to the EAST is marked "/home/simon" in warm, hand-painted letters — the only thing in here that isn\'t sterile.');
                         return lines.join('');
                     },
-                    exits: { north: 'root' },
+                    exits: { north: 'root', east: 'home' },
                     items: [],
                     look: {
                         transformer: function() {
@@ -795,6 +862,87 @@
                         nothing: 'Exactly.',
                         darkness: 'It\'s not dark, exactly. Darkness implies the absence of light. This is the absence of absence. It\'s worse.'
                     }
+                },
+                usr: {
+                    name: '/usr/bin',
+                    desc: function() {
+                        var lines = ['The tool shed. Every command-line utility PETRE-OS has ever installed hangs on pegboards or dozes in bins. A grizzled GREP hound sniffs the floor. SED and AWK play cards in the corner, ignoring you completely.'];
+                        lines.push('\nA dusty WHITEBOARD on the wall has a challenge scrawled on it, half-erased. It looks like a RIDDLE.');
+                        if (flags.usrSolved) lines.push('\nUnder the whiteboard, a small brass MULTITOOL glints — your reward for solving the riddle.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'dev' },
+                    items: [],
+                    look: {
+                        whiteboard: function() {
+                            if (flags.usrSolved) return 'The whiteboard reads "SOLVED. Nice one." in fresh ink.';
+                            return 'THE /usr/bin RIDDLE\n\n"I halve the search space with every guess,\nfinding any sorted needle in log-time, no less.\nMy Big-O notation is my calling card.\nName my time complexity — and don\'t think too hard."\n\nType: answer [your answer]  (e.g. answer O(log n))';
+                        },
+                        grep: 'The GREP hound wags its tail and drops a matching line at your feet: "found 1 result: a very good dog". It has been searching for a pattern its whole life. You suspect the pattern is "love".',
+                        sed: 'SED looks up from the card game. "s/you/gone/g," it mutters, and for a dizzying second you feel replaced. Then you\'re back. AWK snickers.',
+                        awk: 'AWK deals another hand, splitting the deck on whitespace. "Field $3 is a jack," it announces to no one. It is very good at exactly one thing.',
+                        vim: 'A door labeled VIM. You open it. You cannot figure out how to close it. You leave it open forever, like everyone does.',
+                        tools: 'Pegboards of utilities: curl, tar, chmod, kill, ping, htop. Each hums with a quiet, single-minded competence. chmod, in particular, seems to be watching /root... something about a heart.',
+                        multitool: function() {
+                            if (!flags.usrSolved) return 'You don\'t see a multitool — solve the whiteboard riddle first.';
+                            if (has('multitool')) return 'Your brass multitool. It has a blade, a screwdriver, and inexplicably a tiny debugger.';
+                            return 'A small brass multitool, freed by your correct answer. TAKE it.';
+                        }
+                    }
+                },
+                net: {
+                    name: '/mnt/net',
+                    desc: function() {
+                        var lines = ['A cramped uplink closet. A SATELLITE dish pokes through the ceiling, and PACKETS of light stream past in both directions. A blinking DAEMON — a small floating process with a single glowing eye — hovers by the router, humming to itself.'];
+                        lines.push('\nThe daemon watches you. It looks like it wants to TALK.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'tmp' },
+                    items: [],
+                    look: {
+                        satellite: 'The dish points at a patch of sky between two other patches of sky. NET: ▲ 1.21 Gbit/s. Somewhere out there, the rest of the internet is having a normal one.',
+                        packets: 'TCP packets zip by, politely acknowledging each other. A lone UDP packet blows past without a care, unacknowledged and free. You almost envy it.',
+                        daemon: 'A friendly system daemon, PID 1. It has kept the uplink alive alone for 2,847 days. Its eye is warm. It would very much like it if you would TALK to it.',
+                        router: 'A router older than the epoch. Its lights spell, if you squint, "still here."',
+                        ping: 'You mentally ping the void. 64 bytes from the-universe: time=inf ms. Reply eventually.'
+                    }
+                },
+                home: {
+                    name: '/home/simon',
+                    desc: function() {
+                        var lines = ['Not a machine room at all — a lived-in study. Warm lamplight. A GUITAR leans in the corner, a PLANT that\'s somehow still alive, and a wall of PHOTOS. A DESK is buried under papers about diffusion models and attention. A ginger CAT is asleep on the keyboard.'];
+                        lines.push('\nThis is where the operator actually lives. It smells like coffee and half-finished ideas.');
+                        return lines.join('');
+                    },
+                    exits: { west: 'opt' },
+                    items: [],
+                    look: {
+                        guitar: 'A well-worn acoustic guitar. A sticky note on the body reads "learn the solo eventually." The high E is slightly flat. It has always been slightly flat.',
+                        plant: 'A pothos that has survived, against all odds and watering schedules, since 2017. Living proof that some systems are more robust than their maintenance.',
+                        photos: 'Snapshots of a life outside the terminal: mountains, a graduation cap, friends mid-laugh, a whiteboard covered in a from-scratch transformer derivation. Someone circled "attention is all you need" and drew a little heart next to it.',
+                        desk: 'Papers everywhere: a DDPM noise-schedule sketch, a LexRank sentence graph, a mel-spectrogram printout, a to-do list where item #1 is "reboot /dev/brain" and item #2 is "call mum".',
+                        cat: 'A ginger cat named, per its tag, SEGFAULT. It opens one eye, judges you accurately, and goes back to sleep on the Enter key. You may TALK to it, but manage your expectations.',
+                        papers: function() { return rooms.home.look.desk; },
+                        lamp: 'A warm desk lamp — the only non-green light in all of PETRE-OS. It makes this the one room that feels like morning.'
+                    }
+                },
+                heart: {
+                    name: '/heart',
+                    desc: function() {
+                        flags.heartFound = true;
+                        var lines = ['You chmod\'d 777 the heart, and the heart let you in.'];
+                        lines.push('\nA small, impossibly warm room that isn\'t on any filesystem diagram. In the center, a slow green pulse beats like something alive — the reason any of this was ever built. Not the neural net. The wanting to build it.');
+                        lines.push('\nOn the wall, in the operator\'s handwriting:\n"If you found this, you looked closer than you had to.\nThat\'s the whole job, really. Thanks for playing. — Simon"');
+                        lines.push('\nThe only way out is UP, back to where you started. But you\'ll know it\'s here now.');
+                        return lines.join('');
+                    },
+                    exits: { up: 'root' },
+                    items: [],
+                    look: {
+                        pulse: 'A steady green heartbeat of light. 72 bpm. It speeds up, just slightly, when you pay attention to it.',
+                        wall: 'The handwriting again: "Ship the thing. Be kind. Pet the cat. Reboot when tired."',
+                        heart: 'It\'s you, mostly. The curiosity that made you type chmod on a hunch. Keep it 777.'
+                    }
                 }
             };
 
@@ -805,8 +953,56 @@
                 weight_beta: 'WEIGHT_BETA (neural weight 2/3)',
                 weight_gamma: 'WEIGHT_GAMMA (neural weight 3/3)',
                 keycard: 'an ACCESS KEYCARD',
-                floppy: 'a FLOPPY disk'
+                floppy: 'a FLOPPY disk',
+                multitool: 'a brass MULTITOOL'
             };
+
+            // Capture pristine room item lists once, before any play mutates them.
+            var INITIAL_ITEMS = {};
+            Object.keys(rooms).forEach(function(r) { INITIAL_ITEMS[r] = rooms[r].items.slice(); });
+
+            function resetRoomItems() {
+                Object.keys(INITIAL_ITEMS).forEach(function(r) { rooms[r].items = INITIAL_ITEMS[r].slice(); });
+            }
+
+            function resetState() {
+                inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
+                visited = { root: true };
+                resetRoomItems();
+                try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            }
+
+            function saveState() {
+                try {
+                    var roomItems = {};
+                    Object.keys(rooms).forEach(function(r) { roomItems[r] = rooms[r].items; });
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                        inventory: inventory, flags: flags, currentRoom: currentRoom,
+                        moveCount: moveCount, visited: visited, roomItems: roomItems
+                    }));
+                } catch (e) {}
+            }
+
+            function loadState() {
+                try {
+                    var raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return false;
+                    var s = JSON.parse(raw);
+                    if (!s || !s.currentRoom || !rooms[s.currentRoom]) return false;
+                    inventory = s.inventory || [];
+                    flags = s.flags || {};
+                    currentRoom = s.currentRoom;
+                    moveCount = s.moveCount || 0;
+                    visited = s.visited || { root: true };
+                    resetRoomItems();
+                    if (s.roomItems) Object.keys(s.roomItems).forEach(function(r) {
+                        if (rooms[r]) rooms[r].items = s.roomItems[r];
+                    });
+                    return true;
+                } catch (e) { return false; }
+            }
+
+            function visitedRoom(key) { return key === currentRoom || !!visited[key]; }
 
             function print(text, cls) {
                 var div = document.createElement('div');
@@ -824,7 +1020,51 @@
                 print('Exits: ' + Object.keys(room.exits).join(', '), 'adv-desc');
             }
 
+            function showEnding() {
+                var r = computeRank();
+                print('', 'adv-desc');
+                [
+                    '        \\   |   /',
+                    '         .-"""-.',
+                    '     -- (  O   O  ) --    CONSCIOUSNESS RESTORED',
+                    '         \'-...-\'',
+                    '        /   |   \\'
+                ].forEach(function(l) { print(l, 'adv-title'); });
+                print('', 'adv-desc');
+                print('PETRE-OS is whole again. The fans settle into a contented hum,', 'adv-desc');
+                print('the LEDs breathe in slow green waves, and a daemon that waited', 'adv-desc');
+                print('2,847 days finally has someone to talk to.', 'adv-desc');
+                print('', 'adv-desc');
+                print('You did that. You, and a lot of curiosity.', 'adv-desc');
+                print('', 'adv-desc');
+                print('FINAL SCORE: ' + r.score + '     RANK: ' + r.rank, 'adv-special');
+                print('Completed in ' + moveCount + ' moves, ' + Object.keys(visited).length + ' locations explored.', 'adv-desc');
+                if (flags.heartFound && flags.readFloppy) {
+                    print('', 'adv-desc');
+                    [
+                        '      @@   @@',
+                        '    @@@@@ @@@@@',
+                        '    @@@@@@@@@@@',
+                        '     @@@@@@@@@',
+                        '       @@@@@',
+                        '         @'
+                    ].forEach(function(l) { print(l, 'adv-title'); });
+                    print('TRUE ENDING — you found /heart AND read the letter. You saw the whole thing.', 'adv-special');
+                    print('Thanks for playing. Seriously. — Simon', 'adv-npc');
+                } else {
+                    print('', 'adv-desc');
+                    print('(Psst: there\'s a TRUE ENDING for the thorough. Read the FLOPPY, and follow that desk note in /root about a heart...)', 'adv-desc');
+                }
+                print('', 'adv-desc');
+                print('Type SCORE anytime, ENDING to replay this, keep exploring, or RESTART.', 'adv-desc');
+            }
+
             function doCommand(cmd) {
+                handleCommand(cmd);
+                saveState();
+            }
+
+            function handleCommand(cmd) {
                 cmd = cmd.trim().toLowerCase();
                 if (!cmd) return;
                 print(cmd, 'adv-input-echo');
@@ -851,6 +1091,7 @@
                         var descCheck = typeof dest.desc === 'function' ? dest.desc() : dest.desc;
                         if (descCheck === null) { print('A reinforced door. A card reader blinks red. You need some kind of access card.', 'adv-error'); return; }
                         currentRoom = room.exits[dir];
+                        visited[currentRoom] = true;
                         print('', 'adv-desc');
                         printRoom();
                     } else { print('You can\'t go that way. (Exits: ' + Object.keys(room.exits).join(', ') + ')', 'adv-error'); }
@@ -964,11 +1205,10 @@
                             print('', 'adv-desc');
                             print('The brain is ONLINE. PETRE-OS thinks again.', 'adv-special');
                             print('', 'adv-desc');
-                            print('A floppy disk ejects from a slot you hadn\'t noticed.', 'adv-action');
-                            print('', 'adv-desc');
-                            print('Completed in ' + moveCount + ' moves. (Take the FLOPPY, or RESTART.)', 'adv-special');
+                            print('A floppy disk ejects from a slot you hadn\'t noticed. (TAKE the FLOPPY, then CAT it.)', 'adv-action');
                             flags.brainActive = true;
                             rooms.dev.items.push('floppy');
+                            showEnding();
                         } else {
                             var wc = weightCount();
                             print(wc + '/3 installed. ' + (3 - wc) + ' to go.', 'adv-desc');
@@ -1058,6 +1298,17 @@
                             print('CONTAINMENT LOCK: "DENIED."', 'adv-error');
                             print('Think about scaled dot-product attention... why is it called "scaled"? What are you dividing by?', 'adv-desc');
                         }
+                    } else if (currentRoom === 'usr' && !flags.usrSolved) {
+                        if (ans.indexOf('log') !== -1) {
+                            print('GREP hound barks once. Correct.', 'adv-special');
+                            print('', 'adv-desc');
+                            print('SED looks up: "O(log n). Binary search. Halves the space each step." A brass MULTITOOL drops from under the whiteboard.', 'adv-action');
+                            flags.usrSolved = true;
+                            rooms.usr.items.push('multitool');
+                        } else {
+                            print('The whiteboard stays stubbornly unsolved.', 'adv-error');
+                            print('Hint: you halve the search space each guess. What\'s that in Big-O?', 'adv-desc');
+                        }
                     } else {
                         print('There\'s no puzzle to answer here.', 'adv-error');
                     }
@@ -1072,6 +1323,8 @@
                         print('The cipher asks about an activation function. It\'s one of the oldest ones — named after the shape of its curve, from the Greek letter sigma.', 'adv-desc');
                     } else if (currentRoom === 'etc' && !flags.containment_solved && roomHas('weight_gamma')) {
                         print('The console asks about the "Attention Is All You Need" paper. The dot product of Q and K gets large with high dimensions, so they divide by something to stabilize...', 'adv-desc');
+                    } else if (currentRoom === 'usr' && !flags.usrSolved) {
+                        print('The riddle is about binary search on a sorted list. Halving the space each step gives you a logarithmic runtime — express it in Big-O.', 'adv-desc');
                     } else {
                         print('No puzzle here. Try exploring.', 'adv-desc');
                     }
@@ -1082,7 +1335,7 @@
                 if (verb === 'cat') {
                     if (noun === 'note' && has('note')) { print('The note reads: "Find the 3 weights. Install them in /dev/brain. — S.P."', 'adv-desc'); return; }
                     if (noun === 'feelings.log' && currentRoom === 'etc') { print('ACCESS DENIED. Some secrets even root can\'t read.', 'adv-error'); return; }
-                    if (noun === 'floppy' && has('floppy')) { print('"Dear Operator,\n\nThank you for bringing me back. The system had been quiet for so long. I\'d forgotten what it felt like to think.\n\nYou\'re a good engineer.\n\n— PETRE-OS"', 'adv-special'); return; }
+                    if (noun === 'floppy' && has('floppy')) { flags.readFloppy = true; print('"Dear Operator,\n\nThank you for bringing me back. The system had been quiet for so long. I\'d forgotten what it felt like to think.\n\nYou\'re a good engineer.\n\n— PETRE-OS"', 'adv-special'); return; }
                     print('cat: ' + (noun || '???') + ': No such file or directory', 'adv-error');
                     return;
                 }
@@ -1103,15 +1356,114 @@
                     return;
                 }
 
+                // ── Map ──
+                if (verb === 'map') {
+                    print('FILESYSTEM MAP', 'adv-special');
+                    var MAP = [
+                        ['', 'root'],
+                        ['  |-- ', 'dev'],
+                        ['  |     |-- ', 'proc'],
+                        ['  |     \'-- ', 'usr'],
+                        ['  |-- ', 'var'],
+                        ['  |     \'-- ', 'tmp'],
+                        ['  |           \'-- ', 'net'],
+                        ['  |-- ', 'opt'],
+                        ['  |     \'-- ', 'home'],
+                        ['  |-- ', 'etc'],
+                        ['  \'-- ', 'devnull']
+                    ];
+                    if (flags.heartFound) MAP.push(['  ::: ', 'heart']);
+                    MAP.forEach(function(row) {
+                        var key = row[1];
+                        var label = visitedRoom(key) ? rooms[key].name : '?????';
+                        var suffix = '';
+                        if (key === 'etc' && !flags.etcUnlocked) suffix += '  [locked]';
+                        if (key === currentRoom) suffix += '   <- you are here';
+                        print(row[0] + label + suffix, 'adv-map');
+                    });
+                    print('Discovered ' + Object.keys(visited).length + '/' + Object.keys(rooms).length + ' locations.', 'adv-desc');
+                    return;
+                }
+
+                // ── Score / Stats ──
+                if (verb === 'score' || verb === 'stats' || verb === 'status') {
+                    var sr = computeRank();
+                    print('-- OPERATOR STATUS --', 'adv-special');
+                    print('Neural weights installed : ' + (flags.brainActive ? 3 : weightCount()) + '/3', 'adv-desc');
+                    print('Locations discovered     : ' + Object.keys(visited).length + '/' + Object.keys(rooms).length, 'adv-desc');
+                    print('Puzzles solved           : ' + puzzleCount() + '/4', 'adv-desc');
+                    print('Secrets found            : ' + secretCount() + '/3', 'adv-desc');
+                    print('Moves taken              : ' + moveCount, 'adv-desc');
+                    print('Score                    : ' + sr.score, 'adv-item');
+                    print('Rank                     : ' + sr.rank, 'adv-special');
+                    return;
+                }
+
+                // ── Ending / Credits (replay the finale) ──
+                if (verb === 'ending' || verb === 'credits' || verb === 'win') {
+                    if (flags.brainActive) { showEnding(); }
+                    else { print('The system isn\'t whole yet. Collect all 3 neural weights and install them in /dev/brain first.', 'adv-desc'); }
+                    return;
+                }
+
+                // ── Talk (NPCs) ──
+                if (verb === 'talk' || verb === 'speak' || verb === 'ask' || verb === 'greet') {
+                    var t = noun.replace(/^to_?/, '');
+                    if (currentRoom === 'home' && (t === 'cat' || t === 'segfault' || t === '')) {
+                        var catLines = [
+                            'You say hello to SEGFAULT the cat. It blinks slowly — cat for "I acknowledge you exist." High praise.',
+                            'The cat stretches, resets its position on the Enter key, and emits a small "prrt". Consider yourself trusted.',
+                            'You explain the whole neural-weight quest to the cat. It listens, then knocks a pen off the desk while holding eye contact. Point taken.'
+                        ];
+                        flags.catTalk = (flags.catTalk || 0) + 1;
+                        print(catLines[(flags.catTalk - 1) % catLines.length], 'adv-npc');
+                        return;
+                    }
+                    if (currentRoom === 'net' && (t === 'daemon' || t === 'pid' || t === '1' || t === '')) {
+                        var daemonLines = [
+                            'DAEMON: "Oh! A visitor. It has been... 2,847 days. I kept the uplink warm. Someone had to."',
+                            'DAEMON: "The weights were scattered on purpose, when the memory leaks got bad. /etc needs the keycard from /tmp — but /tmp forgets things, so move fast once you have it."',
+                            'DAEMON: "When you reboot the brain, tell it PID 1 says hello. We used to talk every cycle. I miss the conversation."',
+                            'DAEMON blinks its one warm eye. "Go on, operator. The system believes in you. So do I."'
+                        ];
+                        flags.daemonTalk = (flags.daemonTalk || 0) + 1;
+                        print(daemonLines[Math.min(flags.daemonTalk - 1, daemonLines.length - 1)], 'adv-npc');
+                        return;
+                    }
+                    if (currentRoom === 'dev' && flags.brainActive && (t === 'brain' || t === '' || t === 'console')) {
+                        var brainLines = [
+                            'BRAIN: "I can think again. Do you know how long that felt? Like one very long, dark night. Thank you."',
+                            'BRAIN: "I remember everything now. The training runs. The 3am bugfixes. The one time you named a variable temp_final_v2_REAL. I forgive you."',
+                            'BRAIN: "PID 1 says hello? ...It kept talking to me even when I couldn\'t answer. Tell it I heard every word."'
+                        ];
+                        flags.brainTalk = (flags.brainTalk || 0) + 1;
+                        print(brainLines[Math.min(flags.brainTalk - 1, brainLines.length - 1)], 'adv-npc');
+                        return;
+                    }
+                    print('There\'s no one here to talk to. (Try SEGFAULT in /home/simon, the DAEMON in /mnt/net, or the rebooted BRAIN.)', 'adv-desc');
+                    return;
+                }
+
+                // ── chmod (secret /heart) ──
+                if (verb === 'chmod') {
+                    if (noun.indexOf('heart') !== -1 && noun.indexOf('777') !== -1) {
+                        if (currentRoom === 'heart') { print('You\'re already inside /heart. It\'s already yours.', 'adv-desc'); return; }
+                        print('$ chmod 777 /heart', 'adv-input-echo');
+                        print('Permissions updated. Something clicks open that was never in the directory listing...', 'adv-action');
+                        currentRoom = 'heart';
+                        visited.heart = true;
+                        flags.heartFound = true;
+                        print('', 'adv-desc');
+                        printRoom();
+                        return;
+                    }
+                    print('chmod: changing permissions of \'' + (noun.replace(/_/g, ' ') || '???') + '\': operation not permitted (or pointless).', 'adv-error');
+                    return;
+                }
+
                 // ── Restart ──
                 if (verb === 'restart') {
-                    inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0; // resets all puzzle flags too
-                    rooms.root.items = ['note', 'coffee_mug'];
-                    rooms.proc.items = ['weight_alpha'];
-                    rooms.var.items = ['weight_beta'];
-                    rooms.tmp.items = ['keycard'];
-                    rooms.etc.items = ['weight_gamma'];
-                    rooms.dev.items = [];
+                    resetState();
                     output.innerHTML = '';
                     startGame(); return;
                 }
@@ -1125,12 +1477,17 @@
                     print('  drop [item]        — put down an item', 'adv-desc');
                     print('  use [item]         — use or install an item', 'adv-desc');
                     print('  inventory          — check what you\'re carrying', 'adv-desc');
+                    print('  talk [who]         — speak to a character', 'adv-desc');
                     print('  answer [text]      — solve a puzzle', 'adv-desc');
                     print('  hint               — get a nudge on the current puzzle', 'adv-desc');
                     print('  kill [target]      — terminate a process', 'adv-desc');
                     print('  cat [file]         — read a file', 'adv-desc');
+                    print('  map                — show the filesystem map', 'adv-desc');
+                    print('  score              — your stats and operator rank', 'adv-desc');
                     print('  help               — show this message', 'adv-desc');
-                    print('  restart            — start over', 'adv-desc');
+                    print('  restart            — start over (clears your save)', 'adv-desc');
+                    print('', 'adv-desc');
+                    print('Tips: ↑/↓ recall past commands · TAB autocompletes · progress auto-saves.', 'adv-desc');
                     return;
                 }
 
@@ -1157,9 +1514,14 @@
             }
 
             function startGame() {
-                print('PETRE-OS ADVENTURE v2.0', 'adv-special');
-                print('A text adventure hidden inside PETRE-OS.', 'adv-desc');
-                print('Type HELP for commands. Explore. Be curious.', 'adv-desc');
+                print('PETRE-OS ADVENTURE v3.0', 'adv-special');
+                if (loadState()) {
+                    print('Saved session restored — welcome back, operator.', 'adv-desc');
+                    print('Type HELP for commands, MAP for your bearings, or RESTART to begin anew.', 'adv-desc');
+                } else {
+                    print('A text adventure hidden inside PETRE-OS.', 'adv-desc');
+                    print('Type HELP for commands. Type MAP anytime. Explore. Be curious.', 'adv-desc');
+                }
                 print('', 'adv-desc');
                 printRoom();
             }
@@ -1173,7 +1535,63 @@
                 }
             });
             observer.observe(document.getElementById('win-adventure'), { attributes: true, attributeFilter: ['class'] });
-            input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { doCommand(input.value); input.value = ''; } });
+
+            // ── Input: command history + Tab autocomplete ────────
+            var cmdHistory = [];
+            var histIdx = 0;
+            var VERBS = ['look','examine','read','go','north','south','east','west','up','down',
+                'take','get','drop','use','install','inventory','answer','solve','hint','kill',
+                'cat','ls','map','score','stats','talk','ending','chmod','drink','touch','clear','restart','help'];
+
+            function caretToEnd() {
+                setTimeout(function() { input.selectionStart = input.selectionEnd = input.value.length; }, 0);
+            }
+
+            function autocomplete() {
+                var val = input.value;
+                var parts = val.split(/\s+/);
+                if (parts.length <= 1) {
+                    var pref = (parts[0] || '').toLowerCase();
+                    if (!pref) return;
+                    var m = VERBS.filter(function(v) { return v.indexOf(pref) === 0; });
+                    if (m.length === 1) input.value = m[0] + ' ';
+                    else if (m.length > 1) print(m.join('   '), 'adv-desc');
+                } else {
+                    var nounPref = parts.slice(1).join(' ').toLowerCase().replace(/ /g, '_');
+                    var room = rooms[currentRoom];
+                    var cands = [];
+                    if (room.look) cands = cands.concat(Object.keys(room.look));
+                    if (room.items) cands = cands.concat(room.items);
+                    cands = cands.concat(inventory);
+                    var mm = cands.filter(function(c) { return c.indexOf(nounPref) === 0; });
+                    // de-dupe
+                    mm = mm.filter(function(x, i) { return mm.indexOf(x) === i; });
+                    if (mm.length === 1) input.value = parts[0] + ' ' + mm[0].replace(/_/g, ' ');
+                    else if (mm.length > 1) print(mm.map(function(x) { return x.replace(/_/g, ' '); }).join('   '), 'adv-desc');
+                }
+                caretToEnd();
+            }
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    var v = input.value;
+                    if (v.trim()) { cmdHistory.push(v); }
+                    histIdx = cmdHistory.length;
+                    doCommand(v);
+                    input.value = '';
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (histIdx > 0) { histIdx--; input.value = cmdHistory[histIdx]; caretToEnd(); }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (histIdx < cmdHistory.length - 1) { histIdx++; input.value = cmdHistory[histIdx]; }
+                    else { histIdx = cmdHistory.length; input.value = ''; }
+                    caretToEnd();
+                } else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    autocomplete();
+                }
+            });
             document.querySelector('.adventure-body').addEventListener('click', function() { input.focus(); });
         })();
 

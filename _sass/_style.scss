@@ -72,6 +72,40 @@ a {
         );
 }
 
+// Slow bright band drifting down the screen (CRT vertical roll)
+.crt-rollbar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 22vh;
+    pointer-events: none;
+    z-index: 9997;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(74, 246, 38, 0.03) 45%,
+        rgba(180, 255, 180, 0.05) 50%,
+        rgba(74, 246, 38, 0.03) 55%,
+        transparent 100%
+    );
+    animation: crtRoll 9s linear infinite;
+}
+
+// CRT power-on flash (removed by JS after it plays)
+#power-on {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10001;
+    transform-origin: center center;
+    background:
+        radial-gradient(ellipse at center, rgba(180, 255, 180, 0.9) 0%, rgba(74, 246, 38, 0.5) 30%, transparent 70%),
+        $bg;
+    animation: crtPowerOn 0.7s ease-out forwards;
+    &.quick { animation-duration: 0.4s; }
+}
+
 // ── Matrix rain canvas ────────────────────────────────────────
 #matrix-rain {
     position: fixed;
@@ -105,30 +139,85 @@ a {
     85%, 95%      { opacity: 0.3; }
 }
 
+// Subtle chromatic-aberration jitter for big glowing headings
+@keyframes rgbJitter {
+    0%, 100% {
+        text-shadow:
+            -1px 0 rgba(255, 40, 60, 0.35),
+            1px 0 rgba(40, 200, 255, 0.35),
+            0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
+    }
+    50% {
+        text-shadow:
+            -1.6px 0 rgba(255, 40, 60, 0.45),
+            1.6px 0 rgba(40, 200, 255, 0.45),
+            0 0 18px $glow-strong, 0 0 34px rgba(74, 246, 38, 0.2);
+    }
+}
+
+// Focused-window ambient glow pulse (applied to a pseudo-element)
+@keyframes focusPulse {
+    0%, 100% { box-shadow: 0 0 5px $glow; opacity: 0.55; }
+    50%      { box-shadow: 0 0 14px $glow-strong; opacity: 1; }
+}
+
+// Slow rolling CRT scan band
+@keyframes crtRoll {
+    0%   { transform: translateY(-20vh); }
+    100% { transform: translateY(120vh); }
+}
+
+// CRT power-on: warm up from a bright horizontal line
+@keyframes crtPowerOn {
+    0%   { opacity: 1; transform: scaleY(0.004) scaleX(1); filter: brightness(4); }
+    35%  { opacity: 1; transform: scaleY(0.01) scaleX(1); filter: brightness(5); }
+    55%  { opacity: 1; transform: scaleY(1) scaleX(1); filter: brightness(3); }
+    75%  { opacity: 0.6; filter: brightness(1.4); }
+    100% { opacity: 0; transform: scaleY(1) scaleX(1); filter: brightness(1); }
+}
+
 body {
     animation: flicker 6s infinite;
 }
 
-// ── Window animations ─────────────────────────────────────────
+// ── Window animations (CRT power on/off physics) ──────────────
 @keyframes windowOpen {
-    from {
+    0% {
         opacity: 0;
-        transform: scale(0.92);
+        transform: scaleX(0.6) scaleY(0.008);
+        filter: brightness(2.2);
     }
-    to {
+    45% {
         opacity: 1;
-        transform: scale(1);
+        transform: scaleX(1) scaleY(0.012);
+        filter: brightness(2.4);
+    }
+    70% {
+        transform: scaleX(1) scaleY(1.03);
+        filter: brightness(1.4);
+    }
+    100% {
+        opacity: 1;
+        transform: scaleX(1) scaleY(1);
+        filter: brightness(1);
     }
 }
 
 @keyframes windowClose {
-    from {
+    0% {
         opacity: 1;
-        transform: scale(1);
+        transform: scaleX(1) scaleY(1);
+        filter: brightness(1);
     }
-    to {
+    45% {
+        opacity: 1;
+        transform: scaleX(1) scaleY(0.01);
+        filter: brightness(2.6);
+    }
+    100% {
         opacity: 0;
-        transform: scale(0.92);
+        transform: scaleX(0.001) scaleY(0.01);
+        filter: brightness(3);
     }
 }
 
@@ -211,11 +300,17 @@ body {
     cursor: pointer;
     border: 1px solid transparent;
     text-align: center;
-    transition: background 0.1s;
+    transition: background 0.12s, border-color 0.12s;
 
     &:hover {
         background: rgba(74, 246, 38, 0.08);
         border-color: $border;
+        .icon {
+            color: $green-bright;
+            text-shadow: 0 0 14px $glow-strong;
+            transform: translateY(-1px);
+        }
+        span { color: $green; }
     }
 
     &.selected {
@@ -228,6 +323,7 @@ body {
         font-size: 2rem;
         margin-bottom: 4px;
         color: $green;
+        transition: color 0.15s, text-shadow 0.15s, transform 0.15s;
     }
 
     span {
@@ -287,15 +383,16 @@ body {
     background: $bg;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 2px $glow;
     flex-direction: column;
+    transform-origin: center center;
 
     &.open {
         display: flex;
-        animation: windowOpen 0.15s ease-out forwards;
+        animation: windowOpen 0.22s cubic-bezier(0.2, 0.8, 0.3, 1.1) forwards;
     }
 
     &.closing {
         display: flex;
-        animation: windowClose 0.1s ease-in forwards;
+        animation: windowClose 0.16s ease-in forwards;
     }
 
     &.minimizing {
@@ -310,6 +407,16 @@ body {
     &.focused {
         border-color: $green;
         box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 6px $glow;
+    }
+
+    // Ambient glow pulse lives on a pseudo-element so it never
+    // competes with the window open/close transform animation.
+    &.focused::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        pointer-events: none;
+        animation: focusPulse 4s ease-in-out infinite;
     }
 
     &.dragging {
@@ -453,8 +560,12 @@ body {
     font-family: $mono-system;
     font-size: 36px;
     color: $green-bright;
-    text-shadow: 0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
+    text-shadow:
+        -1px 0 rgba(255, 40, 60, 0.35),
+        1px 0 rgba(40, 200, 255, 0.35),
+        0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
     letter-spacing: 0.1em;
+    animation: rgbJitter 5s ease-in-out infinite;
     // Typing cursor appended by JS
     .typing-cursor {
         display: inline-block;
@@ -561,7 +672,7 @@ body {
     font-family: $mono-system;
     color: $green-bright;
     font-size: 20px;
-    text-shadow: 0 0 6px $glow;
+    @include chroma(0 0 6px $glow);
 }
 
 .file-link {
@@ -604,7 +715,7 @@ body {
     font-family: $mono-system;
     color: $green-bright;
     font-size: 22px;
-    text-shadow: 0 0 6px $glow;
+    @include chroma(0 0 6px $glow);
 }
 
 .log-org {
@@ -670,7 +781,7 @@ body {
         color: $green-bright;
         font-size: 18px;
         margin-top: 8px;
-        text-shadow: 0 0 8px $glow;
+        @include chroma(0 0 8px $glow);
     }
     .adv-desc { color: $green-dim; }
     .adv-action { color: $green; }
@@ -685,7 +796,23 @@ body {
     }
     .adv-special {
         color: $green-bright;
-        text-shadow: 0 0 12px $glow-strong;
+        @include chroma(0 0 12px $glow-strong);
+    }
+    .adv-npc {
+        color: #6fd6ff;
+        text-shadow: 0 0 8px rgba(60, 190, 255, 0.4);
+    }
+    .adv-map {
+        font-family: $mono-body;
+        color: $green-dim;
+        white-space: pre;
+        line-height: 1.35;
+    }
+    .adv-title {
+        color: $green-bright;
+        white-space: pre;
+        line-height: 1.1;
+        @include chroma(0 0 12px $glow-strong, 0 0 24px rgba(74, 246, 38, 0.2));
     }
 
     &::-webkit-scrollbar { width: 12px; }
@@ -758,12 +885,14 @@ body {
     gap: 6px;
     flex-shrink: 0;
     text-shadow: 0 0 6px $glow;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 
     &:hover {
         background: $green;
         color: $bg;
         text-shadow: none;
         border-color: $green;
+        box-shadow: 0 0 12px $glow-strong;
     }
 
     i { font-size: 12px; }
@@ -789,6 +918,7 @@ body {
     white-space: nowrap;
     text-shadow: none;
     flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
 
     &:hover {
         border-color: $green-muted;
@@ -861,7 +991,7 @@ body {
     font-size: 18px;
     color: $green-bright;
     letter-spacing: 0.1em;
-    text-shadow: 0 0 8px $glow;
+    @include chroma(0 0 8px $glow);
 }
 
 .start-menu-items {
@@ -877,6 +1007,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: background 0.12s, color 0.12s, padding-left 0.12s;
 
     i {
         width: 18px;
@@ -888,6 +1019,7 @@ body {
         background: $green;
         color: $bg;
         text-shadow: none;
+        padding-left: 18px;
     }
 }
 
@@ -918,7 +1050,19 @@ body {
         );
     }
 
-    #matrix-rain {
+    #matrix-rain,
+    .crt-rollbar,
+    #power-on {
+        display: none;
+    }
+
+    // Drop the heaviest glow/jitter on small screens for legibility + battery
+    .content-heading {
+        animation: none;
+        text-shadow: 0 0 12px $glow;
+    }
+
+    .window.focused::after {
         display: none;
     }
 
@@ -1006,5 +1150,11 @@ body {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+
+    // Fully remove the ambient CRT motion layers
+    .crt-rollbar,
+    #power-on {
+        display: none !important;
     }
 }

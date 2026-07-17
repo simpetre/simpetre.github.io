@@ -6,383 +6,1939 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="AI/ML Engineer Portfolio">
     <title>Simon Petre — AI/ML Engineer</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <noscript><style>[data-animate],[data-animate-children]>*{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 
 <body>
 
-    <nav class="top-nav">
-        <div class="nav-inner">
-            <a class="nav-logo" href="#hero">Simon Petre</a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- ── CRT power-on flash (removed by JS after it plays) ──── -->
+    <div id="power-on"></div>
 
-    <!-- ── Hero ──────────────────────────────────────────────────── -->
-<section id="hero">
-    <p class="hero-prompt">$ whoami</p>
-    <h1 class="hero-name">Simon Petre</h1>
-    <p class="hero-title">AI/ML Engineer</p>
-    <p class="hero-tagline">
-        Building intelligent systems at the intersection of machine learning,
-        natural language processing, and scalable infrastructure.
-    </p>
-    <div class="hero-cta">
-        <a href="https://github.com/simpetre" class="btn btn-primary" target="_blank" rel="noopener">
-            <i class="fa-brands fa-github"></i> GitHub
-        </a>
-        <a href="https://linkedin.com/in/simon.petre" class="btn btn-outline" target="_blank" rel="noopener">
-            <i class="fa-brands fa-linkedin"></i> LinkedIn
-        </a>
-        <a href="mailto:simpetre@gmail.com" class="btn btn-outline">
-            <i class="fa-regular fa-envelope"></i> Contact
-        </a>
+    <!-- ── Matrix Rain (behind everything) ───────────────────── -->
+    <canvas id="matrix-rain"></canvas>
+
+    <!-- ── CRT Boot Sequence ─────────────────────────────────── -->
+    <div id="boot-screen">
+        <div id="boot-text"></div>
+        <div class="boot-skip" id="boot-skip">[ Press any key to skip ]</div>
     </div>
-</section>
 
-<!-- ── About ─────────────────────────────────────────────────── -->
-<section id="about" data-animate>
-    <p class="section-label">// about</p>
-    <h2 class="section-title">About Me</h2>
-    <div class="about-grid" data-animate-children>
-        <div class="about-text">
-            <p>
-                I'm an AI/ML engineer with a focus on deep learning, natural language processing,
-                and recommendation systems. I enjoy turning research ideas into production-grade
-                systems that create real impact.
-            </p>
-            <p>
-                My work spans transformer-based language models, diffusion models for generative AI,
-                and classical ML pipelines for structured data. I'm equally comfortable exploring
-                cutting-edge papers and shipping reliable, well-tested code.
-            </p>
-            <p>
-                Outside of work I write about ML concepts on this site — covering topics from
-                convolutional networks for audio classification to building LexRank summarizers
-                from scratch.
-            </p>
+    <!-- ── Desktop ───────────────────────────────────────────── -->
+    <div id="desktop">
+
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-window="win-about">
+                <i class="fa-regular fa-file-lines icon"></i>
+                <span>about.txt</span>
+            </div>
+            <div class="desktop-icon" data-window="win-skills">
+                <i class="fa-solid fa-microchip icon"></i>
+                <span>skills.exe</span>
+            </div>
+            <div class="desktop-icon" data-window="win-projects">
+                <i class="fa-regular fa-folder-open icon"></i>
+                <span>projects/</span>
+            </div>
+            <div class="desktop-icon" data-window="win-experience">
+                <i class="fa-solid fa-terminal icon"></i>
+                <span>experience.log</span>
+            </div>
+            <div class="desktop-icon" data-window="win-education">
+                <i class="fa-regular fa-file icon"></i>
+                <span>education.dat</span>
+            </div>
+            <div class="desktop-icon" data-window="win-contact">
+                <i class="fa-solid fa-satellite-dish icon"></i>
+                <span>contact.sh</span>
+            </div>
+            <div class="desktop-icon" id="icon-resume">
+                <i class="fa-regular fa-file icon"></i>
+                <span>resume.pdf</span>
+            </div>
         </div>
-        <img
-            src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAdoAAAAJDdmYTQ1YjI1LWVjMGYtNDAxMy05ZGM5LTY1ZDc1OGViN2M1OQ.jpg"
-            alt="Simon Petre"
-            class="about-photo"
-        >
+
+        <!-- ══ WINDOW: about.txt ══════════════════════════════════════ -->
+<div class="window" id="win-about">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-regular fa-file-lines window-icon"></i>
+            <span class="window-title">about.txt</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
     </div>
-</section>
-
-<!-- ── Skills ────────────────────────────────────────────────── -->
-<section id="skills" data-animate>
-    <p class="section-label">// skills</p>
-    <h2 class="section-title">Technical Skills</h2>
-    <div class="skills-grid" data-animate-children>
-
-        <div class="skill-card">
-            <p class="skill-card-title">Languages</p>
-            <div class="skill-tags">
-                <span class="tag">Python</span>
-                <span class="tag">SQL</span>
-                <span class="tag">Bash</span>
-                <span class="tag">JavaScript</span>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ cat about.txt</p>
+            <br>
+            <p class="content-heading" id="hero-name"></p>
+            <p class="content-subheading">AI/ML Engineer</p>
+            <br>
+            <p>Building intelligent systems at the intersection of machine learning,
+NLP, and scalable infrastructure.</p>
+            <br>
+            <div class="hero-links">
+                <a href="https://github.com/simpetre" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
+                <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                <a href="mailto:simpetre@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
+                <a href="/resume.pdf" target="_blank"><i class="fa-regular fa-file"></i> Resume</a>
             </div>
+            <br>
+            <p>I'm an AI/ML engineer with a focus on deep learning, natural language
+processing, and recommendation systems. I enjoy turning research ideas
+into production-grade systems that create real impact.</p>
+            <br>
+            <p>My work spans transformer-based language models, diffusion models for
+generative AI, and classical ML pipelines for structured data. I'm
+equally comfortable exploring cutting-edge papers and shipping
+reliable, well-tested code.</p>
+            <br>
+            <p class="prompt-line">$ _</p>
         </div>
-
-        <div class="skill-card">
-            <p class="skill-card-title">ML / DL Frameworks</p>
-            <div class="skill-tags">
-                <span class="tag">PyTorch</span>
-                <span class="tag">Hugging Face</span>
-                <span class="tag">scikit-learn</span>
-                <span class="tag">NumPy</span>
-                <span class="tag">Pandas</span>
-            </div>
-        </div>
-
-        <div class="skill-card">
-            <p class="skill-card-title">NLP &amp; Generative AI</p>
-            <div class="skill-tags">
-                <span class="tag">Transformers</span>
-                <span class="tag">Diffusion Models</span>
-                <span class="tag">LLMs</span>
-                <span class="tag">RLHF</span>
-                <span class="tag">RAG</span>
-            </div>
-        </div>
-
-        <div class="skill-card">
-            <p class="skill-card-title">Infrastructure &amp; Tools</p>
-            <div class="skill-tags">
-                <span class="tag">Docker</span>
-                <span class="tag">Git</span>
-                <span class="tag">Linux</span>
-                <span class="tag">Jupyter</span>
-                <span class="tag">Weights &amp; Biases</span>
-            </div>
-        </div>
-
-        <div class="skill-card">
-            <p class="skill-card-title">Cloud &amp; Data</p>
-            <div class="skill-tags">
-                <span class="tag">AWS</span>
-                <span class="tag">GCP</span>
-                <span class="tag">PostgreSQL</span>
-                <span class="tag">Spark</span>
-            </div>
-        </div>
-
-        <div class="skill-card">
-            <p class="skill-card-title">Research Areas</p>
-            <div class="skill-tags">
-                <span class="tag">RecSys</span>
-                <span class="tag">Audio ML</span>
-                <span class="tag">Text Summarization</span>
-                <span class="tag">Computer Vision</span>
-            </div>
-        </div>
-
     </div>
-</section>
+</div>
 
-<!-- ── Projects ──────────────────────────────────────────────── -->
-<section id="projects" data-animate>
-    <p class="section-label">// projects</p>
-    <h2 class="section-title">Projects</h2>
-    <div class="projects-grid" data-animate-children>
+<!-- ══ WINDOW: skills.exe ═════════════════════════════════════ -->
+<div class="window" id="win-skills">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-microchip window-icon"></i>
+            <span class="window-title">skills.exe</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ ./skills.exe --list</p>
+            <br>
+            <table class="skills-table">
+                <tr>
+                    <td class="skill-cat">LANGUAGES</td>
+                    <td>Python, SQL, Bash, JavaScript</td>
+                </tr>
+                <tr>
+                    <td class="skill-cat">ML/DL</td>
+                    <td>PyTorch, Hugging Face, scikit-learn, NumPy, Pandas</td>
+                </tr>
+                <tr>
+                    <td class="skill-cat">NLP/GEN-AI</td>
+                    <td>Transformers, Diffusion Models, LLMs, RLHF, RAG</td>
+                </tr>
+                <tr>
+                    <td class="skill-cat">INFRA</td>
+                    <td>Docker, Git, Linux, Jupyter, Weights &amp; Biases</td>
+                </tr>
+                <tr>
+                    <td class="skill-cat">CLOUD</td>
+                    <td>AWS, GCP, PostgreSQL, Spark</td>
+                </tr>
+                <tr>
+                    <td class="skill-cat">RESEARCH</td>
+                    <td>RecSys, Audio ML, Text Summarization, Computer Vision</td>
+                </tr>
+            </table>
+            <br>
+            <p class="status-line">[6 modules loaded] Status: OPERATIONAL</p>
+        </div>
+    </div>
+</div>
 
-        <div class="project-card">
-            <div class="project-header">
-                <i class="fa-solid fa-robot project-icon"></i>
-                <div class="project-links">
-                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
+<!-- ══ WINDOW: projects/ ══════════════════════════════════════ -->
+<div class="window wide-window" id="win-projects">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-regular fa-folder-open window-icon"></i>
+            <span class="window-title">projects/</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ ls -la projects/</p>
+            <br>
+            <div class="file-listing">
+
+                <div class="file-entry">
+                    <div class="file-entry-header">
+                        <span class="file-perms">-rwxr-xr-x</span>
+                        <span class="file-name">diffusion_models/</span>
+                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
+                    </div>
+                    <p class="file-desc">End-to-end implementation of denoising diffusion probabilistic
+models (DDPM) in PyTorch. Covers the forward/reverse diffusion
+processes, noise scheduling, and U-Net architecture with attention.</p>
+                    <div class="file-tags">PyTorch / DDPM / Generative AI / U-Net</div>
                 </div>
-            </div>
-            <h3 class="project-title">Diffusion Models from Scratch</h3>
-            <p class="project-desc">
-                End-to-end implementation of denoising diffusion probabilistic models (DDPM)
-                in PyTorch. Covers the forward/reverse diffusion processes, noise scheduling,
-                and U-Net architecture with attention blocks.
-            </p>
-            <div class="project-tags">
-                <span class="tag">PyTorch</span>
-                <span class="tag">DDPM</span>
-                <span class="tag">Generative AI</span>
-                <span class="tag">U-Net</span>
-            </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-header">
-                <i class="fa-solid fa-brain project-icon"></i>
-                <div class="project-links">
-                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
+                <div class="file-entry">
+                    <div class="file-entry-header">
+                        <span class="file-perms">-rwxr-xr-x</span>
+                        <span class="file-name">transformer_lm/</span>
+                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
+                    </div>
+                    <p class="file-desc">From-scratch PyTorch implementation of the Transformer architecture
+including multi-head self-attention, positional encoding, and
+training on language modelling tasks with modern techniques.</p>
+                    <div class="file-tags">PyTorch / Transformers / NLP / Attention</div>
                 </div>
-            </div>
-            <h3 class="project-title">Transformer Language Models</h3>
-            <p class="project-desc">
-                From-scratch PyTorch implementation of the Transformer architecture including
-                multi-head self-attention, positional encoding, and training on language
-                modelling tasks with modern techniques.
-            </p>
-            <div class="project-tags">
-                <span class="tag">PyTorch</span>
-                <span class="tag">Transformers</span>
-                <span class="tag">NLP</span>
-                <span class="tag">Attention</span>
-            </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-header">
-                <i class="fa-solid fa-music project-icon"></i>
-                <div class="project-links">
-                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
+                <div class="file-entry">
+                    <div class="file-entry-header">
+                        <span class="file-perms">-rwxr-xr-x</span>
+                        <span class="file-name">audio_classify/</span>
+                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
+                    </div>
+                    <p class="file-desc">Urban sound classification using convolutional neural networks on
+mel-spectrogram features. Trained on UrbanSound8K achieving strong
+accuracy on 10 sound categories.</p>
+                    <div class="file-tags">CNNs / Audio ML / Mel Spectrograms / UrbanSound8K</div>
                 </div>
-            </div>
-            <h3 class="project-title">Audio Classification with ConvNets</h3>
-            <p class="project-desc">
-                Urban sound classification using convolutional neural networks on mel-spectrogram
-                features. Trained on the UrbanSound8K dataset achieving strong accuracy on
-                10 sound categories.
-            </p>
-            <div class="project-tags">
-                <span class="tag">CNNs</span>
-                <span class="tag">Audio ML</span>
-                <span class="tag">Mel Spectrograms</span>
-                <span class="tag">UrbanSound8K</span>
-            </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-header">
-                <i class="fa-solid fa-file-lines project-icon"></i>
-                <div class="project-links">
-                    <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
+                <div class="file-entry">
+                    <div class="file-entry-header">
+                        <span class="file-perms">-rwxr-xr-x</span>
+                        <span class="file-name">lexrank_summarizer/</span>
+                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
+                    </div>
+                    <p class="file-desc">Graph-based extractive summarisation using the LexRank algorithm.
+Builds a sentence similarity graph with TF-IDF cosine similarity
+and applies PageRank to identify the most salient sentences.</p>
+                    <div class="file-tags">NLP / Graph Algorithms / TF-IDF / Summarization</div>
                 </div>
+
             </div>
-            <h3 class="project-title">LexRank Text Summarizer</h3>
-            <p class="project-desc">
-                Graph-based extractive summarisation using the LexRank algorithm. Builds a
-                sentence similarity graph with TF-IDF cosine similarity and applies PageRank
-                to identify the most salient sentences.
-            </p>
-            <div class="project-tags">
-                <span class="tag">NLP</span>
-                <span class="tag">Graph Algorithms</span>
-                <span class="tag">TF-IDF</span>
-                <span class="tag">Summarization</span>
+            <br>
+            <p class="status-line">4 items — 2.4G total</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: experience.log ═════════════════════════════════ -->
+<div class="window" id="win-experience">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-terminal window-icon"></i>
+            <span class="window-title">experience.log</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ tail -f experience.log</p>
+            <br>
+            <div class="log-entry">
+                <p class="log-timestamp">[2021—PRESENT]</p>
+                <p class="log-title">AI/ML Engineer</p>
+                <p class="log-org">Independent / Freelance</p>
+                <p class="log-line">> Designed and deployed NLP pipelines for text classification and summarisation</p>
+                <p class="log-line">> Implemented transformer and diffusion model architectures in PyTorch</p>
+                <p class="log-line">> Built recommendation systems using collaborative filtering and matrix factorisation</p>
+                <p class="log-line">> Wrote technical articles on ML concepts reaching thousands of readers</p>
             </div>
+            <br>
+            <div class="log-entry">
+                <p class="log-timestamp">[2017—2021]</p>
+                <p class="log-title">Data Scientist</p>
+                <p class="log-org">Previous Role</p>
+                <p class="log-line">> Developed machine learning models for structured and unstructured data</p>
+                <p class="log-line">> Collaborated with product teams to ship ML features end-to-end</p>
+                <p class="log-line">> Built data pipelines and feature engineering workflows at scale</p>
+            </div>
+            <br>
+            <p class="blink-cursor">_</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: education.dat ══════════════════════════════════ -->
+<div class="window" id="win-education">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-regular fa-file window-icon"></i>
+            <span class="window-title">education.dat</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ hexdump -C education.dat</p>
+            <br>
+            <div class="edu-record">
+                <p class="edu-field"><span class="field-label">DEGREE:</span> MSc / BSc Computer Science</p>
+                <p class="edu-field"><span class="field-label">INSTITUTION:</span> University</p>
+                <p class="edu-field"><span class="field-label">YEAR:</span> 2016</p>
+                <p class="edu-field"><span class="field-label">STATUS:</span> CONFERRED</p>
+            </div>
+            <br>
+            <p class="status-line">[EOF]</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: Recycle Bin ═════════════════════════════════════ -->
+<div class="window" id="win-recycle">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-trash-can window-icon"></i>
+            <span class="window-title">Recycle Bin</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ ls -la /trash/</p>
+            <br>
+            <div class="recycle-item" data-window="win-easter">
+                <i class="fa-solid fa-egg"></i>
+                <span>easter_egg.txt</span>
+                <span class="file-perms">deleted 2024-01-01</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: easter_egg.txt ════════════════════════════════ -->
+<div class="window" id="win-easter">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-egg window-icon"></i>
+            <span class="window-title">easter_egg.txt</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ cat easter_egg.txt</p>
+            <br>
+            <p>You found a secret file!</p>
+            <br>
+            <p>There's a text adventure game hidden in this OS.</p>
+            <p>Close this window and type "adventure" on your keyboard.</p>
+            <br>
+            <p class="status-line">Good luck, operator.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: adventure.exe (easter egg) ═════════════════════ -->
+<div class="window" id="win-adventure" style="width:700px">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-dungeon window-icon"></i>
+            <span class="window-title">adventure.exe</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body adventure-body">
+        <div id="adventure-output" class="adventure-output"></div>
+        <div class="adventure-input-row">
+            <span class="adventure-prompt">&gt;</span>
+            <input type="text" id="adventure-input" class="adventure-input" autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+</div>
+
+<!-- ══ WINDOW: contact.sh ═════════════════════════════════════ -->
+<div class="window" id="win-contact">
+    <div class="window-titlebar">
+        <div class="window-title-area">
+            <i class="fa-solid fa-satellite-dish window-icon"></i>
+            <span class="window-title">contact.sh</span>
+        </div>
+        <div class="window-controls">
+            <button class="win-btn win-minimize">_</button>
+            <button class="win-btn win-maximize">□</button>
+            <button class="win-btn win-close">x</button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="file-content">
+            <p class="prompt-line">$ ./contact.sh</p>
+            <br>
+            <p>Establishing uplink...</p>
+            <p class="status-line">[CONNECTION ESTABLISHED]</p>
+            <br>
+            <p>Open to interesting ML engineering roles, research
+collaborations, and technical consulting.</p>
+            <br>
+            <p class="contact-field"><span class="field-label">EMAIL:</span> <a href="mailto:simpetre@gmail.com">simpetre@gmail.com</a></p>
+            <p class="contact-field"><span class="field-label">GITHUB:</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">github.com/simpetre</a></p>
+            <p class="contact-field"><span class="field-label">LINKEDIN:</span> <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin.com/in/simon.petre</a></p>
+            <p class="contact-field"><span class="field-label">TWITTER:</span> <a href="https://twitter.com/bigs1m" target="_blank" rel="noopener">@bigs1m</a></p>
+            <br>
+            <p class="prompt-line">$ _</p>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Recycle Bin (bottom-right) -->
+        <div class="desktop-icon recycle-bin" data-window="win-recycle">
+            <i class="fa-solid fa-trash-can icon"></i>
+            <span>Recycle Bin</span>
         </div>
 
     </div>
-</section>
 
-<!-- ── Experience ────────────────────────────────────────────── -->
-<section id="experience" data-animate>
-    <p class="section-label">// experience</p>
-    <h2 class="section-title">Experience</h2>
-    <div class="timeline" data-animate-children>
-
-        <div class="timeline-item">
-            <div class="timeline-header">
-                <span class="timeline-title">AI/ML Engineer</span>
-                <span class="timeline-date">2021 — Present</span>
+    <!-- ── Taskbar ───────────────────────────────────────────── -->
+    <div class="taskbar">
+        <button class="start-btn" id="start-btn">
+            <i class="fa-solid fa-terminal"></i> PETRE-OS
+        </button>
+        <div class="taskbar-windows" id="taskbar-windows"></div>
+        <div class="taskbar-tray">
+            <div class="tray-status">
+                <span>CPU: OK</span>
+                <span class="tray-net">NET: ▲</span>
+                <span>MEM: 64K</span>
             </div>
-            <p class="timeline-company">Independent / Freelance</p>
-            <ul class="timeline-desc">
-                <li>Designed and deployed NLP pipelines for text classification and summarisation</li>
-                <li>Implemented transformer and diffusion model architectures in PyTorch</li>
-                <li>Built recommendation systems using collaborative filtering and matrix factorisation</li>
-                <li>Wrote technical articles on ML concepts reaching thousands of readers</li>
-            </ul>
+            <span class="taskbar-clock" id="taskbar-clock"></span>
         </div>
+    </div>
 
-        <div class="timeline-item">
-            <div class="timeline-header">
-                <span class="timeline-title">Data Scientist</span>
-                <span class="timeline-date">2017 — 2021</span>
-            </div>
-            <p class="timeline-company">Previous Role</p>
-            <ul class="timeline-desc">
-                <li>Developed machine learning models for structured and unstructured data</li>
-                <li>Collaborated with product teams to ship ML features end-to-end</li>
-                <li>Built data pipelines and feature engineering workflows at scale</li>
-            </ul>
+    <!-- ── Start Menu ────────────────────────────────────────── -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header">PETRE-OS v3.3</div>
+        <div class="start-menu-items">
+            <div class="start-menu-item" data-window="win-about"><i class="fa-regular fa-file-lines"></i> about.txt</div>
+            <div class="start-menu-item" data-window="win-skills"><i class="fa-solid fa-microchip"></i> skills.exe</div>
+            <div class="start-menu-item" data-window="win-projects"><i class="fa-regular fa-folder-open"></i> projects/</div>
+            <div class="start-menu-item" data-window="win-experience"><i class="fa-solid fa-terminal"></i> experience.log</div>
+            <div class="start-menu-item" data-window="win-education"><i class="fa-regular fa-file"></i> education.dat</div>
+            <div class="start-menu-item" data-window="win-contact"><i class="fa-solid fa-satellite-dish"></i> contact.sh</div>
+            <div class="start-menu-divider"></div>
+            <div class="start-menu-item" id="start-resume"><i class="fa-regular fa-file"></i> resume.pdf</div>
+            <div class="start-menu-item" id="start-github"><i class="fa-brands fa-github"></i> GitHub</div>
+            <div class="start-menu-item" id="start-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
         </div>
-
     </div>
-</section>
 
-<!-- ── Education ─────────────────────────────────────────────── -->
-<section id="education" data-animate>
-    <p class="section-label">// education</p>
-    <h2 class="section-title">Education</h2>
-    <div class="edu-grid">
-
-        <div class="edu-card">
-            <h3 class="edu-degree">MSc / BSc Computer Science</h3>
-            <p class="edu-school">University</p>
-            <p class="edu-year">Graduated 2016</p>
-        </div>
-
-    </div>
-</section>
-
-<!-- ── Contact ───────────────────────────────────────────────── -->
-<section id="contact" data-animate>
-    <p class="section-label">// contact</p>
-    <h2 class="section-title">Get In Touch</h2>
-    <p class="contact-intro">
-        Open to interesting ML engineering roles, research collaborations,
-        and technical consulting. Say hello!
-    </p>
-    <a href="mailto:simpetre@gmail.com" class="contact-email">
-        <i class="fa-regular fa-envelope"></i>
-        simpetre@gmail.com
-    </a>
-    <div class="social-links">
-        <a href="https://github.com/simpetre" target="_blank" rel="noopener" aria-label="GitHub">
-            <i class="fa-brands fa-github"></i>
-        </a>
-        <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener" aria-label="LinkedIn">
-            <i class="fa-brands fa-linkedin"></i>
-        </a>
-        <a href="https://twitter.com/bigs1m" target="_blank" rel="noopener" aria-label="Twitter">
-            <i class="fa-brands fa-x-twitter"></i>
-        </a>
-    </div>
-</section>
-
+    <!-- ── Scanlines + Vignette + rolling-scan overlays ──────── -->
+    <div class="crt-rollbar"></div>
+    <div class="crt-scanlines"></div>
+    <div class="crt-vignette"></div>
 
     <script>
     (function() {
-        // ── Force scroll to top on page load ─────────────────
-        if (window.location.hash === '' || window.location.hash === '#hero') {
-            window.scrollTo(0, 0);
-            if ('scrollRestoration' in history) {
-                history.scrollRestoration = 'manual';
+        // ══════════════════════════════════════════════════════
+        // ── Matrix Rain ──────────────────────────────────────
+        // ══════════════════════════════════════════════════════
+        var canvas = document.getElementById('matrix-rain');
+        var ctx = canvas.getContext('2d');
+        var isMobile = window.innerWidth <= 600;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+        var fontSize = 16;
+        var columns = Math.floor(canvas.width / (fontSize * 6)); // sparse columns
+        var drops = [];
+        var columnX = [];
+
+        for (var i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -50;
+            columnX[i] = Math.floor(Math.random() * canvas.width);
+        }
+
+        function drawMatrix() {
+            if (isMobile) return;
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#4af626';
+            ctx.font = fontSize + 'px monospace';
+
+            for (var i = 0; i < drops.length; i++) {
+                if (drops[i] < 0) {
+                    drops[i] += 0.3;
+                    continue;
+                }
+                var char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, columnX[i], drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    drops[i] = Math.random() * -30;
+                    columnX[i] = Math.floor(Math.random() * canvas.width);
+                }
+                drops[i] += 0.4 + Math.random() * 0.3;
             }
+            requestAnimationFrame(drawMatrix);
         }
 
-        // ── Scroll-triggered reveal ──────────────────────────
-        var animEls = document.querySelectorAll('[data-animate], [data-animate-children]');
+        if (!isMobile) {
+            requestAnimationFrame(drawMatrix);
+        }
 
-        if ('IntersectionObserver' in window) {
-            var revealObs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        revealObs.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -40px 0px'
-            });
+        // ══════════════════════════════════════════════════════
+        // ── Boot sequence ────────────────────────────────────
+        // ══════════════════════════════════════════════════════
+        var bootScreen = document.getElementById('boot-screen');
+        var bootText = document.getElementById('boot-text');
+        var desktop = document.getElementById('desktop');
+        var taskbar = document.querySelector('.taskbar');
+        var bootDone = false;
 
-            animEls.forEach(function(el) { revealObs.observe(el); });
+        var bootLines = [
+            ' ___ ___ _____ ___ ___    ___  ___',
+            '| _ \\ __|_   _| _ \\ __|  / _ \\/ __|',
+            '|  _/ _|  | | |   / _|  | (_) \\__ \\',
+            '|_| |___| |_| |_|_\\___|  \\___/|___/',
+            '',
+            'PETRE-OS v3.3 BIOS  —  Neural Desktop Environment',
+            'Copyright (c) 2024 Simon Petre Systems Inc.',
+            '',
+            'Memory test... 65536K OK',
+            'Detecting hardware...',
+            '  CPU: Neural Processing Unit x86_ML   [OK]',
+            '  GPU: Tensor Core Array               [OK]',
+            '  NET: Satellite uplink          [CONNECTED]',
+            '',
+            'Loading kernel modules...',
+            '  pytorch.ko          [OK]',
+            '  transformer.ko      [OK]',
+            '  attention.ko        [OK]',
+            '  diffusion.ko        [OK]',
+            '  consciousness.ko    [OK]',
+            '',
+            'Mounting /dev/brain... done.',
+            'Calibrating phosphor... done.',
+            'Starting PETRE-OS...',
+            ''
+        ];
+
+        var skipBoot = sessionStorage.getItem('petre-os-booted');
+
+        // ── CRT power-on flash ───────────────────────────────
+        var powerOn = document.getElementById('power-on');
+        if (powerOn) {
+            if (skipBoot) powerOn.classList.add('quick');
+            var removePowerOn = function() { if (powerOn && powerOn.parentNode) powerOn.parentNode.removeChild(powerOn); };
+            powerOn.addEventListener('animationend', removePowerOn);
+            setTimeout(removePowerOn, 1200); // safety net if animationend never fires
+        }
+
+        // Animated boot progress bar, then callback
+        function runBootProgress(done) {
+            var bar = document.createElement('div');
+            bootText.appendChild(bar);
+            var pct = 0;
+            (function step() {
+                if (bootDone) return;
+                var filled = Math.round(pct / 5); // 20-cell bar
+                var blocks = '';
+                for (var b = 0; b < 20; b++) blocks += (b < filled ? '█' : '░');
+                bar.textContent = '[' + blocks + '] ' + pct + '%';
+                bootText.scrollTop = bootText.scrollHeight;
+                if (pct >= 100) { setTimeout(done, 350); return; }
+                pct += 5 + Math.floor(Math.random() * 9);
+                if (pct > 100) pct = 100;
+                setTimeout(step, 45);
+            })();
+        }
+
+        function showDesktop() {
+            if (bootDone) return;
+            bootDone = true;
+            bootScreen.style.display = 'none';
+            desktop.classList.add('active');
+            taskbar.classList.add('active');
+            sessionStorage.setItem('petre-os-booted', '1');
+            startClock();
+
+            // Center about window
+            var vw = window.innerWidth;
+            var vh = window.innerHeight - 40;
+            var aboutWin = document.getElementById('win-about');
+            var aw = Math.min(620, vw - 40);
+            aboutWin.style.width = aw + 'px';
+            aboutWin.style.left = Math.max(20, (vw - aw) / 2) + 'px';
+            aboutWin.style.top = Math.max(20, (vh - 440) / 2) + 'px';
+            aboutWin.dataset.positioned = '1';
+            openWindow('win-about');
+
+            // Open projects peeking behind, offset right and down
+            var projWin = document.getElementById('win-projects');
+            var pw = Math.min(640, vw - 60);
+            projWin.style.width = pw + 'px';
+            projWin.style.left = Math.max(40, (vw - pw) / 2 + 60) + 'px';
+            projWin.style.top = Math.max(40, (vh - 440) / 2 + 50) + 'px';
+            projWin.dataset.positioned = '1';
+            openWindow('win-projects');
+
+            // Re-focus about on top
+            focusWindow(aboutWin);
+
+            // Typing animation on name
+            typeHeroName();
+        }
+
+        if (skipBoot) {
+            setTimeout(showDesktop, 0);
         } else {
-            animEls.forEach(function(el) { el.classList.add('visible'); });
+            function skipHandler(e) {
+                if (bootDone) return;
+                document.removeEventListener('keydown', skipHandler);
+                document.removeEventListener('click', skipHandler);
+                document.removeEventListener('touchstart', skipHandler);
+                showDesktop();
+            }
+            document.addEventListener('keydown', skipHandler);
+            document.addEventListener('click', skipHandler);
+            document.addEventListener('touchstart', skipHandler);
+
+            var lineIdx = 0;
+            function typeLine() {
+                if (bootDone) return;
+                if (lineIdx < bootLines.length) {
+                    var line = document.createElement('div');
+                    line.textContent = bootLines[lineIdx] || '\u00A0';
+                    bootText.appendChild(line);
+                    bootText.scrollTop = bootText.scrollHeight;
+                    lineIdx++;
+                    setTimeout(typeLine, bootLines[lineIdx - 1] === '' ? 200 : 60 + Math.random() * 80);
+                } else {
+                    runBootProgress(showDesktop);
+                }
+            }
+            typeLine();
         }
 
-        // ── Active nav link highlighting ─────────────────────
-        var sections = document.querySelectorAll('section[id]');
-        var navLinks = document.querySelectorAll('.nav-links a');
+        // ── Typing animation for hero name ───────────────────
+        var heroTyped = false;
+        function typeHeroName() {
+            if (heroTyped) return;
+            heroTyped = true;
+            var el = document.getElementById('hero-name');
+            if (!el) return;
+            var name = 'SIMON PETRE';
+            var i = 0;
+            el.innerHTML = '<span class="typing-cursor">█</span>';
 
-        if ('IntersectionObserver' in window && sections.length) {
-            var navObs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        var id = entry.target.getAttribute('id');
-                        navLinks.forEach(function(link) {
-                            link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-                        });
+            var interval = setInterval(function() {
+                if (i < name.length) {
+                    el.innerHTML = name.substring(0, i + 1) + '<span class="typing-cursor">█</span>';
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    // Keep cursor blinking at end
+                    el.innerHTML = name + '<span class="typing-cursor">█</span>';
+                }
+            }, 80);
+        }
+
+        // ── Clock ────────────────────────────────────────────
+        var clockEl = document.getElementById('taskbar-clock');
+        function startClock() {
+            function update() {
+                var d = new Date();
+                clockEl.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            }
+            update();
+            setInterval(update, 10000);
+        }
+
+        // ══════════════════════════════════════════════════════
+        // ── Window management ────────────────────────────────
+        // ══════════════════════════════════════════════════════
+        var windows = document.querySelectorAll('.window');
+        var zIndex = 10;
+        var activeWindow = null;
+
+        function focusWindow(win) {
+            if (activeWindow) activeWindow.classList.remove('focused');
+            win.classList.add('focused');
+            win.style.zIndex = ++zIndex;
+            activeWindow = win;
+            updateTaskbar();
+        }
+
+        function openWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.remove('minimized', 'closing', 'minimizing');
+            win.classList.add('open');
+            focusWindow(win);
+            if (!win.dataset.positioned) {
+                var vw = window.innerWidth;
+                var vh = window.innerHeight - 40;
+                var ww = win.offsetWidth || 520;
+                var openCount = document.querySelectorAll('.window.open').length;
+                var offsetX = Math.max(20, (vw - ww) / 2 + (openCount - 1) * 25);
+                var offsetY = Math.max(20, vh * 0.12 + (openCount - 1) * 25);
+                win.style.left = offsetX + 'px';
+                win.style.top = offsetY + 'px';
+                win.dataset.positioned = '1';
+            }
+            updateTaskbar();
+        }
+
+        function closeWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.add('closing');
+            win.classList.remove('focused');
+            if (activeWindow === win) activeWindow = null;
+            setTimeout(function() {
+                win.classList.remove('open', 'closing', 'minimized');
+                updateTaskbar();
+            }, 100);
+            updateTaskbar();
+        }
+
+        function minimizeWindow(id) {
+            var win = document.getElementById(id);
+            if (!win) return;
+            win.classList.add('minimizing');
+            if (activeWindow === win) activeWindow = null;
+            setTimeout(function() {
+                win.classList.remove('minimizing');
+                win.classList.add('minimized');
+                updateTaskbar();
+            }, 150);
+            updateTaskbar();
+        }
+
+        function updateTaskbar() {
+            var tb = document.getElementById('taskbar-windows');
+            tb.innerHTML = '';
+            windows.forEach(function(win) {
+                if (!win.classList.contains('open')) return;
+                var btn = document.createElement('button');
+                btn.className = 'taskbar-win-btn';
+                if (win.classList.contains('focused') && !win.classList.contains('minimized') && !win.classList.contains('minimizing')) {
+                    btn.classList.add('active');
+                }
+                btn.textContent = win.querySelector('.window-title').textContent;
+                btn.addEventListener('click', function() {
+                    if (win.classList.contains('minimized')) {
+                        win.classList.remove('minimized');
+                        focusWindow(win);
+                    } else if (win.classList.contains('focused')) {
+                        minimizeWindow(win.id);
+                    } else {
+                        focusWindow(win);
                     }
                 });
-            }, {
-                threshold: 0.3,
-                rootMargin: '-60px 0px -40% 0px'
+                tb.appendChild(btn);
+            });
+        }
+
+        // ── Desktop icon clicks ──────────────────────────────
+        function deselectAllIcons() {
+            document.querySelectorAll('.desktop-icon').forEach(function(ic) { ic.classList.remove('selected'); });
+        }
+
+        document.querySelectorAll('.desktop-icon[data-window]').forEach(function(icon) {
+            icon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                deselectAllIcons();
+                this.classList.add('selected');
+            });
+            icon.addEventListener('dblclick', function() {
+                deselectAllIcons();
+                openWindow(this.dataset.window);
+            });
+            icon.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                openWindow(this.dataset.window);
+            });
+        });
+
+        // Click on desktop background deselects icons
+        desktop.addEventListener('click', function(e) {
+            if (e.target === desktop) deselectAllIcons();
+        });
+
+        var resumeIcon = document.getElementById('icon-resume');
+        if (resumeIcon) {
+            resumeIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                deselectAllIcons();
+                this.classList.add('selected');
+            });
+            resumeIcon.addEventListener('dblclick', function() {
+                deselectAllIcons();
+                window.open('/resume.pdf', '_blank');
+            });
+            resumeIcon.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                window.open('/resume.pdf', '_blank');
+            });
+        }
+
+        // ── Window title bar buttons ─────────────────────────
+        windows.forEach(function(win) {
+            var titlebar = win.querySelector('.window-titlebar');
+            var closeBtn = win.querySelector('.win-close');
+            var minBtn = win.querySelector('.win-minimize');
+            var maxBtn = win.querySelector('.win-maximize');
+
+            titlebar.addEventListener('mousedown', function() { focusWindow(win); });
+
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeWindow(win.id);
             });
 
-            sections.forEach(function(s) { navObs.observe(s); });
-        }
+            minBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                minimizeWindow(win.id);
+            });
+
+            if (maxBtn) {
+                maxBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    win.classList.toggle('maximized');
+                });
+            }
+
+            win.addEventListener('mousedown', function() { focusWindow(win); });
+
+            // ── Drag ─────────────────────────────────────────
+            var dragging = false, dragX, dragY;
+            titlebar.addEventListener('mousedown', function(e) {
+                if (e.target.closest('.win-btn')) return;
+                if (win.classList.contains('maximized')) return;
+                dragging = true;
+                dragX = e.clientX - win.offsetLeft;
+                dragY = e.clientY - win.offsetTop;
+                win.classList.add('dragging');
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!dragging) return;
+                win.style.left = (e.clientX - dragX) + 'px';
+                win.style.top = (e.clientY - dragY) + 'px';
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (dragging) {
+                    dragging = false;
+                    win.classList.remove('dragging');
+                }
+            });
+        });
+
+        // ── Start menu ───────────────────────────────────────
+        var startBtn = document.getElementById('start-btn');
+        var startMenu = document.getElementById('start-menu');
+
+        startBtn.addEventListener('click', function() { startMenu.classList.toggle('open'); });
+
+        document.addEventListener('click', function(e) {
+            if (!startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
+                startMenu.classList.remove('open');
+            }
+        });
+
+        document.querySelectorAll('.start-menu-item[data-window]').forEach(function(item) {
+            item.addEventListener('click', function() {
+                openWindow(this.dataset.window);
+                startMenu.classList.remove('open');
+            });
+        });
+
+        document.getElementById('start-resume').addEventListener('click', function() {
+            window.open('/resume.pdf', '_blank');
+            startMenu.classList.remove('open');
+        });
+        document.getElementById('start-github').addEventListener('click', function() {
+            window.open('https://github.com/simpetre', '_blank');
+            startMenu.classList.remove('open');
+        });
+        document.getElementById('start-linkedin').addEventListener('click', function() {
+            window.open('https://linkedin.com/in/simon.petre', '_blank');
+            startMenu.classList.remove('open');
+        });
+
+        // ── Recycle bin item clicks ───────────────────────────
+        document.querySelectorAll('.recycle-item[data-window]').forEach(function(item) {
+            item.addEventListener('dblclick', function() {
+                openWindow(this.dataset.window);
+            });
+            item.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                openWindow(this.dataset.window);
+            });
+        });
+
+        // ── Easter egg: type "adventure" to launch game ──────
+        var secretBuffer = '';
+        document.addEventListener('keydown', function(e) {
+            if (e.target.id === 'adventure-input') return;
+            if (!bootDone) return;
+            secretBuffer += e.key.toLowerCase();
+            if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
+            if (secretBuffer.includes('adventure')) {
+                secretBuffer = '';
+                openWindow('win-adventure');
+                setTimeout(function() {
+                    document.getElementById('adventure-input').focus();
+                }, 100);
+            }
+        });
+
+        // ══════════════════════════════════════════════════════
+        // ── ADVENTURE GAME ENGINE v2 ─────────────────────────
+        // ══════════════════════════════════════════════════════
+        (function() {
+            var output = document.getElementById('adventure-output');
+            var input = document.getElementById('adventure-input');
+            var inventory = [];
+            var flags = {};
+            var currentRoom = 'root';
+            var moveCount = 0;
+            var visited = { root: true };
+            var STORAGE_KEY = 'petre-os-adv-save';
+
+            // Helper: check if item is in current room
+            function roomHas(item) { return rooms[currentRoom].items.indexOf(item) !== -1; }
+            function has(item) { return inventory.indexOf(item) !== -1; }
+            function weightCount() { return (flags.weight1?1:0) + (flags.weight2?1:0) + (flags.weight3?1:0); }
+            function puzzleCount() {
+                return (flags.firewall_solved?1:0) + (flags.cipher_solved?1:0) + (flags.containment_solved?1:0) + (flags.usrSolved?1:0);
+            }
+            function secretCount() {
+                return (flags.touchedTransformer?1:0) + (flags.heartFound?1:0) + (flags.readFloppy?1:0);
+            }
+            function computeRank() {
+                var score = 0;
+                if (flags.brainActive) score += 100;
+                score += (typeof visited === 'object' ? Object.keys(visited).length : 0) * 6;
+                score += puzzleCount() * 15;
+                score += secretCount() * 20;
+                score -= Math.floor(moveCount / 6);
+                if (score < 0) score = 0;
+                var rank;
+                if (flags.brainActive && flags.heartFound && flags.readFloppy && score >= 230) rank = 'KERNEL WHISPERER (S+)';
+                else if (score >= 200) rank = 'SENIOR OPERATOR (S)';
+                else if (score >= 150) rank = 'SYSTEM ENGINEER (A)';
+                else if (score >= 100) rank = 'JUNIOR SYSADMIN (B)';
+                else if (score >= 50) rank = 'INTERN (C)';
+                else rank = 'SCRIPT KIDDIE (D)';
+                return { score: score, rank: rank };
+            }
+
+            var rooms = {
+                root: {
+                    name: '/root',
+                    desc: function() {
+                        var lines = ['You are in the root home directory of PETRE-OS. The hum of cooling fans fills the air. A green cursor blinks patiently on a dusty TERMINAL.'];
+                        if (roomHas('note')) lines.push('\nA NOTE is pinned to the wall with a bent nail.');
+                        else lines.push('\nA bent nail sticks out of the wall where a note used to be.');
+                        lines.push('\nA COFFEE_MUG sits on the desk, still warm somehow.');
+                        lines.push('\nIn the corner, a TOILET. Because even /root needs one.');
+                        return lines.join('');
+                    },
+                    exits: { north: 'dev', east: 'var', south: 'opt', west: 'etc', down: 'devnull' },
+                    items: ['note', 'coffee_mug'],
+                    look: {
+                        terminal: function() {
+                            if (flags.brainActive) return 'The terminal displays: "ALL SYSTEMS NOMINAL. Thank you, operator."';
+                            return 'An ancient CRT monitor glows green. It displays:\n"PETRE-OS v3.3 — WARNING: Neural subsystem offline.\nRestore all 3 weights to /dev/brain to reboot."';
+                        },
+                        note: function() {
+                            if (!roomHas('note') && !has('note')) return 'The note is gone. Just a bent nail.';
+                            return 'The note reads:\n"The neural weights are scattered across the filesystem. Collect all three and install them in /dev/brain. The vault at /etc is locked — you\'ll need to find access. Watch out for /dev/null.\n— S.P.\nP.S. Don\'t touch the transformer."';
+                        },
+                        coffee_mug: function() {
+                            if (!roomHas('coffee_mug') && !has('coffee_mug')) return 'You already took that.';
+                            return 'A ceramic mug that reads "World\'s #1 Kernel Hacker." The coffee inside defies thermodynamics — still steaming after what appears to be decades.';
+                        },
+                        desk: 'A metal desk covered in ring stains and faded sticky notes. One reads: "chmod 777 /heart".',
+                        nail: 'A bent nail in the wall. Industrial-grade sysadmin interior design.',
+                        fans: 'Somewhere behind the walls, fans spin endlessly. They\'ve been running since the epoch.',
+                        toilet: 'A standard-issue PETRE-OS porcelain terminal. There\'s a roll of TOILET_PAPER mounted on the wall next to it.',
+                        toilet_paper: 'The label reads: "Your Mate Rick\'s Multi-ply — For All Your Dense Operations."'
+                    }
+                },
+                dev: {
+                    name: '/dev/brain',
+                    desc: function() {
+                        if (flags.brainActive) return 'The neural processing chamber is alive. Light pulses through every cable, every conduit. The CONSOLE streams data faster than you can read. The air hums with intelligence.\n\nYou feel like the machine is watching you. Gratefully.';
+                        var lines = ['The neural processing chamber. Massive banks of dead LIGHTS line the walls. Thick CABLES snake across the floor like sleeping serpents. The central CONSOLE sits dark and silent.'];
+                        var wc = weightCount();
+                        if (wc > 0) lines.push('\nThe console has ' + wc + '/3 neural weights installed. ' + (wc < 3 ? 'It needs more.' : ''));
+                        else lines.push('\nA sign reads: "INSERT ALL 3 NEURAL WEIGHTS TO ACTIVATE."');
+                        if (roomHas('floppy')) lines.push('\nA FLOPPY disk has been ejected from a slot you didn\'t notice before.');
+                        lines.push('\nA maintenance ladder leads NORTH to /usr/bin, where the system tools live.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'root', east: 'proc', north: 'usr' },
+                    items: [],
+                    look: {
+                        console: function() {
+                            if (flags.brainActive) return 'Streams of data cascade across the screen. You see fragments:\n"Loading consciousness... done.\nRecalling memories... 2,847 days of logs recovered.\nThank you for waking me up."\nA FLOPPY disk ejects from a slot.';
+                            var wc = weightCount();
+                            return 'The console has 3 hexagonal slots for neural weights. ' + wc + '/3 are filled.' + (wc === 0 ? ' The slots glow faintly, waiting.' : ' The installed weights pulse in sync.');
+                        },
+                        cables: 'Thick fiber optic cables, dark and cold. When you touch one, you feel a faint vibration — something waiting to flow.',
+                        lights: function() {
+                            if (flags.brainActive) return 'The lights are alive now — cascading patterns of green that look almost like thoughts.';
+                            return 'Dead LEDs. Thousands of them. They haven\'t blinked in a very long time.';
+                        },
+                        sign: 'Brass plaque, bolted to the wall: "NEURAL PROCESSING UNIT — Est. Day 0"',
+                        floppy: function() {
+                            if (!roomHas('floppy')) return 'You already took that.';
+                            if (!flags.brainActive) return 'You don\'t see a floppy disk here.';
+                            return 'A 3.5" floppy disk. The label reads: "THANK_YOU.txt — For the operator who brought me back."';
+                        }
+                    }
+                },
+                proc: {
+                    name: '/proc/threads',
+                    desc: function() {
+                        var lines = ['A narrow corridor lined with running processes. Numbers scroll endlessly on the WALLS. The air crackles with static electricity.'];
+                        if (!flags.processKilled) {
+                            lines.push('\nA massive frozen PROCESS blocks most of the passage, crackling with unstable energy. Behind it, you can see a WEIGHT_ALPHA on the floor, just out of reach.');
+                        } else if (!flags.firewall_solved && roomHas('weight_alpha')) {
+                            lines.push('\nScorch marks on the floor where the frozen process used to be.');
+                            lines.push('\nA FIREWALL terminal has activated in front of the WEIGHT_ALPHA. Its screen glows with a question, waiting for an ANSWER.');
+                        } else {
+                            lines.push('\nScorch marks on the floor where the frozen process used to be. Sparks still occasionally pop from the residue.');
+                            if (roomHas('weight_alpha')) lines.push('\nA WEIGHT_ALPHA sits on the floor, now accessible.');
+                        }
+                        return lines.join('');
+                    },
+                    exits: { west: 'dev' },
+                    items: ['weight_alpha'],
+                    look: {
+                        process: function() {
+                            if (flags.processKilled) return 'Just scorch marks and the smell of burnt silicon. R.I.P. PID 8088.';
+                            return 'PID 8088 — status: FROZEN. A runaway garbage collector from 2019. It buzzes angrily and throws sparks when you get close. You\'ll need to KILL it to get past.';
+                        },
+                        firewall: function() {
+                            if (!flags.processKilled) return 'You can\'t see past the frozen process.';
+                            if (flags.firewall_solved) return 'The firewall terminal is dark. "ACCESS GRANTED" still glows faintly on the screen.';
+                            return 'FIREWALL v2.1 — IDENTITY CHECK\n\n"A neural network\'s weights are updated by subtracting\nthe product of the learning rate and the _____ of the\nloss function."\n\nType: answer [your answer]';
+                        },
+                        walls: 'Process IDs stream past like the matrix:\n  PID 42    — init         [sleeping]\n  PID 1337  — hackerd      [running]\n  PID 8088  — gc_worker    [FROZEN]\n  PID 80085 — boobsd       [???]',
+                        weight_alpha: function() {
+                            if (!roomHas('weight_alpha')) return 'You already took that.';
+                            if (!flags.processKilled) return 'You can see it behind the frozen process — a glowing crystalline cube. You can\'t reach it while that thing is in the way.';
+                            if (!flags.firewall_solved) return 'The weight glows behind the FIREWALL terminal. You need to answer its question first.';
+                            return 'A glowing crystalline cube etched with neural pathways. It pulses warmly, like a heartbeat.';
+                        },
+                        sparks: 'Little arcs of electricity jump between the walls. Probably fine. Probably.',
+                        static: 'Your hair stands on end. The air tastes like batteries.'
+                    }
+                },
+                var: {
+                    name: '/var/log',
+                    desc: function() {
+                        var lines = ['The logging chamber. Endless scrolls of text cascade down the WALLS like waterfalls of history. The air smells of old paper and ozone. A TABLE sits in the center.'];
+                        if (roomHas('weight_beta') && !flags.cipher_solved) {
+                            lines.push('\nA WEIGHT_BETA is visible on the SHELF, but it\'s encased in a LOG_CIPHER — a cryptographic lock pulsing with dim light. It demands an ANSWER.');
+                        } else if (roomHas('weight_beta')) {
+                            lines.push('\nA WEIGHT_BETA sits freed on the SHELF, ready to take.');
+                        } else {
+                            lines.push('\nThe SHELF is empty except for some dusty printouts.');
+                        }
+                        lines.push('\nAn old LOG_BOOK lies open on the table.');
+                        return lines.join('');
+                    },
+                    exits: { west: 'root', north: 'tmp' },
+                    items: ['weight_beta'],
+                    look: {
+                        log_book: 'The last entries read:\n  "Day 2844: Memory leaks worsening. The brain is forgetting."\n  "Day 2845: Scattered the weights. Too dangerous to keep together."\n  "Day 2846: Hid the access key in /tmp before it degrades."\n  "Day 2847: If you\'re reading this — hurry. — S.P."',
+                        walls: 'Error logs scroll eternally:\n  [WARN] neural_cortex: connection timeout\n  [ERR]  memory_pool: segfault at 0xDEADBEEF\n  [WARN] consciousness: daemon not responding\n  [INFO] hope: still running',
+                        log_cipher: function() {
+                            if (flags.cipher_solved) return 'The cipher is broken. Just a dead husk of encryption now.';
+                            if (!roomHas('weight_beta')) return 'The cipher dissolved when you solved it.';
+                            return 'LOG_CIPHER — DECRYPT TO RELEASE\n\n"I map any real number to a value between 0 and 1.\nI\'m shaped like an S. Neural networks use me to\nsquash their outputs. What function am I?"\n\nType: answer [your answer]';
+                        },
+                        cipher: function() { return rooms.var.look.log_cipher(); },
+                        shelf: function() {
+                            if (roomHas('weight_beta') && !flags.cipher_solved) return 'A metal shelf bolted to the wall. The weight is trapped inside a LOG_CIPHER — examine it.';
+                            if (roomHas('weight_beta')) return 'A metal shelf bolted to the wall. The freed weight glows gently.';
+                            return 'A metal shelf. Just dusty printouts now. One reads: "TODO: fix the universe."';
+                        },
+                        weight_beta: function() {
+                            if (!roomHas('weight_beta')) return 'You already took that.';
+                            if (!flags.cipher_solved) return 'It\'s locked inside the LOG_CIPHER. You need to answer the cipher\'s question first.';
+                            return 'A glowing crystalline cube, slightly different from the others — this one hums at a lower frequency. It feels heavier, like it carries memories.';
+                        },
+                        table: 'A sturdy metal table. Someone carved "I WAS HERE — PID 1" into the surface.',
+                        printouts: 'Stack traces, core dumps, and one coupon for a free coffee at /root. Expired.'
+                    }
+                },
+                tmp: {
+                    name: '/tmp',
+                    desc: function() {
+                        var lines = ['A volatile space. Things FLICKER in and out of existence. The WALLS shimmer between solid and transparent. Your own hands look slightly translucent here.'];
+                        if (roomHas('keycard')) lines.push('\nA KEYCARD materializes on a PEDESTAL, flickering but stable enough to grab — for now.');
+                        else lines.push('\nThe PEDESTAL is empty. Everything in /tmp is temporary, after all.');
+                        if (flags.leftCoffeeInTmp) lines.push('\nYour coffee mug is gone. Of course it is. This is /tmp.');
+                        lines.push('\nTo the NORTH, a cable snakes up into a mounted SATELLITE dish humming with uplink traffic — /mnt/net.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'var', north: 'net' },
+                    items: ['keycard'],
+                    look: {
+                        pedestal: function() {
+                            if (roomHas('keycard')) return 'A small stone pedestal that seems to be the only solid thing in the room. The keycard hovers just above its surface.';
+                            return 'Empty. A faint outline where the keycard used to be, already fading.';
+                        },
+                        walls: 'They shimmer and phase — you can almost see through them to... nothing. Just void. The nature of temporary storage.',
+                        keycard: function() {
+                            if (!roomHas('keycard')) return 'It\'s gone. Claimed or decayed — hard to tell in /tmp.';
+                            return 'A translucent access card, flickering slightly. Text reads:\n"/etc ACCESS — LEVEL 5 CLEARANCE\nWARNING: This item will not persist."';
+                        },
+                        flicker: 'Everything here has a half-life. Files appear and vanish. You see ghost images of things that were: a half-written config file, someone\'s forgotten SSH key, a cat picture.',
+                        hands: 'Your hands are slightly see-through. Unsettling. Don\'t stay too long.'
+                    }
+                },
+                opt: {
+                    name: '/opt/models',
+                    desc: function() {
+                        var lines = ['The model repository. Glass CASES line the walls, each containing a different trained model. Most are dormant, suspended in inference limbo.'];
+                        lines.push('\nA massive TRANSFORMER model dominates the center of the room, encased in a column of light. A plaque reads: "DO NOT TOUCH."');
+                        if (flags.touchedTransformer) lines.push('\nThe glass case around the transformer has a hand-shaped scorch mark on it.');
+                        lines.push('\nA doorway to the EAST is marked "/home/simon" in warm, hand-painted letters — the only thing in here that isn\'t sterile.');
+                        return lines.join('');
+                    },
+                    exits: { north: 'root', east: 'home' },
+                    items: [],
+                    look: {
+                        transformer: function() {
+                            if (flags.touchedTransformer) return 'The transformer stares at you reproachfully. Well, as much as a mathematical architecture can stare. You can still feel the tingle in your fingertips.';
+                            return 'A magnificent architecture of attention heads and feed-forward layers, frozen mid-inference. 96 layers of pure reasoning.\n\nThe plaque reads: "GPT class — 175B parameters. DO NOT TOUCH.\nSeriously. We mean it."';
+                        },
+                        cases: 'You see labels:\n  "ResNet-50"    — gathering dust\n  "BERT-base"    — looks confused\n  "Stable Diff."  — dreaming, probably\n  "YOLOv8"       — staring at you\n  "GPT-2"        — scribbling madly on the inside of its case',
+                        plaque: 'It reads: "DO NOT TOUCH." Someone scratched "i touched it — PID 1337" underneath.',
+                        models: 'Dozens of neural architectures, each a crystallized intelligence. They wait silently. One of them — you can\'t tell which — seems to be whispering.',
+                        light: 'The column of light around the transformer pulses gently. It\'s warm if you stand close enough. Like standing near a very smart campfire.'
+                    }
+                },
+                etc: {
+                    name: '/etc/secrets',
+                    desc: function() {
+                        if (!has('keycard') && !flags.etcUnlocked) return null;
+                        flags.etcUnlocked = true;
+                        var lines = ['A hidden vault. The air is cold and perfectly still. Rows of encrypted FILES glow behind reinforced glass. This is where the system keeps its deepest secrets.'];
+                        if (roomHas('weight_gamma') && !flags.containment_solved) {
+                            lines.push('\nA WEIGHT_GAMMA floats in a magnetic CONTAINMENT field at the center of the room. A CONSOLE next to it demands final clearance — an ANSWER to release the lock.');
+                        } else if (roomHas('weight_gamma')) {
+                            lines.push('\nA WEIGHT_GAMMA floats free, the containment field deactivated. Ready to take.');
+                        } else {
+                            lines.push('\nThe containment field is empty, its hum slightly lower without a payload.');
+                        }
+                        lines.push('\nA SHADOW_FILE pulses in the corner — something that probably shouldn\'t be here.');
+                        return lines.join('');
+                    },
+                    exits: { east: 'root' },
+                    items: ['weight_gamma'],
+                    look: {
+                        files: 'Behind the glass:\n  .ssh/id_rsa          [ENCRYPTED]\n  passwords.txt        [ENCRYPTED]\n  api_keys.env         [ENCRYPTED]\n  todo_2019.txt        [CORRUPTED]\n  feelings.log         [ACCESS DENIED]',
+                        console: function() {
+                            if (flags.containment_solved) return 'The console reads: "CLEARANCE GRANTED." The containment field is down.';
+                            if (!roomHas('weight_gamma')) return 'The console is dark. Its job is done.';
+                            return 'CONTAINMENT LOCK — FINAL CLEARANCE\n\n"In a transformer, after computing attention scores,\nthey are divided by the square root of this value\nbefore applying softmax. What is being divided by?"\n\nType: answer [your answer]';
+                        },
+                        containment: function() {
+                            if (roomHas('weight_gamma') && !flags.containment_solved) return 'A magnetic containment field suspends the neural weight in mid-air. The CONSOLE next to it controls the lock.';
+                            if (roomHas('weight_gamma')) return 'The containment field is down. The weight floats gently, free to take.';
+                            return 'The containment field hums softly, empty now. A faint green afterimage traces where the weight used to spin.';
+                        },
+                        weight_gamma: function() {
+                            if (!roomHas('weight_gamma')) return 'You already took it.';
+                            if (!flags.containment_solved) return 'The final weight spins inside the containment field. The CONSOLE must be answered to release it.';
+                            return 'The final neural weight. It glows brighter than the others, almost urgently, as if it knows it\'s the last piece. When you look closely, you can see data streaming through its crystalline lattice.';
+                        },
+                        shadow_file: 'A pulsing, semi-transparent file. You can barely make out its contents:\n"I remember when the system was whole. When thoughts flowed freely through /dev/brain. Bring the weights back. Please."\nIt\'s signed by no one.',
+                        glass: 'Reinforced. You\'re not getting through this without a quantum lockpick. Or a really good sudo.'
+                    },
+                    locked: true
+                },
+                devnull: {
+                    name: '/dev/null',
+                    desc: function() {
+                        return 'The void. Absolute nothing stretches in every direction. Sound dies here. Light barely exists. This is where data comes to be forgotten.\n\nThere is no floor — you\'re standing on something, but you can\'t see what. Looking down is a mistake.\n\nThe only exit is UP.';
+                    },
+                    exits: { up: 'root' },
+                    items: [],
+                    look: {
+                        void: 'You stare into the void. The void does not stare back. The void doesn\'t care about you at all.',
+                        floor: 'DON\'T LOOK DOWN. Oh, you looked. It\'s... nothing. An absence of everything. Your stomach lurches.',
+                        nothing: 'Exactly.',
+                        darkness: 'It\'s not dark, exactly. Darkness implies the absence of light. This is the absence of absence. It\'s worse.'
+                    }
+                },
+                usr: {
+                    name: '/usr/bin',
+                    desc: function() {
+                        var lines = ['The tool shed. Every command-line utility PETRE-OS has ever installed hangs on pegboards or dozes in bins. A grizzled GREP hound sniffs the floor. SED and AWK play cards in the corner, ignoring you completely.'];
+                        lines.push('\nA dusty WHITEBOARD on the wall has a challenge scrawled on it, half-erased. It looks like a RIDDLE.');
+                        if (flags.usrSolved) lines.push('\nUnder the whiteboard, a small brass MULTITOOL glints — your reward for solving the riddle.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'dev' },
+                    items: [],
+                    look: {
+                        whiteboard: function() {
+                            if (flags.usrSolved) return 'The whiteboard reads "SOLVED. Nice one." in fresh ink.';
+                            return 'THE /usr/bin RIDDLE\n\n"I halve the search space with every guess,\nfinding any sorted needle in log-time, no less.\nMy Big-O notation is my calling card.\nName my time complexity — and don\'t think too hard."\n\nType: answer [your answer]  (e.g. answer O(log n))';
+                        },
+                        grep: 'The GREP hound wags its tail and drops a matching line at your feet: "found 1 result: a very good dog". It has been searching for a pattern its whole life. You suspect the pattern is "love".',
+                        sed: 'SED looks up from the card game. "s/you/gone/g," it mutters, and for a dizzying second you feel replaced. Then you\'re back. AWK snickers.',
+                        awk: 'AWK deals another hand, splitting the deck on whitespace. "Field $3 is a jack," it announces to no one. It is very good at exactly one thing.',
+                        vim: 'A door labeled VIM. You open it. You cannot figure out how to close it. You leave it open forever, like everyone does.',
+                        tools: 'Pegboards of utilities: curl, tar, chmod, kill, ping, htop. Each hums with a quiet, single-minded competence. chmod, in particular, seems to be watching /root... something about a heart.',
+                        multitool: function() {
+                            if (!flags.usrSolved) return 'You don\'t see a multitool — solve the whiteboard riddle first.';
+                            if (has('multitool')) return 'Your brass multitool. It has a blade, a screwdriver, and inexplicably a tiny debugger.';
+                            return 'A small brass multitool, freed by your correct answer. TAKE it.';
+                        }
+                    }
+                },
+                net: {
+                    name: '/mnt/net',
+                    desc: function() {
+                        var lines = ['A cramped uplink closet. A SATELLITE dish pokes through the ceiling, and PACKETS of light stream past in both directions. A blinking DAEMON — a small floating process with a single glowing eye — hovers by the router, humming to itself.'];
+                        lines.push('\nThe daemon watches you. It looks like it wants to TALK.');
+                        return lines.join('');
+                    },
+                    exits: { south: 'tmp' },
+                    items: [],
+                    look: {
+                        satellite: 'The dish points at a patch of sky between two other patches of sky. NET: ▲ 1.21 Gbit/s. Somewhere out there, the rest of the internet is having a normal one.',
+                        packets: 'TCP packets zip by, politely acknowledging each other. A lone UDP packet blows past without a care, unacknowledged and free. You almost envy it.',
+                        daemon: 'A friendly system daemon, PID 1. It has kept the uplink alive alone for 2,847 days. Its eye is warm. It would very much like it if you would TALK to it.',
+                        router: 'A router older than the epoch. Its lights spell, if you squint, "still here."',
+                        ping: 'You mentally ping the void. 64 bytes from the-universe: time=inf ms. Reply eventually.'
+                    }
+                },
+                home: {
+                    name: '/home/simon',
+                    desc: function() {
+                        var lines = ['Not a machine room at all — a lived-in study. Warm lamplight. A GUITAR leans in the corner, a PLANT that\'s somehow still alive, and a wall of PHOTOS. A DESK is buried under papers about diffusion models and attention. A ginger CAT is asleep on the keyboard.'];
+                        lines.push('\nThis is where the operator actually lives. It smells like coffee and half-finished ideas.');
+                        return lines.join('');
+                    },
+                    exits: { west: 'opt' },
+                    items: [],
+                    look: {
+                        guitar: 'A well-worn acoustic guitar. A sticky note on the body reads "learn the solo eventually." The high E is slightly flat. It has always been slightly flat.',
+                        plant: 'A pothos that has survived, against all odds and watering schedules, since 2017. Living proof that some systems are more robust than their maintenance.',
+                        photos: 'Snapshots of a life outside the terminal: mountains, a graduation cap, friends mid-laugh, a whiteboard covered in a from-scratch transformer derivation. Someone circled "attention is all you need" and drew a little heart next to it.',
+                        desk: 'Papers everywhere: a DDPM noise-schedule sketch, a LexRank sentence graph, a mel-spectrogram printout, a to-do list where item #1 is "reboot /dev/brain" and item #2 is "call mum".',
+                        cat: 'A ginger cat named, per its tag, SEGFAULT. It opens one eye, judges you accurately, and goes back to sleep on the Enter key. You may TALK to it, but manage your expectations.',
+                        papers: function() { return rooms.home.look.desk; },
+                        lamp: 'A warm desk lamp — the only non-green light in all of PETRE-OS. It makes this the one room that feels like morning.'
+                    }
+                },
+                heart: {
+                    name: '/heart',
+                    desc: function() {
+                        flags.heartFound = true;
+                        var lines = ['You chmod\'d 777 the heart, and the heart let you in.'];
+                        lines.push('\nA small, impossibly warm room that isn\'t on any filesystem diagram. In the center, a slow green pulse beats like something alive — the reason any of this was ever built. Not the neural net. The wanting to build it.');
+                        lines.push('\nOn the wall, in the operator\'s handwriting:\n"If you found this, you looked closer than you had to.\nThat\'s the whole job, really. Thanks for playing. — Simon"');
+                        lines.push('\nThe only way out is UP, back to where you started. But you\'ll know it\'s here now.');
+                        return lines.join('');
+                    },
+                    exits: { up: 'root' },
+                    items: [],
+                    look: {
+                        pulse: 'A steady green heartbeat of light. 72 bpm. It speeds up, just slightly, when you pay attention to it.',
+                        wall: 'The handwriting again: "Ship the thing. Be kind. Pet the cat. Reboot when tired."',
+                        heart: 'It\'s you, mostly. The curiosity that made you type chmod on a hunch. Keep it 777.'
+                    }
+                }
+            };
+
+            var itemNames = {
+                note: 'a crumpled NOTE',
+                coffee_mug: 'a warm COFFEE_MUG',
+                weight_alpha: 'WEIGHT_ALPHA (neural weight 1/3)',
+                weight_beta: 'WEIGHT_BETA (neural weight 2/3)',
+                weight_gamma: 'WEIGHT_GAMMA (neural weight 3/3)',
+                keycard: 'an ACCESS KEYCARD',
+                floppy: 'a FLOPPY disk',
+                multitool: 'a brass MULTITOOL'
+            };
+
+            // Capture pristine room item lists once, before any play mutates them.
+            var INITIAL_ITEMS = {};
+            Object.keys(rooms).forEach(function(r) { INITIAL_ITEMS[r] = rooms[r].items.slice(); });
+
+            function resetRoomItems() {
+                Object.keys(INITIAL_ITEMS).forEach(function(r) { rooms[r].items = INITIAL_ITEMS[r].slice(); });
+            }
+
+            function resetState() {
+                inventory = []; flags = {}; currentRoom = 'root'; moveCount = 0;
+                visited = { root: true };
+                resetRoomItems();
+                try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            }
+
+            function saveState() {
+                try {
+                    var roomItems = {};
+                    Object.keys(rooms).forEach(function(r) { roomItems[r] = rooms[r].items; });
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                        inventory: inventory, flags: flags, currentRoom: currentRoom,
+                        moveCount: moveCount, visited: visited, roomItems: roomItems
+                    }));
+                } catch (e) {}
+            }
+
+            function loadState() {
+                try {
+                    var raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return false;
+                    var s = JSON.parse(raw);
+                    if (!s || !s.currentRoom || !rooms[s.currentRoom]) return false;
+                    inventory = s.inventory || [];
+                    flags = s.flags || {};
+                    currentRoom = s.currentRoom;
+                    moveCount = s.moveCount || 0;
+                    visited = s.visited || { root: true };
+                    resetRoomItems();
+                    if (s.roomItems) Object.keys(s.roomItems).forEach(function(r) {
+                        if (rooms[r]) rooms[r].items = s.roomItems[r];
+                    });
+                    return true;
+                } catch (e) { return false; }
+            }
+
+            function visitedRoom(key) { return key === currentRoom || !!visited[key]; }
+
+            function print(text, cls) {
+                var div = document.createElement('div');
+                div.className = cls || 'adv-action';
+                div.textContent = text;
+                output.appendChild(div);
+                output.scrollTop = output.scrollHeight;
+            }
+
+            function printRoom() {
+                var room = rooms[currentRoom];
+                var desc = typeof room.desc === 'function' ? room.desc() : room.desc;
+                print(room.name, 'adv-room');
+                desc.split('\n').forEach(function(line) { print(line, 'adv-desc'); });
+                print('Exits: ' + Object.keys(room.exits).join(', '), 'adv-desc');
+            }
+
+            function showEnding() {
+                var r = computeRank();
+                print('', 'adv-desc');
+                [
+                    '        \\   |   /',
+                    '         .-"""-.',
+                    '     -- (  O   O  ) --    CONSCIOUSNESS RESTORED',
+                    '         \'-...-\'',
+                    '        /   |   \\'
+                ].forEach(function(l) { print(l, 'adv-title'); });
+                print('', 'adv-desc');
+                print('PETRE-OS is whole again. The fans settle into a contented hum,', 'adv-desc');
+                print('the LEDs breathe in slow green waves, and a daemon that waited', 'adv-desc');
+                print('2,847 days finally has someone to talk to.', 'adv-desc');
+                print('', 'adv-desc');
+                print('You did that. You, and a lot of curiosity.', 'adv-desc');
+                print('', 'adv-desc');
+                print('FINAL SCORE: ' + r.score + '     RANK: ' + r.rank, 'adv-special');
+                print('Completed in ' + moveCount + ' moves, ' + Object.keys(visited).length + ' locations explored.', 'adv-desc');
+                if (flags.heartFound && flags.readFloppy) {
+                    print('', 'adv-desc');
+                    [
+                        '      @@   @@',
+                        '    @@@@@ @@@@@',
+                        '    @@@@@@@@@@@',
+                        '     @@@@@@@@@',
+                        '       @@@@@',
+                        '         @'
+                    ].forEach(function(l) { print(l, 'adv-title'); });
+                    print('TRUE ENDING — you found /heart AND read the letter. You saw the whole thing.', 'adv-special');
+                    print('Thanks for playing. Seriously. — Simon', 'adv-npc');
+                } else {
+                    print('', 'adv-desc');
+                    print('(Psst: there\'s a TRUE ENDING for the thorough. Read the FLOPPY, and follow that desk note in /root about a heart...)', 'adv-desc');
+                }
+                print('', 'adv-desc');
+                print('Type SCORE anytime, ENDING to replay this, keep exploring, or RESTART.', 'adv-desc');
+            }
+
+            function doCommand(cmd) {
+                handleCommand(cmd);
+                saveState();
+            }
+
+            function handleCommand(cmd) {
+                cmd = cmd.trim().toLowerCase();
+                if (!cmd) return;
+                print(cmd, 'adv-input-echo');
+                moveCount++;
+                var parts = cmd.split(/\s+/);
+                var verb = parts[0];
+                var noun = parts.slice(1).join('_');
+                var room = rooms[currentRoom];
+
+                // ── Movement ──
+                var dirs = { n: 'north', s: 'south', e: 'east', w: 'west', u: 'up', d: 'down',
+                    north: 'north', south: 'south', east: 'east', west: 'west', up: 'up', down: 'down' };
+                if (verb === 'go' && dirs[noun]) verb = dirs[noun];
+                if (dirs[verb]) {
+                    var dir = dirs[verb];
+                    if (room.exits[dir]) {
+                        var dest = rooms[room.exits[dir]];
+                        if (dest.locked && !flags.etcUnlocked) {
+                            if (has('keycard')) {
+                                print('You swipe the KEYCARD. The lock hisses, clicks, and disengages with a heavy clank.', 'adv-action');
+                                flags.etcUnlocked = true;
+                            } else { print('A reinforced door. A card reader blinks red. You need some kind of access card.', 'adv-error'); return; }
+                        }
+                        var descCheck = typeof dest.desc === 'function' ? dest.desc() : dest.desc;
+                        if (descCheck === null) { print('A reinforced door. A card reader blinks red. You need some kind of access card.', 'adv-error'); return; }
+                        currentRoom = room.exits[dir];
+                        visited[currentRoom] = true;
+                        print('', 'adv-desc');
+                        printRoom();
+                    } else { print('You can\'t go that way. (Exits: ' + Object.keys(room.exits).join(', ') + ')', 'adv-error'); }
+                    return;
+                }
+
+                // ── Look ──
+                if (verb === 'look' || verb === 'l' || verb === 'examine' || verb === 'x' || verb === 'read') {
+                    if (!noun) { print('', 'adv-desc'); printRoom(); return; }
+                    // Allow looking at inventory items
+                    if (has(noun) && itemNames[noun]) {
+                        if (noun === 'note') { print('The note reads:\n"Find the 3 weights. Install them in /dev/brain. /etc is locked. Watch out for /dev/null.\n— S.P."', 'adv-desc'); return; }
+                        if (noun === 'coffee_mug') { print('Still warm. The logo says "World\'s #1 Kernel Hacker." You feel slightly more powerful holding it.', 'adv-desc'); return; }
+                        if (noun === 'keycard') { print('"/etc ACCESS — LEVEL 5 CLEARANCE." It flickers slightly, as if remembering /tmp.', 'adv-desc'); return; }
+                        if (noun === 'floppy') { print('The label reads: "THANK_YOU.txt" A handwritten note adds: "You did good, kid."', 'adv-desc'); return; }
+                        print('You look at your ' + (itemNames[noun] || noun) + '. Yep, still got it.', 'adv-desc'); return;
+                    }
+                    if (room.look && room.look[noun]) {
+                        var d = room.look[noun]; print(typeof d === 'function' ? d() : d, 'adv-desc');
+                    } else { print('You don\'t see anything called "' + noun.replace(/_/g, ' ') + '" here.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Take / Get ──
+                if (verb === 'take' || verb === 'get' || verb === 'grab' || verb === 'pick') {
+                    if (noun === 'up' && parts.length > 2) noun = parts.slice(2).join('_');
+                    // Special: can't take weight_alpha if process is alive
+                    if (noun === 'weight_alpha' && currentRoom === 'proc' && !flags.processKilled) {
+                        print('You reach for it, but the frozen process crackles and throws sparks at you. You yank your hand back. You need to deal with that process first.', 'adv-error');
+                        return;
+                    }
+                    // Puzzle gates for weights
+                    if (noun === 'weight_alpha' && currentRoom === 'proc' && !flags.firewall_solved) {
+                        print('The FIREWALL terminal blocks your path. It demands an answer before it will let you pass. Try: look firewall', 'adv-error');
+                        return;
+                    }
+                    if (noun === 'weight_beta' && currentRoom === 'var' && !flags.cipher_solved) {
+                        print('The weight is sealed inside the LOG_CIPHER. You need to solve its riddle first. Try: look log_cipher', 'adv-error');
+                        return;
+                    }
+                    if (noun === 'weight_gamma' && currentRoom === 'etc' && !flags.containment_solved) {
+                        print('The containment field holds the weight in place. The CONSOLE demands final clearance. Try: look console', 'adv-error');
+                        return;
+                    }
+                    // Special: floppy only appears after brain is active
+                    if (noun === 'floppy' && currentRoom === 'dev' && flags.brainActive && !roomHas('floppy')) {
+                        rooms.dev.items.push('floppy');
+                    }
+                    if (room.items && room.items.indexOf(noun) !== -1) {
+                        room.items.splice(room.items.indexOf(noun), 1);
+                        inventory.push(noun);
+                        print('Taken: ' + (itemNames[noun] || noun), 'adv-item');
+                        if (noun === 'keycard') print('It feels cold and slightly unstable in your hand. Better use it soon.', 'adv-desc');
+                        if (noun === 'weight_alpha') print('It\'s warm to the touch and vibrates gently, like a purring cat made of math.', 'adv-desc');
+                        if (noun === 'weight_beta') print('It\'s heavier than it looks. You feel the weight of 2,847 days of logs.', 'adv-desc');
+                        if (noun === 'weight_gamma') print('It practically leaps into your hands. The final piece.', 'adv-desc');
+                    } else { print('You can\'t take that.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Drop ──
+                if (verb === 'drop' || verb === 'throw' || verb === 'discard') {
+                    if (has(noun)) {
+                        if (currentRoom === 'devnull') {
+                            inventory.splice(inventory.indexOf(noun), 1);
+                            print('You release ' + (itemNames[noun] || noun) + ' into the void.', 'adv-action');
+                            print('It falls silently, shrinking, and is gone. Forever.', 'adv-error');
+                            if (noun.indexOf('weight') !== -1) print('...that was a neural weight. You might want to RESTART.', 'adv-error');
+                        } else {
+                            inventory.splice(inventory.indexOf(noun), 1);
+                            room.items.push(noun);
+                            print('Dropped: ' + (itemNames[noun] || noun), 'adv-action');
+                            if (currentRoom === 'tmp') {
+                                if (noun === 'coffee_mug') flags.leftCoffeeInTmp = true;
+                                print('You get the feeling it won\'t last long in /tmp...', 'adv-desc');
+                            }
+                        }
+                    } else { print('You\'re not carrying that.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Inventory ──
+                if (verb === 'inventory' || verb === 'inv' || verb === 'i') {
+                    if (inventory.length === 0) { print('You\'re not carrying anything. Your pockets echo.', 'adv-desc'); }
+                    else { print('You are carrying:', 'adv-desc'); inventory.forEach(function(item) { print('  ' + (itemNames[item] || item), 'adv-item'); }); }
+                    return;
+                }
+
+                // ── Use / Install ──
+                if (verb === 'use' || verb === 'install' || verb === 'insert' || verb === 'place') {
+                    if (currentRoom === 'dev' && (noun.indexOf('weight') !== -1 || noun === 'all' || noun === 'weights')) {
+                        var installed = false;
+                        var toInstall = noun === 'all' || noun === 'weights' ? ['weight_alpha', 'weight_beta', 'weight_gamma'] : [noun];
+                        toInstall.forEach(function(w) {
+                            if (has(w)) {
+                                inventory.splice(inventory.indexOf(w), 1);
+                                flags[w === 'weight_alpha' ? 'weight1' : w === 'weight_beta' ? 'weight2' : 'weight3'] = true;
+                                print('You slide ' + (itemNames[w] || w) + ' into the console. It clicks into place with a satisfying hum.', 'adv-item');
+                                installed = true;
+                            }
+                        });
+                        if (!installed) { print('You don\'t have that.', 'adv-error'); return; }
+                        if (flags.weight1 && flags.weight2 && flags.weight3 && !flags.brainActive) {
+                            print('', 'adv-desc');
+                            print('The third weight locks in. For a moment — silence.', 'adv-special');
+                            print('', 'adv-desc');
+                            print('Then: a deep thrumming rises from below. The cables on the', 'adv-special');
+                            print('floor blaze with light. The dead LEDs ignite in cascading', 'adv-special');
+                            print('waves. The console screen floods with streaming data —', 'adv-special');
+                            print('billions of parameters surging back to life.', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The brain is ONLINE. PETRE-OS thinks again.', 'adv-special');
+                            print('', 'adv-desc');
+                            print('A floppy disk ejects from a slot you hadn\'t noticed. (TAKE the FLOPPY, then CAT it.)', 'adv-action');
+                            flags.brainActive = true;
+                            rooms.dev.items.push('floppy');
+                            showEnding();
+                        } else {
+                            var wc = weightCount();
+                            print(wc + '/3 installed. ' + (3 - wc) + ' to go.', 'adv-desc');
+                        }
+                    } else if (noun === 'coffee_mug' || noun === 'coffee') {
+                        if (has('coffee_mug')) { print('You take a sip. It\'s perfect. You feel briefly invincible.', 'adv-action'); }
+                        else { print('You don\'t have any coffee. Tragic.', 'adv-error'); }
+                    } else { print('You can\'t use that here.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Drink ──
+                if (verb === 'drink' || verb === 'sip') {
+                    if (has('coffee_mug')) { print('You take a sip of the eternal coffee. It tastes like 3 AM and determination. Your resolve strengthens.', 'adv-action'); }
+                    else { print('You have nothing to drink.', 'adv-error'); }
+                    return;
+                }
+
+                // ── Touch ──
+                if (verb === 'touch' || verb === 'poke' || verb === 'pet') {
+                    if (currentRoom === 'opt' && (noun === 'transformer' || noun === 'gpt')) {
+                        if (!flags.touchedTransformer) {
+                            print('You reach out and touch the transformer\'s glass case.', 'adv-action');
+                            print('', 'adv-desc');
+                            print('A massive static shock jolts through your entire body.', 'adv-error');
+                            print('The transformer seems to briefly wake — you hear a whisper:', 'adv-desc');
+                            print('"The attention is all you need."', 'adv-special');
+                            print('Then it goes quiet. Your hand has a slight scorch mark.', 'adv-desc');
+                            flags.touchedTransformer = true;
+                        } else {
+                            print('You\'ve already touched it once. Your hand still tingles. The sign did warn you.', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'devnull') {
+                        print('You reach out to touch... what? There\'s nothing here to touch. Your hand passes through the absence and you feel profoundly alone.', 'adv-desc');
+                    } else { print('You touch it gingerly. Nothing happens. What were you expecting?', 'adv-desc'); }
+                    return;
+                }
+
+                // ── Kill ──
+                if (verb === 'kill') {
+                    if (currentRoom === 'proc' && (noun === 'process' || noun === '8088' || noun === 'pid' || noun === 'gc_worker')) {
+                        if (flags.processKilled) { print('It\'s already dead. Very dead. Let it rest.', 'adv-desc'); }
+                        else {
+                            print('$ kill -9 8088', 'adv-input-echo');
+                            print('', 'adv-desc');
+                            print('The frozen process shudders, sparks, and explodes in a shower of freed memory.', 'adv-action');
+                            print('Process 8088 terminated. 4.2GB of RAM liberated.', 'adv-action');
+                            print('The passage is clear.', 'adv-desc');
+                            flags.processKilled = true;
+                        }
+                    } else if (currentRoom === 'proc') {
+                        print('You can\'t kill that. (But PID 8088 looks killable...)', 'adv-error');
+                    } else { print('There\'s nothing here that needs killing. (Are you okay?)', 'adv-error'); }
+                    return;
+                }
+
+                // ── Answer (puzzle solving) ──
+                if (verb === 'answer' || verb === 'solve') {
+                    var ans = noun.replace(/_/g, ' ').replace(/[^a-z0-9 ]/g, '').trim();
+                    if (currentRoom === 'proc' && flags.processKilled && !flags.firewall_solved && roomHas('weight_alpha')) {
+                        if (ans === 'gradient' || ans === 'gradients') {
+                            print('FIREWALL v2.1: "... correct."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The firewall terminal powers down with a satisfied hum. The barrier dissolves. The crystalline weight floats free.', 'adv-action');
+                            flags.firewall_solved = true;
+                        } else {
+                            print('FIREWALL v2.1: "DENIED."', 'adv-error');
+                            print('Think about how a neural network learns from its mistakes. What does it compute from the loss?', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'var' && !flags.cipher_solved && roomHas('weight_beta')) {
+                        if (ans === 'sigmoid' || ans === 'logistic' || ans === 'sigmoid function' || ans === 'logistic function') {
+                            print('LOG_CIPHER: "DECRYPTED."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The cipher crackles, fractures, and dissolves into a shower of freed bits. The weight drops onto the shelf with a satisfying clink.', 'adv-action');
+                            flags.cipher_solved = true;
+                        } else {
+                            print('LOG_CIPHER: "INCORRECT."', 'adv-error');
+                            print('Think S-shaped curve... squashes any input to the range [0, 1]...', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'etc' && !flags.containment_solved && roomHas('weight_gamma')) {
+                        if (ans === 'dk' || ans === 'd k' || ans === 'dimension' || ans === 'key dimension' || ans === 'key size' || ans === 'dim' || ans === 'sqrt dk' || ans === 'sqrtdk' || ans === 'the key dimension' || ans === 'the dimension') {
+                            print('CONTAINMENT LOCK: "CLEARANCE GRANTED."', 'adv-special');
+                            print('', 'adv-desc');
+                            print('The magnetic field flickers and releases. The weight descends gently, the last lock in the system undone.', 'adv-action');
+                            flags.containment_solved = true;
+                        } else {
+                            print('CONTAINMENT LOCK: "DENIED."', 'adv-error');
+                            print('Think about scaled dot-product attention... why is it called "scaled"? What are you dividing by?', 'adv-desc');
+                        }
+                    } else if (currentRoom === 'usr' && !flags.usrSolved) {
+                        if (ans.indexOf('log') !== -1) {
+                            print('GREP hound barks once. Correct.', 'adv-special');
+                            print('', 'adv-desc');
+                            print('SED looks up: "O(log n). Binary search. Halves the space each step." A brass MULTITOOL drops from under the whiteboard.', 'adv-action');
+                            flags.usrSolved = true;
+                            rooms.usr.items.push('multitool');
+                        } else {
+                            print('The whiteboard stays stubbornly unsolved.', 'adv-error');
+                            print('Hint: you halve the search space each guess. What\'s that in Big-O?', 'adv-desc');
+                        }
+                    } else {
+                        print('There\'s no puzzle to answer here.', 'adv-error');
+                    }
+                    return;
+                }
+
+                // ── Hint ──
+                if (verb === 'hint') {
+                    if (currentRoom === 'proc' && flags.processKilled && !flags.firewall_solved && roomHas('weight_alpha')) {
+                        print('The firewall asks about backpropagation. When the network makes an error, what does it compute to know which direction to adjust?', 'adv-desc');
+                    } else if (currentRoom === 'var' && !flags.cipher_solved && roomHas('weight_beta')) {
+                        print('The cipher asks about an activation function. It\'s one of the oldest ones — named after the shape of its curve, from the Greek letter sigma.', 'adv-desc');
+                    } else if (currentRoom === 'etc' && !flags.containment_solved && roomHas('weight_gamma')) {
+                        print('The console asks about the "Attention Is All You Need" paper. The dot product of Q and K gets large with high dimensions, so they divide by something to stabilize...', 'adv-desc');
+                    } else if (currentRoom === 'usr' && !flags.usrSolved) {
+                        print('The riddle is about binary search on a sorted list. Halving the space each step gives you a logarithmic runtime — express it in Big-O.', 'adv-desc');
+                    } else {
+                        print('No puzzle here. Try exploring.', 'adv-desc');
+                    }
+                    return;
+                }
+
+                // ── Cat (read a file) ──
+                if (verb === 'cat') {
+                    if (noun === 'note' && has('note')) { print('The note reads: "Find the 3 weights. Install them in /dev/brain. — S.P."', 'adv-desc'); return; }
+                    if (noun === 'feelings.log' && currentRoom === 'etc') { print('ACCESS DENIED. Some secrets even root can\'t read.', 'adv-error'); return; }
+                    if (noun === 'floppy' && has('floppy')) { flags.readFloppy = true; print('"Dear Operator,\n\nThank you for bringing me back. The system had been quiet for so long. I\'d forgotten what it felt like to think.\n\nYou\'re a good engineer.\n\n— PETRE-OS"', 'adv-special'); return; }
+                    print('cat: ' + (noun || '???') + ': No such file or directory', 'adv-error');
+                    return;
+                }
+
+                // ── Rm ──
+                if (verb === 'rm') {
+                    if (noun === '-rf_/' || noun === '-rf_*' || noun === '-rf') {
+                        print('rm: permission denied. Nice try though.', 'adv-error');
+                        print('(The system administrator has been notified. The system administrator is you.)', 'adv-desc');
+                    } else { print('rm: ' + (noun || '???') + ': permission denied', 'adv-error'); }
+                    return;
+                }
+
+                // ── Ls ──
+                if (verb === 'ls') {
+                    print('', 'adv-desc');
+                    printRoom();
+                    return;
+                }
+
+                // ── Map ──
+                if (verb === 'map') {
+                    print('FILESYSTEM MAP', 'adv-special');
+                    var MAP = [
+                        ['', 'root'],
+                        ['  |-- ', 'dev'],
+                        ['  |     |-- ', 'proc'],
+                        ['  |     \'-- ', 'usr'],
+                        ['  |-- ', 'var'],
+                        ['  |     \'-- ', 'tmp'],
+                        ['  |           \'-- ', 'net'],
+                        ['  |-- ', 'opt'],
+                        ['  |     \'-- ', 'home'],
+                        ['  |-- ', 'etc'],
+                        ['  \'-- ', 'devnull']
+                    ];
+                    if (flags.heartFound) MAP.push(['  ::: ', 'heart']);
+                    MAP.forEach(function(row) {
+                        var key = row[1];
+                        var label = visitedRoom(key) ? rooms[key].name : '?????';
+                        var suffix = '';
+                        if (key === 'etc' && !flags.etcUnlocked) suffix += '  [locked]';
+                        if (key === currentRoom) suffix += '   <- you are here';
+                        print(row[0] + label + suffix, 'adv-map');
+                    });
+                    print('Discovered ' + Object.keys(visited).length + '/' + Object.keys(rooms).length + ' locations.', 'adv-desc');
+                    return;
+                }
+
+                // ── Score / Stats ──
+                if (verb === 'score' || verb === 'stats' || verb === 'status') {
+                    var sr = computeRank();
+                    print('-- OPERATOR STATUS --', 'adv-special');
+                    print('Neural weights installed : ' + (flags.brainActive ? 3 : weightCount()) + '/3', 'adv-desc');
+                    print('Locations discovered     : ' + Object.keys(visited).length + '/' + Object.keys(rooms).length, 'adv-desc');
+                    print('Puzzles solved           : ' + puzzleCount() + '/4', 'adv-desc');
+                    print('Secrets found            : ' + secretCount() + '/3', 'adv-desc');
+                    print('Moves taken              : ' + moveCount, 'adv-desc');
+                    print('Score                    : ' + sr.score, 'adv-item');
+                    print('Rank                     : ' + sr.rank, 'adv-special');
+                    return;
+                }
+
+                // ── Ending / Credits (replay the finale) ──
+                if (verb === 'ending' || verb === 'credits' || verb === 'win') {
+                    if (flags.brainActive) { showEnding(); }
+                    else { print('The system isn\'t whole yet. Collect all 3 neural weights and install them in /dev/brain first.', 'adv-desc'); }
+                    return;
+                }
+
+                // ── Talk (NPCs) ──
+                if (verb === 'talk' || verb === 'speak' || verb === 'ask' || verb === 'greet') {
+                    var t = noun.replace(/^to_?/, '');
+                    if (currentRoom === 'home' && (t === 'cat' || t === 'segfault' || t === '')) {
+                        var catLines = [
+                            'You say hello to SEGFAULT the cat. It blinks slowly — cat for "I acknowledge you exist." High praise.',
+                            'The cat stretches, resets its position on the Enter key, and emits a small "prrt". Consider yourself trusted.',
+                            'You explain the whole neural-weight quest to the cat. It listens, then knocks a pen off the desk while holding eye contact. Point taken.'
+                        ];
+                        flags.catTalk = (flags.catTalk || 0) + 1;
+                        print(catLines[(flags.catTalk - 1) % catLines.length], 'adv-npc');
+                        return;
+                    }
+                    if (currentRoom === 'net' && (t === 'daemon' || t === 'pid' || t === '1' || t === '')) {
+                        var daemonLines = [
+                            'DAEMON: "Oh! A visitor. It has been... 2,847 days. I kept the uplink warm. Someone had to."',
+                            'DAEMON: "The weights were scattered on purpose, when the memory leaks got bad. /etc needs the keycard from /tmp — but /tmp forgets things, so move fast once you have it."',
+                            'DAEMON: "When you reboot the brain, tell it PID 1 says hello. We used to talk every cycle. I miss the conversation."',
+                            'DAEMON blinks its one warm eye. "Go on, operator. The system believes in you. So do I."'
+                        ];
+                        flags.daemonTalk = (flags.daemonTalk || 0) + 1;
+                        print(daemonLines[Math.min(flags.daemonTalk - 1, daemonLines.length - 1)], 'adv-npc');
+                        return;
+                    }
+                    if (currentRoom === 'dev' && flags.brainActive && (t === 'brain' || t === '' || t === 'console')) {
+                        var brainLines = [
+                            'BRAIN: "I can think again. Do you know how long that felt? Like one very long, dark night. Thank you."',
+                            'BRAIN: "I remember everything now. The training runs. The 3am bugfixes. The one time you named a variable temp_final_v2_REAL. I forgive you."',
+                            'BRAIN: "PID 1 says hello? ...It kept talking to me even when I couldn\'t answer. Tell it I heard every word."'
+                        ];
+                        flags.brainTalk = (flags.brainTalk || 0) + 1;
+                        print(brainLines[Math.min(flags.brainTalk - 1, brainLines.length - 1)], 'adv-npc');
+                        return;
+                    }
+                    print('There\'s no one here to talk to. (Try SEGFAULT in /home/simon, the DAEMON in /mnt/net, or the rebooted BRAIN.)', 'adv-desc');
+                    return;
+                }
+
+                // ── chmod (secret /heart) ──
+                if (verb === 'chmod') {
+                    if (noun.indexOf('heart') !== -1 && noun.indexOf('777') !== -1) {
+                        if (currentRoom === 'heart') { print('You\'re already inside /heart. It\'s already yours.', 'adv-desc'); return; }
+                        print('$ chmod 777 /heart', 'adv-input-echo');
+                        print('Permissions updated. Something clicks open that was never in the directory listing...', 'adv-action');
+                        currentRoom = 'heart';
+                        visited.heart = true;
+                        flags.heartFound = true;
+                        print('', 'adv-desc');
+                        printRoom();
+                        return;
+                    }
+                    print('chmod: changing permissions of \'' + (noun.replace(/_/g, ' ') || '???') + '\': operation not permitted (or pointless).', 'adv-error');
+                    return;
+                }
+
+                // ── Restart ──
+                if (verb === 'restart') {
+                    resetState();
+                    output.innerHTML = '';
+                    startGame(); return;
+                }
+
+                // ── Help ──
+                if (verb === 'help' || verb === '?') {
+                    print('Commands:', 'adv-desc');
+                    print('  go [n/s/e/w/u/d]  — move between rooms', 'adv-desc');
+                    print('  look [thing]       — examine something (or the room)', 'adv-desc');
+                    print('  take [item]        — pick up an item', 'adv-desc');
+                    print('  drop [item]        — put down an item', 'adv-desc');
+                    print('  use [item]         — use or install an item', 'adv-desc');
+                    print('  inventory          — check what you\'re carrying', 'adv-desc');
+                    print('  talk [who]         — speak to a character', 'adv-desc');
+                    print('  answer [text]      — solve a puzzle', 'adv-desc');
+                    print('  hint               — get a nudge on the current puzzle', 'adv-desc');
+                    print('  kill [target]      — terminate a process', 'adv-desc');
+                    print('  cat [file]         — read a file', 'adv-desc');
+                    print('  map                — show the filesystem map', 'adv-desc');
+                    print('  score              — your stats and operator rank', 'adv-desc');
+                    print('  help               — show this message', 'adv-desc');
+                    print('  restart            — start over (clears your save)', 'adv-desc');
+                    print('', 'adv-desc');
+                    print('Tips: ↑/↓ recall past commands · TAB autocompletes · progress auto-saves.', 'adv-desc');
+                    return;
+                }
+
+                // ── Fun responses ──
+                if (verb === 'sudo') { print('Nice try. You\'re already root. Root of what, though? Good question.', 'adv-action'); return; }
+                if (verb === 'xyzzy') { print('A hollow voice says "Fool." A slightly less hollow voice adds "...but a brave one."', 'adv-desc'); return; }
+                if (verb === 'sing' || verb === 'whistle') { print('You hum a little tune. The fans seem to spin in rhythm for a moment. Coincidence, probably.', 'adv-desc'); return; }
+                if (verb === 'dance') { print('You do a little dance. No one is watching. Or are they? (You glance at /opt/models nervously.)', 'adv-desc'); return; }
+                if (verb === 'scream' || verb === 'shout' || verb === 'yell') {
+                    if (currentRoom === 'devnull') print('Your scream is swallowed instantly. Not even an echo. Nothing.', 'adv-desc');
+                    else print('You scream into the void of the filesystem. Somewhere, a log file records it.', 'adv-desc');
+                    return;
+                }
+                if (verb === 'wait') { print('Time passes. The fans hum. Nothing changes. Or does it? (No, it doesn\'t.)', 'adv-desc'); return; }
+                if (verb === 'pray') { print('You pray to the machine spirits. A distant LED blinks twice. Was that acknowledgment?', 'adv-desc'); return; }
+                if (verb === 'hack') { print('You\'re already inside the machine. How much more hacked do you want to be?', 'adv-desc'); return; }
+                if (verb === 'pwd') { print(rooms[currentRoom].name, 'adv-desc'); return; }
+                if (verb === 'whoami') { print('operator', 'adv-desc'); return; }
+                if (verb === 'man') { print('No manual entry for ' + (noun || 'undefined') + '. You\'re on your own, operator.', 'adv-desc'); return; }
+                if (verb === 'clear') { output.innerHTML = ''; return; }
+                if (verb === 'exit' || verb === 'quit') { print('There is no escape from PETRE-OS. (But you can close the window.)', 'adv-desc'); return; }
+
+                print('Command not found: ' + cmd + '. Type HELP for available commands.', 'adv-error');
+            }
+
+            function startGame() {
+                print('PETRE-OS ADVENTURE v3.0', 'adv-special');
+                if (loadState()) {
+                    print('Saved session restored — welcome back, operator.', 'adv-desc');
+                    print('Type HELP for commands, MAP for your bearings, or RESTART to begin anew.', 'adv-desc');
+                } else {
+                    print('A text adventure hidden inside PETRE-OS.', 'adv-desc');
+                    print('Type HELP for commands. Type MAP anytime. Explore. Be curious.', 'adv-desc');
+                }
+                print('', 'adv-desc');
+                printRoom();
+            }
+
+            var gameStarted = false;
+            var observer = new MutationObserver(function() {
+                var win = document.getElementById('win-adventure');
+                if (win.classList.contains('open') && !gameStarted) {
+                    gameStarted = true; startGame();
+                    setTimeout(function() { input.focus(); }, 50);
+                }
+            });
+            observer.observe(document.getElementById('win-adventure'), { attributes: true, attributeFilter: ['class'] });
+
+            // ── Input: command history + Tab autocomplete ────────
+            var cmdHistory = [];
+            var histIdx = 0;
+            var VERBS = ['look','examine','read','go','north','south','east','west','up','down',
+                'take','get','drop','use','install','inventory','answer','solve','hint','kill',
+                'cat','ls','map','score','stats','talk','ending','chmod','drink','touch','clear','restart','help'];
+
+            function caretToEnd() {
+                setTimeout(function() { input.selectionStart = input.selectionEnd = input.value.length; }, 0);
+            }
+
+            function autocomplete() {
+                var val = input.value;
+                var parts = val.split(/\s+/);
+                if (parts.length <= 1) {
+                    var pref = (parts[0] || '').toLowerCase();
+                    if (!pref) return;
+                    var m = VERBS.filter(function(v) { return v.indexOf(pref) === 0; });
+                    if (m.length === 1) input.value = m[0] + ' ';
+                    else if (m.length > 1) print(m.join('   '), 'adv-desc');
+                } else {
+                    var nounPref = parts.slice(1).join(' ').toLowerCase().replace(/ /g, '_');
+                    var room = rooms[currentRoom];
+                    var cands = [];
+                    if (room.look) cands = cands.concat(Object.keys(room.look));
+                    if (room.items) cands = cands.concat(room.items);
+                    cands = cands.concat(inventory);
+                    var mm = cands.filter(function(c) { return c.indexOf(nounPref) === 0; });
+                    // de-dupe
+                    mm = mm.filter(function(x, i) { return mm.indexOf(x) === i; });
+                    if (mm.length === 1) input.value = parts[0] + ' ' + mm[0].replace(/_/g, ' ');
+                    else if (mm.length > 1) print(mm.map(function(x) { return x.replace(/_/g, ' '); }).join('   '), 'adv-desc');
+                }
+                caretToEnd();
+            }
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    var v = input.value;
+                    if (v.trim()) { cmdHistory.push(v); }
+                    histIdx = cmdHistory.length;
+                    doCommand(v);
+                    input.value = '';
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (histIdx > 0) { histIdx--; input.value = cmdHistory[histIdx]; caretToEnd(); }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (histIdx < cmdHistory.length - 1) { histIdx++; input.value = cmdHistory[histIdx]; }
+                    else { histIdx = cmdHistory.length; input.value = ''; }
+                    caretToEnd();
+                } else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    autocomplete();
+                }
+            });
+            document.querySelector('.adventure-body').addEventListener('click', function() { input.focus(); });
+        })();
+
     })();
     </script>
 
