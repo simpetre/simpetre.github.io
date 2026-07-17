@@ -3,347 +3,101 @@ title: Simon Petre — AI/ML Engineer
 layout: default
 ---
 
-<!-- ══ WINDOW: about.txt ══════════════════════════════════════ -->
-<div class="window" id="win-about">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-file-lines window-icon"></i>
-            <span class="window-title">about.txt</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ cat about.txt</p>
-            <br>
-            <p class="content-heading" id="hero-name"></p>
-            <p class="content-subheading">AI/ML Engineer</p>
-            <br>
-            <p>Building intelligent systems at the intersection of machine learning,
-NLP, and scalable infrastructure.</p>
-            <br>
-            <div class="hero-links">
-                <a href="https://github.com/simpetre" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
-                <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-                <a href="mailto:simpetre@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
-                <a href="/resume.pdf" target="_blank"><i class="fa-regular fa-file"></i> Resume</a>
-            </div>
-            <br>
-            <p>I'm an AI/ML engineer with a focus on deep learning, natural language
-processing, and recommendation systems. I enjoy turning research ideas
-into production-grade systems that create real impact.</p>
-            <br>
-            <p>My work spans transformer-based language models, diffusion models for
-generative AI, and classical ML pipelines for structured data. I'm
-equally comfortable exploring cutting-edge papers and shipping
-reliable, well-tested code.</p>
-            <br>
-            <p class="prompt-line">$ _</p>
-        </div>
-    </div>
-</div>
+<!--
+  Content source. The terminal shell (in _layouts/default.html) reads these
+  sections by [data-cmd] and renders them into the scrollback. Kept in the DOM
+  (visually hidden, not display:none) so the copy stays crawlable and available
+  to screen readers as a graceful no-JS fallback.
+-->
+<div id="content-source" class="content-source">
 
-<!-- ══ WINDOW: skills.exe ═════════════════════════════════════ -->
-<div class="window" id="win-skills">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-microchip window-icon"></i>
-            <span class="window-title">skills.exe</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ./skills.exe --list</p>
-            <br>
-            <table class="skills-table">
-                <tr>
-                    <td class="skill-cat">LANGUAGES</td>
-                    <td>Python, SQL, Bash, JavaScript</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">ML/DL</td>
-                    <td>PyTorch, Hugging Face, scikit-learn, NumPy, Pandas</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">NLP/GEN-AI</td>
-                    <td>Transformers, Diffusion Models, LLMs, RLHF, RAG</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">INFRA</td>
-                    <td>Docker, Git, Linux, Jupyter, Weights &amp; Biases</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">CLOUD</td>
-                    <td>AWS, GCP, PostgreSQL, Spark</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">RESEARCH</td>
-                    <td>RecSys, Audio ML, Text Summarization, Computer Vision</td>
-                </tr>
-            </table>
-            <br>
-            <p class="status-line">[6 modules loaded] Status: OPERATIONAL</p>
-        </div>
-    </div>
-</div>
+    <section data-cmd="about">
+        <h1 class="o-h1">SIMON PETRE</h1>
+        <p class="o-sub">AI/ML Engineer</p>
+        <p class="o-p">Building intelligent systems at the intersection of machine learning, NLP, and scalable infrastructure.</p>
+        <p class="o-p">I focus on deep learning, natural language processing, and recommendation systems — turning research ideas into production-grade systems that create real impact. My work spans transformer-based language models, diffusion models for generative AI, and classical ML pipelines for structured data. I'm equally comfortable exploring cutting-edge papers and shipping reliable, well-tested code.</p>
+        <p class="o-links">
+            <a href="https://github.com/simpetre" target="_blank" rel="noopener">github</a>
+            <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin</a>
+            <a href="mailto:simpetre@gmail.com">email</a>
+            <a href="/resume.pdf" target="_blank">resume</a>
+        </p>
+    </section>
 
-<!-- ══ WINDOW: projects/ ══════════════════════════════════════ -->
-<div class="window wide-window" id="win-projects">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-folder-open window-icon"></i>
-            <span class="window-title">projects/</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ls -la projects/</p>
-            <br>
-            <div class="file-listing">
+    <section data-cmd="skills">
+        <table class="o-table">
+            <tr><td class="o-key">languages</td><td>Python, SQL, Bash, JavaScript</td></tr>
+            <tr><td class="o-key">ml / dl</td><td>PyTorch, Hugging Face, scikit-learn, NumPy, Pandas</td></tr>
+            <tr><td class="o-key">nlp / gen-ai</td><td>Transformers, Diffusion Models, LLMs, RLHF, RAG</td></tr>
+            <tr><td class="o-key">infra</td><td>Docker, Git, Linux, Jupyter, Weights &amp; Biases</td></tr>
+            <tr><td class="o-key">cloud</td><td>AWS, GCP, PostgreSQL, Spark</td></tr>
+            <tr><td class="o-key">research</td><td>RecSys, Audio ML, Text Summarization, Computer Vision</td></tr>
+        </table>
+        <p class="o-dim">6 modules loaded — status: operational</p>
+    </section>
 
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">diffusion_models/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">End-to-end implementation of denoising diffusion probabilistic
-models (DDPM) in PyTorch. Covers the forward/reverse diffusion
-processes, noise scheduling, and U-Net architecture with attention.</p>
-                    <div class="file-tags">PyTorch / DDPM / Generative AI / U-Net</div>
-                </div>
+    <section data-cmd="projects">
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">diffusion_models/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">End-to-end implementation of denoising diffusion probabilistic models (DDPM) in PyTorch. Covers the forward/reverse diffusion processes, noise scheduling, and a U-Net architecture with attention.</p>
+            <p class="proj-tags">PyTorch · DDPM · Generative AI · U-Net</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">transformer_lm/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">From-scratch PyTorch implementation of the Transformer architecture including multi-head self-attention, positional encoding, and training on language-modelling tasks with modern techniques.</p>
+            <p class="proj-tags">PyTorch · Transformers · NLP · Attention</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">audio_classify/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">Urban sound classification using convolutional neural networks on mel-spectrogram features. Trained on UrbanSound8K, achieving strong accuracy across 10 sound categories.</p>
+            <p class="proj-tags">CNNs · Audio ML · Mel Spectrograms · UrbanSound8K</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">lexrank_summarizer/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">Graph-based extractive summarisation using the LexRank algorithm. Builds a sentence-similarity graph with TF-IDF cosine similarity and applies PageRank to identify the most salient sentences.</p>
+            <p class="proj-tags">NLP · Graph Algorithms · TF-IDF · Summarization</p>
+        </div>
+    </section>
 
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">transformer_lm/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">From-scratch PyTorch implementation of the Transformer architecture
-including multi-head self-attention, positional encoding, and
-training on language modelling tasks with modern techniques.</p>
-                    <div class="file-tags">PyTorch / Transformers / NLP / Attention</div>
-                </div>
+    <section data-cmd="experience">
+        <div class="xp">
+            <p class="xp-when">2021 — present</p>
+            <p class="xp-role">AI/ML Engineer <span class="o-dim">· Independent / Freelance</span></p>
+            <ul class="o-list">
+                <li>Designed and deployed NLP pipelines for text classification and summarisation</li>
+                <li>Implemented transformer and diffusion model architectures in PyTorch</li>
+                <li>Built recommendation systems using collaborative filtering and matrix factorisation</li>
+                <li>Wrote technical articles on ML concepts reaching thousands of readers</li>
+            </ul>
+        </div>
+        <div class="xp">
+            <p class="xp-when">2017 — 2021</p>
+            <p class="xp-role">Data Scientist <span class="o-dim">· Previous Role</span></p>
+            <ul class="o-list">
+                <li>Developed machine learning models for structured and unstructured data</li>
+                <li>Collaborated with product teams to ship ML features end-to-end</li>
+                <li>Built data pipelines and feature-engineering workflows at scale</li>
+            </ul>
+        </div>
+    </section>
 
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">audio_classify/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">Urban sound classification using convolutional neural networks on
-mel-spectrogram features. Trained on UrbanSound8K achieving strong
-accuracy on 10 sound categories.</p>
-                    <div class="file-tags">CNNs / Audio ML / Mel Spectrograms / UrbanSound8K</div>
-                </div>
+    <section data-cmd="education">
+        <table class="o-table">
+            <tr><td class="o-key">degree</td><td>MSc / BSc Computer Science</td></tr>
+            <tr><td class="o-key">institution</td><td>University</td></tr>
+            <tr><td class="o-key">year</td><td>2016</td></tr>
+            <tr><td class="o-key">status</td><td>conferred</td></tr>
+        </table>
+    </section>
 
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">lexrank_summarizer/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">Graph-based extractive summarisation using the LexRank algorithm.
-Builds a sentence similarity graph with TF-IDF cosine similarity
-and applies PageRank to identify the most salient sentences.</p>
-                    <div class="file-tags">NLP / Graph Algorithms / TF-IDF / Summarization</div>
-                </div>
+    <section data-cmd="contact">
+        <p class="o-p">Open to interesting ML engineering roles, research collaborations, and technical consulting.</p>
+        <table class="o-table">
+            <tr><td class="o-key">email</td><td><a href="mailto:simpetre@gmail.com">simpetre@gmail.com</a></td></tr>
+            <tr><td class="o-key">github</td><td><a href="https://github.com/simpetre" target="_blank" rel="noopener">github.com/simpetre</a></td></tr>
+            <tr><td class="o-key">linkedin</td><td><a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin.com/in/simon.petre</a></td></tr>
+            <tr><td class="o-key">twitter</td><td><a href="https://twitter.com/bigs1m" target="_blank" rel="noopener">@bigs1m</a></td></tr>
+        </table>
+    </section>
 
-            </div>
-            <br>
-            <p class="status-line">4 items — 2.4G total</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: experience.log ═════════════════════════════════ -->
-<div class="window" id="win-experience">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-terminal window-icon"></i>
-            <span class="window-title">experience.log</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ tail -f experience.log</p>
-            <br>
-            <div class="log-entry">
-                <p class="log-timestamp">[2021—PRESENT]</p>
-                <p class="log-title">AI/ML Engineer</p>
-                <p class="log-org">Independent / Freelance</p>
-                <p class="log-line">> Designed and deployed NLP pipelines for text classification and summarisation</p>
-                <p class="log-line">> Implemented transformer and diffusion model architectures in PyTorch</p>
-                <p class="log-line">> Built recommendation systems using collaborative filtering and matrix factorisation</p>
-                <p class="log-line">> Wrote technical articles on ML concepts reaching thousands of readers</p>
-            </div>
-            <br>
-            <div class="log-entry">
-                <p class="log-timestamp">[2017—2021]</p>
-                <p class="log-title">Data Scientist</p>
-                <p class="log-org">Previous Role</p>
-                <p class="log-line">> Developed machine learning models for structured and unstructured data</p>
-                <p class="log-line">> Collaborated with product teams to ship ML features end-to-end</p>
-                <p class="log-line">> Built data pipelines and feature engineering workflows at scale</p>
-            </div>
-            <br>
-            <p class="blink-cursor">_</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: education.dat ══════════════════════════════════ -->
-<div class="window" id="win-education">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-file window-icon"></i>
-            <span class="window-title">education.dat</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ hexdump -C education.dat</p>
-            <br>
-            <div class="edu-record">
-                <p class="edu-field"><span class="field-label">DEGREE:</span> MSc / BSc Computer Science</p>
-                <p class="edu-field"><span class="field-label">INSTITUTION:</span> University</p>
-                <p class="edu-field"><span class="field-label">YEAR:</span> 2016</p>
-                <p class="edu-field"><span class="field-label">STATUS:</span> CONFERRED</p>
-            </div>
-            <br>
-            <p class="status-line">[EOF]</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: Recycle Bin ═════════════════════════════════════ -->
-<div class="window" id="win-recycle">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-trash-can window-icon"></i>
-            <span class="window-title">Recycle Bin</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ls -la /trash/</p>
-            <br>
-            <div class="recycle-item" data-window="win-easter">
-                <i class="fa-solid fa-egg"></i>
-                <span>easter_egg.txt</span>
-                <span class="file-perms">deleted 2024-01-01</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: easter_egg.txt ════════════════════════════════ -->
-<div class="window" id="win-easter">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-egg window-icon"></i>
-            <span class="window-title">easter_egg.txt</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ cat easter_egg.txt</p>
-            <br>
-            <p>You found a secret file!</p>
-            <br>
-            <p>There's a text adventure game hidden in this OS.</p>
-            <p>Close this window and type "adventure" on your keyboard.</p>
-            <br>
-            <p class="status-line">Good luck, operator.</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: adventure.exe (easter egg) ═════════════════════ -->
-<div class="window" id="win-adventure" style="width:700px">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-dungeon window-icon"></i>
-            <span class="window-title">adventure.exe</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body adventure-body">
-        <div id="adventure-output" class="adventure-output"></div>
-        <div class="adventure-input-row">
-            <span class="adventure-prompt">&gt;</span>
-            <input type="text" id="adventure-input" class="adventure-input" autocomplete="off" spellcheck="false">
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: contact.sh ═════════════════════════════════════ -->
-<div class="window" id="win-contact">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-satellite-dish window-icon"></i>
-            <span class="window-title">contact.sh</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ./contact.sh</p>
-            <br>
-            <p>Establishing uplink...</p>
-            <p class="status-line">[CONNECTION ESTABLISHED]</p>
-            <br>
-            <p>Open to interesting ML engineering roles, research
-collaborations, and technical consulting.</p>
-            <br>
-            <p class="contact-field"><span class="field-label">EMAIL:</span> <a href="mailto:simpetre@gmail.com">simpetre@gmail.com</a></p>
-            <p class="contact-field"><span class="field-label">GITHUB:</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">github.com/simpetre</a></p>
-            <p class="contact-field"><span class="field-label">LINKEDIN:</span> <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin.com/in/simon.petre</a></p>
-            <p class="contact-field"><span class="field-label">TWITTER:</span> <a href="https://twitter.com/bigs1m" target="_blank" rel="noopener">@bigs1m</a></p>
-            <br>
-            <p class="prompt-line">$ _</p>
-        </div>
-    </div>
 </div>

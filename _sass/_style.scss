@@ -1,1160 +1,312 @@
 // ══════════════════════════════════════════════════════════════
-// PETRE-OS — CRT Green Phosphor Desktop
+// PETRE-OS v4 — "Phosphor Noir": one CRT, one terminal
 // ══════════════════════════════════════════════════════════════
 
 // ── Reset ──────────────────────────────────────────────────────
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
 
-html {
-    height: 100%;
+:root {
+    --accent:  #{$green};   // swap these two to re-skin the whole terminal
+    --accent2: #{$cyan};
 }
 
 body {
-    font-family: $mono-system;
-    font-size: 20px;
-    color: $green;
-    background: $bg;
+    font-family: $mono;
+    font-size: 15px;
     line-height: 1.6;
+    color: $text;
+    background: $bg;
     overflow: hidden;
-    height: 100vh;
-    text-shadow: 0 0 6px $glow;
+    -webkit-font-smoothing: antialiased;
     cursor: default;
-    user-select: none;
 }
 
 a {
-    color: $green-bright;
+    color: var(--accent);
     text-decoration: none;
-    &:hover {
-        color: #aaffaa;
-        text-shadow: 0 0 10px $glow-strong;
-    }
+    border-bottom: 1px solid transparent;
+    transition: color 0.12s, border-color 0.12s;
+    &:hover { color: var(--accent2); border-bottom-color: var(--accent2); }
 }
 
-// ── CRT Overlays ──────────────────────────────────────────────
+::selection { background: rgba(74, 246, 38, 0.28); color: $text-bright; }
+
+// ── Keyframes ──────────────────────────────────────────────────
+@keyframes blink   { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes flicker {
+    0%, 55%, 100% { opacity: 1; }
+    57% { opacity: 0.96; } 58% { opacity: 1; }
+    72% { opacity: 0.97; } 73% { opacity: 1; }
+}
+@keyframes crtRoll { 0% { transform: translateY(-25vh); } 100% { transform: translateY(125vh); } }
+@keyframes crtPowerOn {
+    0%   { opacity: 1; transform: scaleY(0.004); filter: brightness(4); }
+    45%  { opacity: 1; transform: scaleY(0.02);  filter: brightness(5); }
+    60%  { opacity: 1; transform: scaleY(1);     filter: brightness(2.5); }
+    100% { opacity: 0; transform: scaleY(1);     filter: brightness(1); }
+}
+
+// ── Global CRT overlays (one physical monitor → now consistent) ─
 .crt-scanlines {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9999;
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
     background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 0, 0, 0.25) 2px,
-        rgba(0, 0, 0, 0.25) 4px
-    );
+        0deg, transparent, transparent 2px,
+        rgba(0, 0, 0, 0.12) 3px, rgba(0, 0, 0, 0.12) 4px);
+    mix-blend-mode: multiply;
 }
-
 .crt-vignette {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9998;
+    position: fixed; inset: 0; pointer-events: none; z-index: 59;
     background:
-        // Brightness variation: slightly brighter center, dimmer edges
-        radial-gradient(
-            ellipse at center,
-            rgba(74, 246, 38, 0.02) 0%,
-            transparent 50%
-        ),
-        // Vignette: darkened corners
-        radial-gradient(
-            ellipse at center,
-            transparent 50%,
-            rgba(0, 0, 0, 0.65) 100%
-        );
+        radial-gradient(ellipse at center, rgba(74, 246, 38, 0.015) 0%, transparent 55%),
+        radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
 }
-
-// Slow bright band drifting down the screen (CRT vertical roll)
 .crt-rollbar {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 22vh;
-    pointer-events: none;
-    z-index: 9997;
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(74, 246, 38, 0.03) 45%,
-        rgba(180, 255, 180, 0.05) 50%,
-        rgba(74, 246, 38, 0.03) 55%,
-        transparent 100%
-    );
-    animation: crtRoll 9s linear infinite;
+    position: fixed; top: 0; left: 0; width: 100%; height: 22vh;
+    pointer-events: none; z-index: 58;
+    background: linear-gradient(to bottom, transparent,
+        rgba(180, 255, 200, 0.03) 50%, transparent);
+    animation: crtRoll 11s linear infinite;
 }
-
-// CRT power-on flash (removed by JS after it plays)
 #power-on {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 10001;
-    transform-origin: center center;
-    background:
-        radial-gradient(ellipse at center, rgba(180, 255, 180, 0.9) 0%, rgba(74, 246, 38, 0.5) 30%, transparent 70%),
-        $bg;
+    position: fixed; inset: 0; pointer-events: none; z-index: 200;
+    transform-origin: center;
+    background: radial-gradient(ellipse at center,
+        rgba(200, 255, 210, 0.95) 0%, rgba(74, 246, 38, 0.4) 35%, transparent 72%), $bg;
     animation: crtPowerOn 0.7s ease-out forwards;
     &.quick { animation-duration: 0.4s; }
 }
 
-// ── Matrix rain canvas ────────────────────────────────────────
+// ── Matrix rain — idle screensaver + `matrix` command ──────────
 #matrix-rain {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.06;
+    position: fixed; inset: 0; z-index: 150;
+    pointer-events: none; opacity: 0; display: none;
+    transition: opacity 0.5s;
+    &.active { display: block; opacity: 0.55; }
 }
 
-// ── Keyframes ──────────────────────────────────────────────────
-@keyframes flicker {
-    0%   { opacity: 1; }
-    3%   { opacity: 0.88; }
-    6%   { opacity: 1; }
-    7.5% { opacity: 0.93; }
-    9%   { opacity: 1; }
-    55%  { opacity: 1; }
-    57%  { opacity: 0.95; }
-    58%  { opacity: 1; }
-    100% { opacity: 1; }
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0; }
-}
-
-@keyframes netBlink {
-    0%, 80%, 100% { opacity: 1; }
-    85%, 95%      { opacity: 0.3; }
-}
-
-// Subtle chromatic-aberration jitter for big glowing headings
-@keyframes rgbJitter {
-    0%, 100% {
-        text-shadow:
-            -1px 0 rgba(255, 40, 60, 0.35),
-            1px 0 rgba(40, 200, 255, 0.35),
-            0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
-    }
-    50% {
-        text-shadow:
-            -1.6px 0 rgba(255, 40, 60, 0.45),
-            1.6px 0 rgba(40, 200, 255, 0.45),
-            0 0 18px $glow-strong, 0 0 34px rgba(74, 246, 38, 0.2);
-    }
-}
-
-// Focused-window ambient glow pulse (applied to a pseudo-element)
-@keyframes focusPulse {
-    0%, 100% { box-shadow: 0 0 5px $glow; opacity: 0.55; }
-    50%      { box-shadow: 0 0 14px $glow-strong; opacity: 1; }
-}
-
-// Slow rolling CRT scan band
-@keyframes crtRoll {
-    0%   { transform: translateY(-20vh); }
-    100% { transform: translateY(120vh); }
-}
-
-// CRT power-on: warm up from a bright horizontal line
-@keyframes crtPowerOn {
-    0%   { opacity: 1; transform: scaleY(0.004) scaleX(1); filter: brightness(4); }
-    35%  { opacity: 1; transform: scaleY(0.01) scaleX(1); filter: brightness(5); }
-    55%  { opacity: 1; transform: scaleY(1) scaleX(1); filter: brightness(3); }
-    75%  { opacity: 0.6; filter: brightness(1.4); }
-    100% { opacity: 0; transform: scaleY(1) scaleX(1); filter: brightness(1); }
-}
-
-body {
-    animation: flicker 6s infinite;
-}
-
-// ── Window animations (CRT power on/off physics) ──────────────
-@keyframes windowOpen {
-    0% {
-        opacity: 0;
-        transform: scaleX(0.6) scaleY(0.008);
-        filter: brightness(2.2);
-    }
-    45% {
-        opacity: 1;
-        transform: scaleX(1) scaleY(0.012);
-        filter: brightness(2.4);
-    }
-    70% {
-        transform: scaleX(1) scaleY(1.03);
-        filter: brightness(1.4);
-    }
-    100% {
-        opacity: 1;
-        transform: scaleX(1) scaleY(1);
-        filter: brightness(1);
-    }
-}
-
-@keyframes windowClose {
-    0% {
-        opacity: 1;
-        transform: scaleX(1) scaleY(1);
-        filter: brightness(1);
-    }
-    45% {
-        opacity: 1;
-        transform: scaleX(1) scaleY(0.01);
-        filter: brightness(2.6);
-    }
-    100% {
-        opacity: 0;
-        transform: scaleX(0.001) scaleY(0.01);
-        filter: brightness(3);
-    }
-}
-
-@keyframes windowMinimize {
-    from {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: scale(0.7) translateY(60px);
-    }
-}
+// Body flicker sits on the whole screen (the tube)
+body { animation: flicker 7s infinite; }
 
 // ══════════════════════════════════════════════════════════════
-// ── Boot Screen ─────────────────────────────────────────────
+// Boot screen
 // ══════════════════════════════════════════════════════════════
-
 #boot-screen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: $bg;
-    z-index: 10000;
-    padding: 3rem;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    position: fixed; inset: 0; z-index: 100;
+    background: $bg; padding: clamp(1.2rem, 4vw, 3rem);
+    display: flex; flex-direction: column;
+    font-family: $mono; font-size: 14px; line-height: 1.55;
+    color: var(--accent);
+    &.done { display: none; }
+    div { white-space: pre; }
 }
-
-#boot-text {
-    font-size: 18px;
-    line-height: 1.5;
-    flex: 1;
-    overflow: hidden;
-    div {
-        white-space: pre;
-    }
-}
-
 .boot-skip {
-    font-size: 14px;
-    color: $green-muted;
-    text-align: center;
-    padding: 1rem;
-    animation: blink 2s step-end infinite;
+    margin-top: auto; color: $dim; font-size: 12px;
+    animation: blink 1.6s step-end infinite;
 }
 
 // ══════════════════════════════════════════════════════════════
-// ── Desktop ─────────────────────────────────────────────────
+// Terminal
 // ══════════════════════════════════════════════════════════════
+#crt { position: fixed; inset: 0; background: $bg; overflow: hidden; z-index: 1; }
 
-#desktop {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: calc(100% - 40px);
+#terminal {
     display: none;
-    z-index: 1;
-    &.active { display: block; }
-}
-
-// ── Desktop Icons ─────────────────────────────────────────────
-.desktop-icons {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
     flex-direction: column;
-    gap: 8px;
-    z-index: 1;
-}
-
-.desktop-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90px;
-    padding: 8px 4px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    text-align: center;
-    transition: background 0.12s, border-color 0.12s;
-
-    &:hover {
-        background: rgba(74, 246, 38, 0.08);
-        border-color: $border;
-        .icon {
-            color: $green-bright;
-            text-shadow: 0 0 14px $glow-strong;
-            transform: translateY(-1px);
-        }
-        span { color: $green; }
-    }
-
-    &.selected {
-        background: rgba(74, 246, 38, 0.12);
-        border-color: $green-muted;
-        span { color: $green; }
-    }
-
-    .icon {
-        font-size: 2rem;
-        margin-bottom: 4px;
-        color: $green;
-        transition: color 0.15s, text-shadow 0.15s, transform 0.15s;
-    }
-
-    span {
-        font-family: $mono-system;
-        font-size: 14px;
-        color: $green-muted;
-        line-height: 1.2;
-    }
-}
-
-// ── Recycle Bin (bottom-right) ─────────────────────────────────
-.recycle-bin {
-    position: absolute !important;
-    bottom: 20px;
-    right: 20px;
-    top: auto !important;
-    left: auto !important;
-}
-
-.recycle-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    font-family: $mono-system;
-    font-size: 16px;
-    color: $green-dim;
-
-    i {
-        color: $green-muted;
-        font-size: 14px;
-    }
-
-    .file-perms {
-        margin-left: auto;
-    }
-
-    &:hover {
-        background: rgba(74, 246, 38, 0.08);
-        border-color: $border;
-        color: $green;
-    }
-}
-
-// ══════════════════════════════════════════════════════════════
-// ── Windows ─────────────────────────────────────────────────
-// ══════════════════════════════════════════════════════════════
-
-.window {
-    position: absolute;
-    display: none;
-    width: 520px;
-    max-height: 70vh;
-    border: 1px solid $green-muted;
-    background: $bg;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 2px $glow;
-    flex-direction: column;
-    transform-origin: center center;
-
-    &.open {
-        display: flex;
-        animation: windowOpen 0.22s cubic-bezier(0.2, 0.8, 0.3, 1.1) forwards;
-    }
-
-    &.closing {
-        display: flex;
-        animation: windowClose 0.16s ease-in forwards;
-    }
-
-    &.minimizing {
-        display: flex;
-        animation: windowMinimize 0.15s ease-in forwards;
-    }
-
-    &.minimized {
-        display: none !important;
-    }
-
-    &.focused {
-        border-color: $green;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 6px $glow;
-    }
-
-    // Ambient glow pulse lives on a pseudo-element so it never
-    // competes with the window open/close transform animation.
-    &.focused::after {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        pointer-events: none;
-        animation: focusPulse 4s ease-in-out infinite;
-    }
-
-    &.dragging {
-        opacity: 0.9;
-        transition: none;
-    }
-
-    &.maximized {
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        max-height: calc(100vh - 40px) !important;
-        height: calc(100vh - 40px) !important;
-    }
-}
-
-#win-about {
-    width: 620px;
-}
-
-.wide-window {
-    width: 640px;
-}
-
-.window-titlebar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 28px;
-    padding: 0 6px 0 8px;
-    background: darken($green-dark, 3%);
-    border-bottom: 1px solid $border;
-    cursor: move;
-    flex-shrink: 0;
-    font-family: $mono-system;
-    transition: background 0.15s;
-
-    .window-title { color: $green-muted; transition: color 0.15s; }
-    .win-btn { border-color: $border; color: $border; }
-
-    .focused & {
-        background: $green-dark;
-        border-bottom-color: $green-muted;
-        .window-title { color: $green; }
-        .win-btn { border-color: $green-muted; color: $green-muted; }
-    }
-}
-
-.window-title-area {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    overflow: hidden;
-}
-
-.window-icon {
-    font-size: 12px;
-    color: $green-muted;
-}
-
-.window-title {
-    font-family: $mono-system;
-    font-size: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.window-controls {
-    display: flex;
-    gap: 2px;
-    flex-shrink: 0;
-}
-
-.win-btn {
-    width: 22px;
-    height: 20px;
-    background: transparent;
-    border: 1px solid $green-muted;
-    color: $green-muted;
-    font-family: $mono-system;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
-    text-shadow: none;
-
-    &:hover {
-        background: $green;
-        color: $bg;
-        border-color: $green;
-    }
-}
-
-.win-close:hover {
-    background: #ddffd8;
-    border-color: #ddffd8;
-    color: $bg;
-    text-shadow: none;
-    box-shadow: 0 0 6px rgba(200, 255, 200, 0.4);
-}
-
-.window-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 20px;
-    font-family: $mono-body;
-    font-size: 14px;
-    line-height: 1.7;
-    text-shadow: 0 0 4px $glow;
-
-    &::-webkit-scrollbar {
-        width: 12px;
-    }
-    &::-webkit-scrollbar-track {
-        background: $bg;
-        border-left: 1px solid $border;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: $green-dark;
-        border: 1px solid $green-muted;
-        &:hover { background: $border; }
-    }
-}
-
-// ── Window content styles ─────────────────────────────────────
-.file-content {
-    user-select: text;
-}
-
-.prompt-line {
-    font-family: $mono-system;
-    font-size: 16px;
-    color: $green-muted;
-}
-
-.content-heading {
-    font-family: $mono-system;
-    font-size: 36px;
-    color: $green-bright;
-    text-shadow:
-        -1px 0 rgba(255, 40, 60, 0.35),
-        1px 0 rgba(40, 200, 255, 0.35),
-        0 0 15px $glow-strong, 0 0 30px rgba(74, 246, 38, 0.15);
-    letter-spacing: 0.1em;
-    animation: rgbJitter 5s ease-in-out infinite;
-    // Typing cursor appended by JS
-    .typing-cursor {
-        display: inline-block;
-        animation: blink 0.7s step-end infinite;
-    }
-}
-
-.content-subheading {
-    font-family: $mono-system;
-    font-size: 22px;
-    color: $green;
-    letter-spacing: 0.05em;
-    text-shadow: 0 0 8px $glow;
-}
-
-.hero-links {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-    a {
-        font-family: $mono-system;
-        font-size: 16px;
-        color: $green-dim;
-        border: 1px solid $green-muted;
-        padding: 4px 12px;
-        transition: all 0.15s;
-        &:hover {
-            color: $bg;
-            background: $green;
-            border-color: $green;
-            text-shadow: none;
-        }
-    }
-}
-
-.status-line {
-    font-family: $mono-system;
-    color: $green-muted;
-    font-size: 14px;
-}
-
-.blink-cursor {
-    animation: blink 1s step-end infinite;
-}
-
-// ── Skills table ──────────────────────────────────────────────
-.skills-table {
-    border-collapse: collapse;
-    width: 100%;
-
-    tr {
-        border-bottom: 1px solid rgba(74, 246, 38, 0.08);
-    }
-
-    td {
-        padding: 6px 0;
-        vertical-align: top;
-        font-family: $mono-body;
-        font-size: 14px;
-        color: $green-dim;
-    }
-
-    .skill-cat {
-        font-family: $mono-system;
-        color: $green-bright;
-        white-space: nowrap;
-        padding-right: 20px;
-        width: 1%;
-        font-size: 16px;
-        letter-spacing: 0.05em;
-        text-shadow: 0 0 6px $glow;
-    }
-}
-
-// ── File listing (projects) ───────────────────────────────────
-.file-listing {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.file-entry {
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(74, 246, 38, 0.08);
-    &:last-child { border-bottom: none; }
-}
-
-.file-entry-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-}
-
-.file-perms {
-    font-family: $mono-system;
-    color: $green-muted;
-    font-size: 13px;
-}
-
-.file-name {
-    font-family: $mono-system;
-    color: $green-bright;
-    font-size: 20px;
-    @include chroma(0 0 6px $glow);
-}
-
-.file-link {
-    font-family: $mono-system;
-    font-size: 14px;
-    color: $green-muted;
-    &:hover { color: $green-bright; }
-}
-
-.file-desc {
-    font-family: $mono-body;
-    color: $green-dim;
-    font-size: 13px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    margin-bottom: 6px;
-}
-
-.file-tags {
-    font-family: $mono-body;
-    font-size: 12px;
-    color: $green-muted;
-    letter-spacing: 0.05em;
-}
-
-// ── Log entries (experience) ──────────────────────────────────
-.log-entry {
-    padding-left: 0;
-    margin-bottom: 4px;
-}
-
-.log-timestamp {
-    font-family: $mono-system;
-    color: $green-muted;
-    font-size: 14px;
-    letter-spacing: 0.05em;
-}
-
-.log-title {
-    font-family: $mono-system;
-    color: $green-bright;
-    font-size: 22px;
-    @include chroma(0 0 6px $glow);
-}
-
-.log-org {
-    font-family: $mono-body;
-    color: $green;
-    font-size: 14px;
-    margin-bottom: 6px;
-}
-
-.log-line {
-    font-family: $mono-body;
-    color: $green-dim;
-    font-size: 13px;
-    padding-left: 0;
-    line-height: 1.8;
-}
-
-// ── Education fields ──────────────────────────────────────────
-.edu-record {
-    padding: 4px 0;
-}
-
-.edu-field,
-.contact-field {
-    font-family: $mono-body;
-    font-size: 14px;
-    margin-bottom: 4px;
-}
-
-.field-label {
-    font-family: $mono-system;
-    color: $green-bright;
-    margin-right: 8px;
-    font-size: 16px;
-    text-shadow: 0 0 4px $glow;
-}
-
-// ── Adventure game ────────────────────────────────────────────
-#win-adventure {
-    width: 700px;
-    max-height: none;
-    height: 550px;
-}
-
-.adventure-body {
-    display: flex;
-    flex-direction: column;
-    padding: 0 !important;
-    height: 500px;
-}
-
-.adventure-output {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 16px;
-    font-family: $mono-body;
-    font-size: 14px;
-    line-height: 1.6;
-    user-select: text;
-
-    .adv-room {
-        font-family: $mono-system;
-        color: $green-bright;
-        font-size: 18px;
-        margin-top: 8px;
-        @include chroma(0 0 8px $glow);
-    }
-    .adv-desc { color: $green-dim; }
-    .adv-action { color: $green; }
-    .adv-error { color: #cc5555; }
-    .adv-item {
-        color: $green-bright;
-        text-shadow: 0 0 6px $glow;
-    }
-    .adv-input-echo {
-        color: $green-muted;
-        &::before { content: '> '; }
-    }
-    .adv-special {
-        color: $green-bright;
-        @include chroma(0 0 12px $glow-strong);
-    }
-    .adv-npc {
-        color: #6fd6ff;
-        text-shadow: 0 0 8px rgba(60, 190, 255, 0.4);
-    }
-    .adv-map {
-        font-family: $mono-body;
-        color: $green-dim;
-        white-space: pre;
-        line-height: 1.35;
-    }
-    .adv-title {
-        color: $green-bright;
-        white-space: pre;
-        line-height: 1.1;
-        @include chroma(0 0 12px $glow-strong, 0 0 24px rgba(74, 246, 38, 0.2));
-    }
-
-    &::-webkit-scrollbar { width: 12px; }
-    &::-webkit-scrollbar-track { background: $bg; }
-    &::-webkit-scrollbar-thumb {
-        background: $green-dark;
-        border: 1px solid $green-muted;
-    }
-}
-
-.adventure-input-row {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-top: 1px solid $border;
-    background: $surface;
-    flex-shrink: 0;
-}
-
-.adventure-prompt {
-    color: $green;
-    margin-right: 8px;
-    font-family: $mono-system;
-    font-size: 18px;
-}
-
-.adventure-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: $green;
-    font-family: $mono-body;
-    font-size: 14px;
-    text-shadow: 0 0 6px $glow;
-    caret-color: $green;
-}
-
-// ══════════════════════════════════════════════════════════════
-// ── Taskbar ─────────────────────────────────────────────────
-// ══════════════════════════════════════════════════════════════
-
-.taskbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: $surface;
-    border-top: 1px solid $green-muted;
-    display: none;
-    align-items: center;
-    padding: 0 4px;
-    z-index: 500;
-    gap: 4px;
+    height: 100vh;
+    max-width: 1080px;
+    margin: 0 auto;
+    border-left: 1px solid $border;
+    border-right: 1px solid $border;
+    background: rgba(10, 14, 12, 0.35);
     &.active { display: flex; }
 }
 
-.start-btn {
-    height: 30px;
-    padding: 0 12px;
-    background: $green-dark;
-    border: 1px solid $green-muted;
-    color: $green;
-    font-family: $mono-system;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+// ── Status bar ─────────────────────────────────────────────────
+#term-header {
     flex-shrink: 0;
-    text-shadow: 0 0 6px $glow;
-    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-
-    &:hover {
-        background: $green;
-        color: $bg;
-        text-shadow: none;
-        border-color: $green;
-        box-shadow: 0 0 12px $glow-strong;
-    }
-
-    i { font-size: 12px; }
+    display: flex; align-items: center; justify-content: space-between;
+    height: 34px; padding: 0 14px;
+    background: $surface; border-bottom: 1px solid $border;
+    font-size: 12.5px; color: $dim;
+    .th-user { color: var(--accent); }
+    .th-title { color: $dim; }
+    .th-right { display: flex; align-items: center; gap: 12px; }
+    .th-dot { color: var(--accent); font-size: 9px; vertical-align: middle; }
+    #term-clock { color: $text; font-variant-numeric: tabular-nums; }
 }
 
-.taskbar-windows {
-    flex: 1;
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    padding: 0 4px;
+// ── Scrollback ─────────────────────────────────────────────────
+#term-output {
+    flex: 1; overflow-y: auto;
+    padding: 20px 20px 10px;
+    scrollbar-width: thin;
+    scrollbar-color: $border transparent;
+    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar-thumb { background: $border; border-radius: 6px; }
 }
 
-.taskbar-win-btn {
-    height: 28px;
-    padding: 0 10px;
-    background: transparent;
-    border: 1px solid $border;
-    color: $green-muted;
-    font-family: $mono-system;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    text-shadow: none;
-    flex-shrink: 0;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-
-    &:hover {
-        border-color: $green-muted;
-        color: $green;
-    }
-
-    &.active {
-        background: $green-dark;
-        border-color: $green-muted;
-        color: $green;
-        text-shadow: 0 0 6px $glow;
-    }
+// A rendered command block: echo line + output
+.term-block { margin-bottom: 18px; }
+.term-echo {
+    margin-bottom: 6px; color: $text;
+    .tp { color: var(--accent); }         // prompt
+    .tc { color: $text-bright; }          // typed command
+}
+.term-dim  { color: $dim; }
+.term-err  { color: $red; }
+.term-ok   { color: var(--accent); }
+.term-note { color: var(--accent2); }
+.term-ascii {
+    font-family: $display;
+    white-space: pre; line-height: 1;
+    color: var(--accent);
+    @include chroma(0 0 10px $glow);
+    font-size: clamp(18px, 4.5vw, 30px);
 }
 
-.taskbar-tray {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 10px;
-    border-left: 1px solid $border;
-    height: 100%;
-    flex-shrink: 0;
-    font-family: $mono-system;
-    font-size: 13px;
-    color: $green-muted;
-}
-
-.tray-status {
-    display: flex;
-    gap: 10px;
-    font-size: 13px;
-
-    span {
-        white-space: nowrap;
-    }
-
-    .tray-net {
-        animation: netBlink 4s ease-in-out infinite;
-    }
-}
-
-.taskbar-clock {
-    font-family: $mono-system;
-    font-size: 14px;
-    color: $green-dim;
-}
-
-// ══════════════════════════════════════════════════════════════
-// ── Start Menu ──────────────────────────────────────────────
-// ══════════════════════════════════════════════════════════════
-
-.start-menu {
-    position: fixed;
-    bottom: 40px;
-    left: 4px;
-    width: 240px;
-    background: $surface;
-    border: 1px solid $green-muted;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 4px $glow;
-    z-index: 600;
-    display: none;
-    &.open { display: block; }
-}
-
-.start-menu-header {
-    padding: 10px 12px;
-    background: $green-dark;
-    border-bottom: 1px solid $green-muted;
-    font-family: $mono-system;
-    font-size: 18px;
-    color: $green-bright;
-    letter-spacing: 0.1em;
+// neofetch-style intro card
+.neofetch { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
+.neofetch .nf-logo {
+    font-family: $display; white-space: pre; line-height: 1;
+    color: var(--accent); font-size: 15px;
     @include chroma(0 0 8px $glow);
 }
-
-.start-menu-items {
-    padding: 4px 0;
+.neofetch .nf-info {
+    font-size: 13.5px; line-height: 1.7;
+    .nf-k { color: var(--accent); }
+    .nf-title { color: var(--accent2); border-bottom: 1px solid $border; }
 }
 
-.start-menu-item {
-    padding: 6px 14px;
-    font-family: $mono-system;
-    font-size: 16px;
-    color: $green-dim;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background 0.12s, color 0.12s, padding-left 0.12s;
-
-    i {
-        width: 18px;
-        text-align: center;
-        font-size: 14px;
+// ── Rendered content (cloned from #content-source) ─────────────
+#term-output {
+    .o-h1 {
+        font-family: $display; font-size: clamp(34px, 8vw, 52px);
+        line-height: 1; letter-spacing: 0.04em; color: $text-bright;
+        @include chroma(0 0 16px $glow, 0 0 32px rgba(74, 246, 38, 0.15));
+        margin-bottom: 4px;
     }
+    .o-sub { color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
+             font-size: 14px; margin-bottom: 14px; text-shadow: 0 0 8px $glow; }
+    .o-p { color: $text; max-width: 72ch; margin-bottom: 12px; }
+    .o-dim { color: $dim; font-size: 13px; }
+    .o-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 6px;
+        a { text-transform: lowercase; letter-spacing: 0.03em; } }
 
-    &:hover {
-        background: $green;
-        color: $bg;
-        text-shadow: none;
-        padding-left: 18px;
+    .o-table { border-collapse: collapse; width: 100%; max-width: 72ch;
+        td { padding: 5px 0; vertical-align: top; }
+        tr + tr td { border-top: 1px solid rgba(74, 246, 38, 0.06); } }
+    .o-key { color: var(--accent); white-space: nowrap; padding-right: 22px;
+        width: 1%; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; }
+
+    .proj { padding: 10px 0; border-bottom: 1px solid $border; }
+    .proj:last-child { border-bottom: none; }
+    .proj-head { margin-bottom: 5px; }
+    .proj-name { color: $green-bright; font-weight: 500; @include chroma(0 0 6px $glow); }
+    .proj-tags { color: var(--accent2); font-size: 12.5px; letter-spacing: 0.03em; }
+
+    .xp { padding: 8px 0 12px; }
+    .xp-when { color: $dim; font-size: 13px; letter-spacing: 0.05em; }
+    .xp-role { color: $text-bright; font-size: 17px; margin-bottom: 6px; }
+    .o-list { list-style: none; }
+    .o-list li { color: $text; padding-left: 18px; position: relative; line-height: 1.75; }
+    .o-list li::before { content: '›'; position: absolute; left: 2px; color: var(--accent); }
+}
+
+// ── Command menu (clickable chips) ─────────────────────────────
+#term-menu {
+    flex-shrink: 0;
+    display: flex; flex-wrap: wrap; gap: 7px;
+    padding: 9px 14px; border-top: 1px solid $border;
+    background: rgba(12, 17, 19, 0.6);
+}
+.chip {
+    font-family: $mono; font-size: 12.5px;
+    color: $dim; background: transparent;
+    border: 1px solid $border; border-radius: 3px;
+    padding: 3px 10px; cursor: pointer;
+    transition: color 0.12s, border-color 0.12s, background 0.12s, box-shadow 0.12s;
+    &:hover, &:focus-visible {
+        color: $bg; background: var(--accent); border-color: var(--accent);
+        box-shadow: 0 0 10px $glow; outline: none;
+    }
+    &.chip-play {
+        color: var(--accent2); border-color: rgba(63, 230, 255, 0.4);
+        &:hover { color: $bg; background: var(--accent2); border-color: var(--accent2);
+                  box-shadow: 0 0 10px $glow-cyan; }
     }
 }
 
-.start-menu-divider {
-    height: 1px;
-    background: $border;
-    margin: 4px 8px;
+// ── Input line ─────────────────────────────────────────────────
+#term-inputline {
+    flex-shrink: 0; display: flex; align-items: center; gap: 9px;
+    padding: 11px 16px 15px;
+}
+#term-prompt {
+    color: var(--accent); white-space: nowrap;
+    text-shadow: 0 0 8px $glow;
+    .ip-tilde { color: $dim; }
+}
+#term-input {
+    flex: 1; min-width: 0;
+    background: transparent; border: none; outline: none;
+    color: $text-bright; font-family: $mono; font-size: 15px;
+    caret-color: var(--accent);
 }
 
 // ══════════════════════════════════════════════════════════════
-// ── Mobile ──────────────────────────────────────────────────
+// Adventure output (reused engine — remapped to palette)
 // ══════════════════════════════════════════════════════════════
+#term-output {
+    .adv-room  { font-family: $display; font-size: 20px; margin-top: 6px;
+                 color: $green-bright; @include chroma(0 0 8px $glow); }
+    .adv-desc  { color: $text; }
+    .adv-action{ color: var(--accent); }
+    .adv-error { color: $red; }
+    .adv-item  { color: $green-bright; text-shadow: 0 0 6px $glow; }
+    .adv-input-echo { color: $dim; &::before { content: '> '; } }
+    .adv-special { color: $green-bright; @include chroma(0 0 10px $glow-strong); }
+    .adv-npc   { color: var(--accent2); text-shadow: 0 0 8px $glow-cyan; }
+    .adv-map   { font-family: $mono; color: $dim; white-space: pre; line-height: 1.35; }
+    .adv-title { font-family: $mono; color: $green-bright; white-space: pre; line-height: 1.15;
+                 @include chroma(0 0 10px $glow-strong); }
+}
+// adventure-mode tint on the prompt so the mode is obvious
+#terminal.adv-mode #term-prompt { color: var(--accent2); text-shadow: 0 0 8px $glow-cyan; }
 
+// ── Visually-hidden content source (crawlable, SR-available) ───
+.content-source {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+// ══════════════════════════════════════════════════════════════
+// Mobile
+// ══════════════════════════════════════════════════════════════
 @include mobile {
-    body {
-        font-size: 16px;
-        overflow-y: auto;
-        height: auto;
-    }
-
-    .crt-scanlines {
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(0, 0, 0, 0.06) 2px,
-            rgba(0, 0, 0, 0.06) 4px
-        );
-    }
-
-    #matrix-rain,
-    .crt-rollbar,
-    #power-on {
-        display: none;
-    }
-
-    // Drop the heaviest glow/jitter on small screens for legibility + battery
-    .content-heading {
-        animation: none;
-        text-shadow: 0 0 12px $glow;
-    }
-
-    .window.focused::after {
-        display: none;
-    }
-
-    .desktop-icons {
-        display: none;
-    }
-
-    .recycle-bin {
-        display: none;
-    }
-
-    #desktop {
-        position: relative;
-        height: auto;
-        overflow: visible;
-        padding-bottom: 50px;
-    }
-
-    .window {
-        position: relative !important;
-        width: 100% !important;
-        max-height: none;
-        left: 0 !important;
-        top: 0 !important;
-        margin: 0;
-        border-left: none;
-        border-right: none;
-        display: flex !important;
-        animation: none !important;
-
-        &#win-adventure {
-            display: none !important;
-            &.open { display: flex !important; }
-        }
-    }
-
-    .wide-window {
-        width: 100% !important;
-    }
-
-    .window-titlebar {
-        cursor: default;
-    }
-
-    .win-minimize, .win-maximize, .win-close {
-        display: none;
-    }
-
-    .window-body {
-        font-size: 13px;
-        max-height: none;
-    }
-
-    .content-heading {
-        font-size: 26px;
-    }
-
-    .content-subheading {
-        font-size: 18px;
-    }
-
-    .hero-links a {
-        font-size: 14px;
-        padding: 3px 8px;
-    }
-
-    .skills-table td { font-size: 13px; }
-    .skills-table .skill-cat { font-size: 14px; }
-    .file-name { font-size: 17px; }
-    .file-desc { font-size: 12px; }
-    .log-title { font-size: 18px; }
-
-    .start-btn { font-size: 14px; padding: 0 8px; }
-    .taskbar-win-btn { font-size: 12px; padding: 0 6px; }
-
-    .tray-status { display: none; }
-
-    #boot-screen { padding: 1.5rem; }
-    #boot-text { font-size: 14px; }
+    body { font-size: 14px; }
+    .crt-rollbar { display: none; }
+    #terminal { border-left: none; border-right: none; }
+    #term-header .th-title { display: none; }
+    #term-output { padding: 14px 14px 8px; }
+    #term-output .o-h1 { font-size: 40px; }
+    #term-menu { gap: 6px; padding: 8px 10px; }
+    .chip { font-size: 12px; padding: 3px 9px; }
+    #term-inputline { padding: 10px 12px 13px; }
+    #term-prompt { font-size: 13px; }
+    #term-input { font-size: 15px; } // keep >=16 target avoided; 15 ok, prevents zoom on some
+    #boot-screen { font-size: 12px; }
 }
 
-// ── Reduced motion ─────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// Reduced motion
+// ══════════════════════════════════════════════════════════════
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-
-    // Fully remove the ambient CRT motion layers
-    .crt-rollbar,
-    #power-on {
-        display: none !important;
-    }
+    .crt-rollbar, #power-on { display: none !important; }
 }

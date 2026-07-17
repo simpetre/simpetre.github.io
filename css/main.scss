@@ -3,42 +3,52 @@
 ---
 @charset "utf-8";
 
-// ── Color palette (single green phosphor) ───────────────────
-$bg:            #0a0a0a;
-$surface:       #0d120d;
-$border:        #0d5a0d;
-$green:         #4af626;
-$green-dim:     #2abf2a;
-$green-bright:  #7aff7a;
-$green-dark:    #0d3d0d;
-$green-muted:   #1a8a1a;
+// ══════════════════════════════════════════════════════════════
+// PETRE-OS v4 — "Phosphor Noir": one CRT, one terminal
+// Modern terminal palette: off-white body text on near-black,
+// green primary accent (the >_ identity), cyan secondary accent.
+// ══════════════════════════════════════════════════════════════
 
-// ── Glow tokens ─────────────────────────────────────────────
-$glow:          rgba(74, 246, 38, 0.3);
-$glow-strong:   rgba(74, 246, 38, 0.5);
+// ── Base surfaces ───────────────────────────────────────────────
+$bg:            #07090b;   // near-black monitor black
+$surface:       #0c1113;   // header / input bar / panels
+$surface-2:     #10171a;   // hover fills
+$border:        #1c2a22;   // hairline dividers
 
-// ── Typography ─────────────────────────────────────────────────
-$mono-system: 'VT323', 'Courier New', monospace;
-$mono-body:   'JetBrains Mono', 'Courier New', monospace;
+// ── Text (legible off-white, NOT glowing) ───────────────────────
+$text:          #c6cfc9;   // body copy
+$text-bright:   #eef5f0;   // emphasis
+$dim:           #6f7b75;   // muted / secondary
+$faint:         #3f4a45;   // ghost text, rules
 
-// ── Breakpoints ────────────────────────────────────────────────
+// ── Accents ─────────────────────────────────────────────────────
+$green:         #4af626;   // primary accent — prompt, cursor, links, brand
+$green-bright:  #8dff6a;
+$cyan:          #3fe6ff;   // secondary accent — hovers, active, tags
+$amber:         #ffcf4a;   // warnings / highlights (sparing)
+$red:           #ff5c6a;   // errors
+
+// ── Glow (applied to ACCENTS only, never body copy) ─────────────
+$glow:          rgba(74, 246, 38, 0.35);
+$glow-strong:   rgba(74, 246, 38, 0.55);
+$glow-cyan:     rgba(63, 230, 255, 0.35);
+
+// ── Typography ──────────────────────────────────────────────────
+$mono:      'JetBrains Mono', 'SFMono-Regular', 'Courier New', monospace; // body/UI (legible)
+$display:   'VT323', 'JetBrains Mono', monospace;                          // big ASCII/banner only
+
+// ── Breakpoints ─────────────────────────────────────────────────
 $on-palm:   600px;
 $on-laptop: 900px;
 
-@mixin mobile {
-    @media screen and (max-width: $on-palm) { @content; }
-}
+@mixin mobile { @media screen and (max-width: $on-palm) { @content; } }
+@mixin tablet { @media screen and (max-width: $on-laptop) { @content; } }
 
-@mixin tablet {
-    @media screen and (max-width: $on-laptop) { @content; }
-}
-
-// Chromatic aberration: red/cyan fringe under a green phosphor glow.
-// Pass the glow layers you want stacked on top of the RGB split.
+// Chromatic aberration, accent-only. Pass the glow layers to stack.
 @mixin chroma($glow-layers...) {
     text-shadow:
-        -1px 0 rgba(255, 40, 60, 0.3),
-        1px 0 rgba(40, 200, 255, 0.3),
+        -0.5px 0 rgba(255, 60, 90, 0.25),
+        0.5px 0 rgba(60, 200, 255, 0.25),
         $glow-layers;
 }
 

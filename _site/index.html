@@ -8,925 +8,172 @@
     <title>Simon Petre — AI/ML Engineer</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/main.css?v=1784326973">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-    <!-- ── CRT power-on flash (removed by JS after it plays) ──── -->
+    <!-- CRT power-on flash (removed by JS once it plays) -->
     <div id="power-on"></div>
 
-    <!-- ── Matrix Rain (behind everything) ───────────────────── -->
+    <!-- Matrix rain: idle screensaver / `matrix` command -->
     <canvas id="matrix-rain"></canvas>
 
-    <!-- ── CRT Boot Sequence ─────────────────────────────────── -->
-    <div id="boot-screen">
-        <div id="boot-text"></div>
-        <div class="boot-skip" id="boot-skip">[ Press any key to skip ]</div>
-    </div>
-
-    <!-- ── Desktop ───────────────────────────────────────────── -->
-    <div id="desktop">
-
-        <!-- Desktop Icons -->
-        <div class="desktop-icons">
-            <div class="desktop-icon" data-window="win-about">
-                <i class="fa-regular fa-file-lines icon"></i>
-                <span>about.txt</span>
-            </div>
-            <div class="desktop-icon" data-window="win-skills">
-                <i class="fa-solid fa-microchip icon"></i>
-                <span>skills.exe</span>
-            </div>
-            <div class="desktop-icon" data-window="win-projects">
-                <i class="fa-regular fa-folder-open icon"></i>
-                <span>projects/</span>
-            </div>
-            <div class="desktop-icon" data-window="win-experience">
-                <i class="fa-solid fa-terminal icon"></i>
-                <span>experience.log</span>
-            </div>
-            <div class="desktop-icon" data-window="win-education">
-                <i class="fa-regular fa-file icon"></i>
-                <span>education.dat</span>
-            </div>
-            <div class="desktop-icon" data-window="win-contact">
-                <i class="fa-solid fa-satellite-dish icon"></i>
-                <span>contact.sh</span>
-            </div>
-            <div class="desktop-icon" id="icon-resume">
-                <i class="fa-regular fa-file icon"></i>
-                <span>resume.pdf</span>
-            </div>
-        </div>
-
-        <!-- ══ WINDOW: about.txt ══════════════════════════════════════ -->
-<div class="window" id="win-about">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-file-lines window-icon"></i>
-            <span class="window-title">about.txt</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ cat about.txt</p>
-            <br>
-            <p class="content-heading" id="hero-name"></p>
-            <p class="content-subheading">AI/ML Engineer</p>
-            <br>
-            <p>Building intelligent systems at the intersection of machine learning,
-NLP, and scalable infrastructure.</p>
-            <br>
-            <div class="hero-links">
-                <a href="https://github.com/simpetre" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
-                <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-                <a href="mailto:simpetre@gmail.com"><i class="fa-regular fa-envelope"></i> Email</a>
-                <a href="/resume.pdf" target="_blank"><i class="fa-regular fa-file"></i> Resume</a>
-            </div>
-            <br>
-            <p>I'm an AI/ML engineer with a focus on deep learning, natural language
-processing, and recommendation systems. I enjoy turning research ideas
-into production-grade systems that create real impact.</p>
-            <br>
-            <p>My work spans transformer-based language models, diffusion models for
-generative AI, and classical ML pipelines for structured data. I'm
-equally comfortable exploring cutting-edge papers and shipping
-reliable, well-tested code.</p>
-            <br>
-            <p class="prompt-line">$ _</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: skills.exe ═════════════════════════════════════ -->
-<div class="window" id="win-skills">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-microchip window-icon"></i>
-            <span class="window-title">skills.exe</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ./skills.exe --list</p>
-            <br>
-            <table class="skills-table">
-                <tr>
-                    <td class="skill-cat">LANGUAGES</td>
-                    <td>Python, SQL, Bash, JavaScript</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">ML/DL</td>
-                    <td>PyTorch, Hugging Face, scikit-learn, NumPy, Pandas</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">NLP/GEN-AI</td>
-                    <td>Transformers, Diffusion Models, LLMs, RLHF, RAG</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">INFRA</td>
-                    <td>Docker, Git, Linux, Jupyter, Weights &amp; Biases</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">CLOUD</td>
-                    <td>AWS, GCP, PostgreSQL, Spark</td>
-                </tr>
-                <tr>
-                    <td class="skill-cat">RESEARCH</td>
-                    <td>RecSys, Audio ML, Text Summarization, Computer Vision</td>
-                </tr>
-            </table>
-            <br>
-            <p class="status-line">[6 modules loaded] Status: OPERATIONAL</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: projects/ ══════════════════════════════════════ -->
-<div class="window wide-window" id="win-projects">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-folder-open window-icon"></i>
-            <span class="window-title">projects/</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ls -la projects/</p>
-            <br>
-            <div class="file-listing">
-
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">diffusion_models/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">End-to-end implementation of denoising diffusion probabilistic
-models (DDPM) in PyTorch. Covers the forward/reverse diffusion
-processes, noise scheduling, and U-Net architecture with attention.</p>
-                    <div class="file-tags">PyTorch / DDPM / Generative AI / U-Net</div>
-                </div>
-
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">transformer_lm/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">From-scratch PyTorch implementation of the Transformer architecture
-including multi-head self-attention, positional encoding, and
-training on language modelling tasks with modern techniques.</p>
-                    <div class="file-tags">PyTorch / Transformers / NLP / Attention</div>
-                </div>
-
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">audio_classify/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">Urban sound classification using convolutional neural networks on
-mel-spectrogram features. Trained on UrbanSound8K achieving strong
-accuracy on 10 sound categories.</p>
-                    <div class="file-tags">CNNs / Audio ML / Mel Spectrograms / UrbanSound8K</div>
-                </div>
-
-                <div class="file-entry">
-                    <div class="file-entry-header">
-                        <span class="file-perms">-rwxr-xr-x</span>
-                        <span class="file-name">lexrank_summarizer/</span>
-                        <a href="https://github.com/simpetre" target="_blank" rel="noopener" class="file-link">[github]</a>
-                    </div>
-                    <p class="file-desc">Graph-based extractive summarisation using the LexRank algorithm.
-Builds a sentence similarity graph with TF-IDF cosine similarity
-and applies PageRank to identify the most salient sentences.</p>
-                    <div class="file-tags">NLP / Graph Algorithms / TF-IDF / Summarization</div>
-                </div>
-
-            </div>
-            <br>
-            <p class="status-line">4 items — 2.4G total</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: experience.log ═════════════════════════════════ -->
-<div class="window" id="win-experience">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-terminal window-icon"></i>
-            <span class="window-title">experience.log</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ tail -f experience.log</p>
-            <br>
-            <div class="log-entry">
-                <p class="log-timestamp">[2021—PRESENT]</p>
-                <p class="log-title">AI/ML Engineer</p>
-                <p class="log-org">Independent / Freelance</p>
-                <p class="log-line">> Designed and deployed NLP pipelines for text classification and summarisation</p>
-                <p class="log-line">> Implemented transformer and diffusion model architectures in PyTorch</p>
-                <p class="log-line">> Built recommendation systems using collaborative filtering and matrix factorisation</p>
-                <p class="log-line">> Wrote technical articles on ML concepts reaching thousands of readers</p>
-            </div>
-            <br>
-            <div class="log-entry">
-                <p class="log-timestamp">[2017—2021]</p>
-                <p class="log-title">Data Scientist</p>
-                <p class="log-org">Previous Role</p>
-                <p class="log-line">> Developed machine learning models for structured and unstructured data</p>
-                <p class="log-line">> Collaborated with product teams to ship ML features end-to-end</p>
-                <p class="log-line">> Built data pipelines and feature engineering workflows at scale</p>
-            </div>
-            <br>
-            <p class="blink-cursor">_</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: education.dat ══════════════════════════════════ -->
-<div class="window" id="win-education">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-regular fa-file window-icon"></i>
-            <span class="window-title">education.dat</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ hexdump -C education.dat</p>
-            <br>
-            <div class="edu-record">
-                <p class="edu-field"><span class="field-label">DEGREE:</span> MSc / BSc Computer Science</p>
-                <p class="edu-field"><span class="field-label">INSTITUTION:</span> University</p>
-                <p class="edu-field"><span class="field-label">YEAR:</span> 2016</p>
-                <p class="edu-field"><span class="field-label">STATUS:</span> CONFERRED</p>
-            </div>
-            <br>
-            <p class="status-line">[EOF]</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: Recycle Bin ═════════════════════════════════════ -->
-<div class="window" id="win-recycle">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-trash-can window-icon"></i>
-            <span class="window-title">Recycle Bin</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ls -la /trash/</p>
-            <br>
-            <div class="recycle-item" data-window="win-easter">
-                <i class="fa-solid fa-egg"></i>
-                <span>easter_egg.txt</span>
-                <span class="file-perms">deleted 2024-01-01</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: easter_egg.txt ════════════════════════════════ -->
-<div class="window" id="win-easter">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-egg window-icon"></i>
-            <span class="window-title">easter_egg.txt</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ cat easter_egg.txt</p>
-            <br>
-            <p>You found a secret file!</p>
-            <br>
-            <p>There's a text adventure game hidden in this OS.</p>
-            <p>Close this window and type "adventure" on your keyboard.</p>
-            <br>
-            <p class="status-line">Good luck, operator.</p>
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: adventure.exe (easter egg) ═════════════════════ -->
-<div class="window" id="win-adventure" style="width:700px">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-dungeon window-icon"></i>
-            <span class="window-title">adventure.exe</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body adventure-body">
-        <div id="adventure-output" class="adventure-output"></div>
-        <div class="adventure-input-row">
-            <span class="adventure-prompt">&gt;</span>
-            <input type="text" id="adventure-input" class="adventure-input" autocomplete="off" spellcheck="false">
-        </div>
-    </div>
-</div>
-
-<!-- ══ WINDOW: contact.sh ═════════════════════════════════════ -->
-<div class="window" id="win-contact">
-    <div class="window-titlebar">
-        <div class="window-title-area">
-            <i class="fa-solid fa-satellite-dish window-icon"></i>
-            <span class="window-title">contact.sh</span>
-        </div>
-        <div class="window-controls">
-            <button class="win-btn win-minimize">_</button>
-            <button class="win-btn win-maximize">□</button>
-            <button class="win-btn win-close">x</button>
-        </div>
-    </div>
-    <div class="window-body">
-        <div class="file-content">
-            <p class="prompt-line">$ ./contact.sh</p>
-            <br>
-            <p>Establishing uplink...</p>
-            <p class="status-line">[CONNECTION ESTABLISHED]</p>
-            <br>
-            <p>Open to interesting ML engineering roles, research
-collaborations, and technical consulting.</p>
-            <br>
-            <p class="contact-field"><span class="field-label">EMAIL:</span> <a href="mailto:simpetre@gmail.com">simpetre@gmail.com</a></p>
-            <p class="contact-field"><span class="field-label">GITHUB:</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">github.com/simpetre</a></p>
-            <p class="contact-field"><span class="field-label">LINKEDIN:</span> <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin.com/in/simon.petre</a></p>
-            <p class="contact-field"><span class="field-label">TWITTER:</span> <a href="https://twitter.com/bigs1m" target="_blank" rel="noopener">@bigs1m</a></p>
-            <br>
-            <p class="prompt-line">$ _</p>
-        </div>
-    </div>
-</div>
-
-
-        <!-- Recycle Bin (bottom-right) -->
-        <div class="desktop-icon recycle-bin" data-window="win-recycle">
-            <i class="fa-solid fa-trash-can icon"></i>
-            <span>Recycle Bin</span>
-        </div>
-
-    </div>
-
-    <!-- ── Taskbar ───────────────────────────────────────────── -->
-    <div class="taskbar">
-        <button class="start-btn" id="start-btn">
-            <i class="fa-solid fa-terminal"></i> PETRE-OS
-        </button>
-        <div class="taskbar-windows" id="taskbar-windows"></div>
-        <div class="taskbar-tray">
-            <div class="tray-status">
-                <span>CPU: OK</span>
-                <span class="tray-net">NET: ▲</span>
-                <span>MEM: 64K</span>
-            </div>
-            <span class="taskbar-clock" id="taskbar-clock"></span>
-        </div>
-    </div>
-
-    <!-- ── Start Menu ────────────────────────────────────────── -->
-    <div class="start-menu" id="start-menu">
-        <div class="start-menu-header">PETRE-OS v3.3</div>
-        <div class="start-menu-items">
-            <div class="start-menu-item" data-window="win-about"><i class="fa-regular fa-file-lines"></i> about.txt</div>
-            <div class="start-menu-item" data-window="win-skills"><i class="fa-solid fa-microchip"></i> skills.exe</div>
-            <div class="start-menu-item" data-window="win-projects"><i class="fa-regular fa-folder-open"></i> projects/</div>
-            <div class="start-menu-item" data-window="win-experience"><i class="fa-solid fa-terminal"></i> experience.log</div>
-            <div class="start-menu-item" data-window="win-education"><i class="fa-regular fa-file"></i> education.dat</div>
-            <div class="start-menu-item" data-window="win-contact"><i class="fa-solid fa-satellite-dish"></i> contact.sh</div>
-            <div class="start-menu-divider"></div>
-            <div class="start-menu-item" id="start-resume"><i class="fa-regular fa-file"></i> resume.pdf</div>
-            <div class="start-menu-item" id="start-github"><i class="fa-brands fa-github"></i> GitHub</div>
-            <div class="start-menu-item" id="start-linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
-        </div>
-    </div>
-
-    <!-- ── Scanlines + Vignette + rolling-scan overlays ──────── -->
+    <!-- Global CRT overlays (one physical monitor) -->
     <div class="crt-rollbar"></div>
     <div class="crt-scanlines"></div>
     <div class="crt-vignette"></div>
 
+    <div id="crt">
+
+        <!-- Boot sequence -->
+        <div id="boot-screen">
+            <div id="boot-text"></div>
+            <div class="boot-skip" id="boot-skip">[ press any key to skip ]</div>
+        </div>
+
+        <!-- The terminal -->
+        <div id="terminal">
+            <div id="term-header">
+                <span class="th-user">simon@petre-os</span>
+                <span class="th-title">~ &mdash; bash</span>
+                <span class="th-right"><span class="th-dot">&#9679;</span> online <span id="term-clock"></span></span>
+            </div>
+
+            <div id="term-output"></div>
+
+            <div id="term-menu">
+                <button class="chip" data-cmd="about">about</button>
+                <button class="chip" data-cmd="skills">skills</button>
+                <button class="chip" data-cmd="projects">projects</button>
+                <button class="chip" data-cmd="experience">experience</button>
+                <button class="chip" data-cmd="education">education</button>
+                <button class="chip" data-cmd="contact">contact</button>
+                <button class="chip" data-cmd="resume">resume</button>
+                <button class="chip" data-cmd="help">help</button>
+                <button class="chip chip-play" data-cmd="adventure">adventure</button>
+            </div>
+
+            <div id="term-inputline">
+                <span id="term-prompt">simon@petre<span class="ip-tilde">:~$</span></span>
+                <input type="text" id="term-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal input">
+            </div>
+        </div>
+
+    </div>
+
+    <!--
+  Content source. The terminal shell (in _layouts/default.html) reads these
+  sections by [data-cmd] and renders them into the scrollback. Kept in the DOM
+  (visually hidden, not display:none) so the copy stays crawlable and available
+  to screen readers as a graceful no-JS fallback.
+-->
+<div id="content-source" class="content-source">
+
+    <section data-cmd="about">
+        <h1 class="o-h1">SIMON PETRE</h1>
+        <p class="o-sub">AI/ML Engineer</p>
+        <p class="o-p">Building intelligent systems at the intersection of machine learning, NLP, and scalable infrastructure.</p>
+        <p class="o-p">I focus on deep learning, natural language processing, and recommendation systems — turning research ideas into production-grade systems that create real impact. My work spans transformer-based language models, diffusion models for generative AI, and classical ML pipelines for structured data. I'm equally comfortable exploring cutting-edge papers and shipping reliable, well-tested code.</p>
+        <p class="o-links">
+            <a href="https://github.com/simpetre" target="_blank" rel="noopener">github</a>
+            <a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin</a>
+            <a href="mailto:simpetre@gmail.com">email</a>
+            <a href="/resume.pdf" target="_blank">resume</a>
+        </p>
+    </section>
+
+    <section data-cmd="skills">
+        <table class="o-table">
+            <tr><td class="o-key">languages</td><td>Python, SQL, Bash, JavaScript</td></tr>
+            <tr><td class="o-key">ml / dl</td><td>PyTorch, Hugging Face, scikit-learn, NumPy, Pandas</td></tr>
+            <tr><td class="o-key">nlp / gen-ai</td><td>Transformers, Diffusion Models, LLMs, RLHF, RAG</td></tr>
+            <tr><td class="o-key">infra</td><td>Docker, Git, Linux, Jupyter, Weights &amp; Biases</td></tr>
+            <tr><td class="o-key">cloud</td><td>AWS, GCP, PostgreSQL, Spark</td></tr>
+            <tr><td class="o-key">research</td><td>RecSys, Audio ML, Text Summarization, Computer Vision</td></tr>
+        </table>
+        <p class="o-dim">6 modules loaded — status: operational</p>
+    </section>
+
+    <section data-cmd="projects">
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">diffusion_models/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">End-to-end implementation of denoising diffusion probabilistic models (DDPM) in PyTorch. Covers the forward/reverse diffusion processes, noise scheduling, and a U-Net architecture with attention.</p>
+            <p class="proj-tags">PyTorch · DDPM · Generative AI · U-Net</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">transformer_lm/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">From-scratch PyTorch implementation of the Transformer architecture including multi-head self-attention, positional encoding, and training on language-modelling tasks with modern techniques.</p>
+            <p class="proj-tags">PyTorch · Transformers · NLP · Attention</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">audio_classify/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">Urban sound classification using convolutional neural networks on mel-spectrogram features. Trained on UrbanSound8K, achieving strong accuracy across 10 sound categories.</p>
+            <p class="proj-tags">CNNs · Audio ML · Mel Spectrograms · UrbanSound8K</p>
+        </div>
+        <div class="proj">
+            <p class="proj-head"><span class="proj-name">lexrank_summarizer/</span> <a href="https://github.com/simpetre" target="_blank" rel="noopener">[github]</a></p>
+            <p class="o-p">Graph-based extractive summarisation using the LexRank algorithm. Builds a sentence-similarity graph with TF-IDF cosine similarity and applies PageRank to identify the most salient sentences.</p>
+            <p class="proj-tags">NLP · Graph Algorithms · TF-IDF · Summarization</p>
+        </div>
+    </section>
+
+    <section data-cmd="experience">
+        <div class="xp">
+            <p class="xp-when">2021 — present</p>
+            <p class="xp-role">AI/ML Engineer <span class="o-dim">· Independent / Freelance</span></p>
+            <ul class="o-list">
+                <li>Designed and deployed NLP pipelines for text classification and summarisation</li>
+                <li>Implemented transformer and diffusion model architectures in PyTorch</li>
+                <li>Built recommendation systems using collaborative filtering and matrix factorisation</li>
+                <li>Wrote technical articles on ML concepts reaching thousands of readers</li>
+            </ul>
+        </div>
+        <div class="xp">
+            <p class="xp-when">2017 — 2021</p>
+            <p class="xp-role">Data Scientist <span class="o-dim">· Previous Role</span></p>
+            <ul class="o-list">
+                <li>Developed machine learning models for structured and unstructured data</li>
+                <li>Collaborated with product teams to ship ML features end-to-end</li>
+                <li>Built data pipelines and feature-engineering workflows at scale</li>
+            </ul>
+        </div>
+    </section>
+
+    <section data-cmd="education">
+        <table class="o-table">
+            <tr><td class="o-key">degree</td><td>MSc / BSc Computer Science</td></tr>
+            <tr><td class="o-key">institution</td><td>University</td></tr>
+            <tr><td class="o-key">year</td><td>2016</td></tr>
+            <tr><td class="o-key">status</td><td>conferred</td></tr>
+        </table>
+    </section>
+
+    <section data-cmd="contact">
+        <p class="o-p">Open to interesting ML engineering roles, research collaborations, and technical consulting.</p>
+        <table class="o-table">
+            <tr><td class="o-key">email</td><td><a href="mailto:simpetre@gmail.com">simpetre@gmail.com</a></td></tr>
+            <tr><td class="o-key">github</td><td><a href="https://github.com/simpetre" target="_blank" rel="noopener">github.com/simpetre</a></td></tr>
+            <tr><td class="o-key">linkedin</td><td><a href="https://linkedin.com/in/simon.petre" target="_blank" rel="noopener">linkedin.com/in/simon.petre</a></td></tr>
+            <tr><td class="o-key">twitter</td><td><a href="https://twitter.com/bigs1m" target="_blank" rel="noopener">@bigs1m</a></td></tr>
+        </table>
+    </section>
+
+</div>
+
+
     <script>
     (function() {
-        // ══════════════════════════════════════════════════════
-        // ── Matrix Rain ──────────────────────────────────────
-        // ══════════════════════════════════════════════════════
-        var canvas = document.getElementById('matrix-rain');
-        var ctx = canvas.getContext('2d');
-        var isMobile = window.innerWidth <= 600;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        var chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
-        var fontSize = 16;
-        var columns = Math.floor(canvas.width / (fontSize * 6)); // sparse columns
-        var drops = [];
-        var columnX = [];
-
-        for (var i = 0; i < columns; i++) {
-            drops[i] = Math.random() * -50;
-            columnX[i] = Math.floor(Math.random() * canvas.width);
-        }
-
-        function drawMatrix() {
-            if (isMobile) return;
-            ctx.fillStyle = 'rgba(10, 10, 10, 0.08)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#4af626';
-            ctx.font = fontSize + 'px monospace';
-
-            for (var i = 0; i < drops.length; i++) {
-                if (drops[i] < 0) {
-                    drops[i] += 0.3;
-                    continue;
-                }
-                var char = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(char, columnX[i], drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
-                    drops[i] = Math.random() * -30;
-                    columnX[i] = Math.floor(Math.random() * canvas.width);
-                }
-                drops[i] += 0.4 + Math.random() * 0.3;
-            }
-            requestAnimationFrame(drawMatrix);
-        }
-
-        if (!isMobile) {
-            requestAnimationFrame(drawMatrix);
-        }
 
         // ══════════════════════════════════════════════════════
-        // ── Boot sequence ────────────────────────────────────
+        // ADVENTURE ENGINE v3.0 — driven by the shell (see below)
         // ══════════════════════════════════════════════════════
-        var bootScreen = document.getElementById('boot-screen');
-        var bootText = document.getElementById('boot-text');
-        var desktop = document.getElementById('desktop');
-        var taskbar = document.querySelector('.taskbar');
-        var bootDone = false;
-
-        var bootLines = [
-            ' ___ ___ _____ ___ ___    ___  ___',
-            '| _ \\ __|_   _| _ \\ __|  / _ \\/ __|',
-            '|  _/ _|  | | |   / _|  | (_) \\__ \\',
-            '|_| |___| |_| |_|_\\___|  \\___/|___/',
-            '',
-            'PETRE-OS v3.3 BIOS  —  Neural Desktop Environment',
-            'Copyright (c) 2024 Simon Petre Systems Inc.',
-            '',
-            'Memory test... 65536K OK',
-            'Detecting hardware...',
-            '  CPU: Neural Processing Unit x86_ML   [OK]',
-            '  GPU: Tensor Core Array               [OK]',
-            '  NET: Satellite uplink          [CONNECTED]',
-            '',
-            'Loading kernel modules...',
-            '  pytorch.ko          [OK]',
-            '  transformer.ko      [OK]',
-            '  attention.ko        [OK]',
-            '  diffusion.ko        [OK]',
-            '  consciousness.ko    [OK]',
-            '',
-            'Mounting /dev/brain... done.',
-            'Calibrating phosphor... done.',
-            'Starting PETRE-OS...',
-            ''
-        ];
-
-        var skipBoot = sessionStorage.getItem('petre-os-booted');
-
-        // ── CRT power-on flash ───────────────────────────────
-        var powerOn = document.getElementById('power-on');
-        if (powerOn) {
-            if (skipBoot) powerOn.classList.add('quick');
-            var removePowerOn = function() { if (powerOn && powerOn.parentNode) powerOn.parentNode.removeChild(powerOn); };
-            powerOn.addEventListener('animationend', removePowerOn);
-            setTimeout(removePowerOn, 1200); // safety net if animationend never fires
-        }
-
-        // Animated boot progress bar, then callback
-        function runBootProgress(done) {
-            var bar = document.createElement('div');
-            bootText.appendChild(bar);
-            var pct = 0;
-            (function step() {
-                if (bootDone) return;
-                var filled = Math.round(pct / 5); // 20-cell bar
-                var blocks = '';
-                for (var b = 0; b < 20; b++) blocks += (b < filled ? '█' : '░');
-                bar.textContent = '[' + blocks + '] ' + pct + '%';
-                bootText.scrollTop = bootText.scrollHeight;
-                if (pct >= 100) { setTimeout(done, 350); return; }
-                pct += 5 + Math.floor(Math.random() * 9);
-                if (pct > 100) pct = 100;
-                setTimeout(step, 45);
-            })();
-        }
-
-        function showDesktop() {
-            if (bootDone) return;
-            bootDone = true;
-            bootScreen.style.display = 'none';
-            desktop.classList.add('active');
-            taskbar.classList.add('active');
-            sessionStorage.setItem('petre-os-booted', '1');
-            startClock();
-
-            // Center about window
-            var vw = window.innerWidth;
-            var vh = window.innerHeight - 40;
-            var aboutWin = document.getElementById('win-about');
-            var aw = Math.min(620, vw - 40);
-            aboutWin.style.width = aw + 'px';
-            aboutWin.style.left = Math.max(20, (vw - aw) / 2) + 'px';
-            aboutWin.style.top = Math.max(20, (vh - 440) / 2) + 'px';
-            aboutWin.dataset.positioned = '1';
-            openWindow('win-about');
-
-            // Open projects peeking behind, offset right and down
-            var projWin = document.getElementById('win-projects');
-            var pw = Math.min(640, vw - 60);
-            projWin.style.width = pw + 'px';
-            projWin.style.left = Math.max(40, (vw - pw) / 2 + 60) + 'px';
-            projWin.style.top = Math.max(40, (vh - 440) / 2 + 50) + 'px';
-            projWin.dataset.positioned = '1';
-            openWindow('win-projects');
-
-            // Re-focus about on top
-            focusWindow(aboutWin);
-
-            // Typing animation on name
-            typeHeroName();
-        }
-
-        if (skipBoot) {
-            setTimeout(showDesktop, 0);
-        } else {
-            function skipHandler(e) {
-                if (bootDone) return;
-                document.removeEventListener('keydown', skipHandler);
-                document.removeEventListener('click', skipHandler);
-                document.removeEventListener('touchstart', skipHandler);
-                showDesktop();
-            }
-            document.addEventListener('keydown', skipHandler);
-            document.addEventListener('click', skipHandler);
-            document.addEventListener('touchstart', skipHandler);
-
-            var lineIdx = 0;
-            function typeLine() {
-                if (bootDone) return;
-                if (lineIdx < bootLines.length) {
-                    var line = document.createElement('div');
-                    line.textContent = bootLines[lineIdx] || '\u00A0';
-                    bootText.appendChild(line);
-                    bootText.scrollTop = bootText.scrollHeight;
-                    lineIdx++;
-                    setTimeout(typeLine, bootLines[lineIdx - 1] === '' ? 200 : 60 + Math.random() * 80);
-                } else {
-                    runBootProgress(showDesktop);
-                }
-            }
-            typeLine();
-        }
-
-        // ── Typing animation for hero name ───────────────────
-        var heroTyped = false;
-        function typeHeroName() {
-            if (heroTyped) return;
-            heroTyped = true;
-            var el = document.getElementById('hero-name');
-            if (!el) return;
-            var name = 'SIMON PETRE';
-            var i = 0;
-            el.innerHTML = '<span class="typing-cursor">█</span>';
-
-            var interval = setInterval(function() {
-                if (i < name.length) {
-                    el.innerHTML = name.substring(0, i + 1) + '<span class="typing-cursor">█</span>';
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    // Keep cursor blinking at end
-                    el.innerHTML = name + '<span class="typing-cursor">█</span>';
-                }
-            }, 80);
-        }
-
-        // ── Clock ────────────────────────────────────────────
-        var clockEl = document.getElementById('taskbar-clock');
-        function startClock() {
-            function update() {
-                var d = new Date();
-                clockEl.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-            }
-            update();
-            setInterval(update, 10000);
-        }
-
-        // ══════════════════════════════════════════════════════
-        // ── Window management ────────────────────────────────
-        // ══════════════════════════════════════════════════════
-        var windows = document.querySelectorAll('.window');
-        var zIndex = 10;
-        var activeWindow = null;
-
-        function focusWindow(win) {
-            if (activeWindow) activeWindow.classList.remove('focused');
-            win.classList.add('focused');
-            win.style.zIndex = ++zIndex;
-            activeWindow = win;
-            updateTaskbar();
-        }
-
-        function openWindow(id) {
-            var win = document.getElementById(id);
-            if (!win) return;
-            win.classList.remove('minimized', 'closing', 'minimizing');
-            win.classList.add('open');
-            focusWindow(win);
-            if (!win.dataset.positioned) {
-                var vw = window.innerWidth;
-                var vh = window.innerHeight - 40;
-                var ww = win.offsetWidth || 520;
-                var openCount = document.querySelectorAll('.window.open').length;
-                var offsetX = Math.max(20, (vw - ww) / 2 + (openCount - 1) * 25);
-                var offsetY = Math.max(20, vh * 0.12 + (openCount - 1) * 25);
-                win.style.left = offsetX + 'px';
-                win.style.top = offsetY + 'px';
-                win.dataset.positioned = '1';
-            }
-            updateTaskbar();
-        }
-
-        function closeWindow(id) {
-            var win = document.getElementById(id);
-            if (!win) return;
-            win.classList.add('closing');
-            win.classList.remove('focused');
-            if (activeWindow === win) activeWindow = null;
-            setTimeout(function() {
-                win.classList.remove('open', 'closing', 'minimized');
-                updateTaskbar();
-            }, 100);
-            updateTaskbar();
-        }
-
-        function minimizeWindow(id) {
-            var win = document.getElementById(id);
-            if (!win) return;
-            win.classList.add('minimizing');
-            if (activeWindow === win) activeWindow = null;
-            setTimeout(function() {
-                win.classList.remove('minimizing');
-                win.classList.add('minimized');
-                updateTaskbar();
-            }, 150);
-            updateTaskbar();
-        }
-
-        function updateTaskbar() {
-            var tb = document.getElementById('taskbar-windows');
-            tb.innerHTML = '';
-            windows.forEach(function(win) {
-                if (!win.classList.contains('open')) return;
-                var btn = document.createElement('button');
-                btn.className = 'taskbar-win-btn';
-                if (win.classList.contains('focused') && !win.classList.contains('minimized') && !win.classList.contains('minimizing')) {
-                    btn.classList.add('active');
-                }
-                btn.textContent = win.querySelector('.window-title').textContent;
-                btn.addEventListener('click', function() {
-                    if (win.classList.contains('minimized')) {
-                        win.classList.remove('minimized');
-                        focusWindow(win);
-                    } else if (win.classList.contains('focused')) {
-                        minimizeWindow(win.id);
-                    } else {
-                        focusWindow(win);
-                    }
-                });
-                tb.appendChild(btn);
-            });
-        }
-
-        // ── Desktop icon clicks ──────────────────────────────
-        function deselectAllIcons() {
-            document.querySelectorAll('.desktop-icon').forEach(function(ic) { ic.classList.remove('selected'); });
-        }
-
-        document.querySelectorAll('.desktop-icon[data-window]').forEach(function(icon) {
-            icon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                deselectAllIcons();
-                this.classList.add('selected');
-            });
-            icon.addEventListener('dblclick', function() {
-                deselectAllIcons();
-                openWindow(this.dataset.window);
-            });
-            icon.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                openWindow(this.dataset.window);
-            });
-        });
-
-        // Click on desktop background deselects icons
-        desktop.addEventListener('click', function(e) {
-            if (e.target === desktop) deselectAllIcons();
-        });
-
-        var resumeIcon = document.getElementById('icon-resume');
-        if (resumeIcon) {
-            resumeIcon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                deselectAllIcons();
-                this.classList.add('selected');
-            });
-            resumeIcon.addEventListener('dblclick', function() {
-                deselectAllIcons();
-                window.open('/resume.pdf', '_blank');
-            });
-            resumeIcon.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                window.open('/resume.pdf', '_blank');
-            });
-        }
-
-        // ── Window title bar buttons ─────────────────────────
-        windows.forEach(function(win) {
-            var titlebar = win.querySelector('.window-titlebar');
-            var closeBtn = win.querySelector('.win-close');
-            var minBtn = win.querySelector('.win-minimize');
-            var maxBtn = win.querySelector('.win-maximize');
-
-            titlebar.addEventListener('mousedown', function() { focusWindow(win); });
-
-            closeBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                closeWindow(win.id);
-            });
-
-            minBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                minimizeWindow(win.id);
-            });
-
-            if (maxBtn) {
-                maxBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    win.classList.toggle('maximized');
-                });
-            }
-
-            win.addEventListener('mousedown', function() { focusWindow(win); });
-
-            // ── Drag ─────────────────────────────────────────
-            var dragging = false, dragX, dragY;
-            titlebar.addEventListener('mousedown', function(e) {
-                if (e.target.closest('.win-btn')) return;
-                if (win.classList.contains('maximized')) return;
-                dragging = true;
-                dragX = e.clientX - win.offsetLeft;
-                dragY = e.clientY - win.offsetTop;
-                win.classList.add('dragging');
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!dragging) return;
-                win.style.left = (e.clientX - dragX) + 'px';
-                win.style.top = (e.clientY - dragY) + 'px';
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (dragging) {
-                    dragging = false;
-                    win.classList.remove('dragging');
-                }
-            });
-        });
-
-        // ── Start menu ───────────────────────────────────────
-        var startBtn = document.getElementById('start-btn');
-        var startMenu = document.getElementById('start-menu');
-
-        startBtn.addEventListener('click', function() { startMenu.classList.toggle('open'); });
-
-        document.addEventListener('click', function(e) {
-            if (!startMenu.contains(e.target) && e.target !== startBtn && !startBtn.contains(e.target)) {
-                startMenu.classList.remove('open');
-            }
-        });
-
-        document.querySelectorAll('.start-menu-item[data-window]').forEach(function(item) {
-            item.addEventListener('click', function() {
-                openWindow(this.dataset.window);
-                startMenu.classList.remove('open');
-            });
-        });
-
-        document.getElementById('start-resume').addEventListener('click', function() {
-            window.open('/resume.pdf', '_blank');
-            startMenu.classList.remove('open');
-        });
-        document.getElementById('start-github').addEventListener('click', function() {
-            window.open('https://github.com/simpetre', '_blank');
-            startMenu.classList.remove('open');
-        });
-        document.getElementById('start-linkedin').addEventListener('click', function() {
-            window.open('https://linkedin.com/in/simon.petre', '_blank');
-            startMenu.classList.remove('open');
-        });
-
-        // ── Recycle bin item clicks ───────────────────────────
-        document.querySelectorAll('.recycle-item[data-window]').forEach(function(item) {
-            item.addEventListener('dblclick', function() {
-                openWindow(this.dataset.window);
-            });
-            item.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                openWindow(this.dataset.window);
-            });
-        });
-
-        // ── Easter egg: type "adventure" to launch game ──────
-        var secretBuffer = '';
-        document.addEventListener('keydown', function(e) {
-            if (e.target.id === 'adventure-input') return;
-            if (!bootDone) return;
-            secretBuffer += e.key.toLowerCase();
-            if (secretBuffer.length > 20) secretBuffer = secretBuffer.slice(-20);
-            if (secretBuffer.includes('adventure')) {
-                secretBuffer = '';
-                openWindow('win-adventure');
-                setTimeout(function() {
-                    document.getElementById('adventure-input').focus();
-                }, 100);
-            }
-        });
-
-        // ══════════════════════════════════════════════════════
-        // ── ADVENTURE GAME ENGINE v2 ─────────────────────────
-        // ══════════════════════════════════════════════════════
-        (function() {
-            var output = document.getElementById('adventure-output');
-            var input = document.getElementById('adventure-input');
+        var ADVENTURE = (function() {
+            var output = document.getElementById('term-output');
+            var input = document.getElementById('term-input');
             var inventory = [];
             var flags = {};
             var currentRoom = 'root';
@@ -1870,22 +1117,10 @@ collaborations, and technical consulting.</p>
                 printRoom();
             }
 
-            var gameStarted = false;
-            var observer = new MutationObserver(function() {
-                var win = document.getElementById('win-adventure');
-                if (win.classList.contains('open') && !gameStarted) {
-                    gameStarted = true; startGame();
-                    setTimeout(function() { input.focus(); }, 50);
-                }
-            });
-            observer.observe(document.getElementById('win-adventure'), { attributes: true, attributeFilter: ['class'] });
-
-            // ── Input: command history + Tab autocomplete ────────
-            var cmdHistory = [];
-            var histIdx = 0;
-            var VERBS = ['look','examine','read','go','north','south','east','west','up','down',
+            // ── autocomplete + history helpers exposed to the shell ──
+            var ADV_VERBS = ['look','examine','read','go','north','south','east','west','up','down',
                 'take','get','drop','use','install','inventory','answer','solve','hint','kill',
-                'cat','ls','map','score','stats','talk','ending','chmod','drink','touch','clear','restart','help'];
+                'cat','ls','map','score','stats','talk','ending','chmod','drink','touch','clear','restart','help','exit','quit'];
 
             function caretToEnd() {
                 setTimeout(function() { input.selectionStart = input.selectionEnd = input.value.length; }, 0);
@@ -1897,7 +1132,7 @@ collaborations, and technical consulting.</p>
                 if (parts.length <= 1) {
                     var pref = (parts[0] || '').toLowerCase();
                     if (!pref) return;
-                    var m = VERBS.filter(function(v) { return v.indexOf(pref) === 0; });
+                    var m = ADV_VERBS.filter(function(v) { return v.indexOf(pref) === 0; });
                     if (m.length === 1) input.value = m[0] + ' ';
                     else if (m.length > 1) print(m.join('   '), 'adv-desc');
                 } else {
@@ -1908,7 +1143,6 @@ collaborations, and technical consulting.</p>
                     if (room.items) cands = cands.concat(room.items);
                     cands = cands.concat(inventory);
                     var mm = cands.filter(function(c) { return c.indexOf(nounPref) === 0; });
-                    // de-dupe
                     mm = mm.filter(function(x, i) { return mm.indexOf(x) === i; });
                     if (mm.length === 1) input.value = parts[0] + ' ' + mm[0].replace(/_/g, ' ');
                     else if (mm.length > 1) print(mm.map(function(x) { return x.replace(/_/g, ' '); }).join('   '), 'adv-desc');
@@ -1916,28 +1150,364 @@ collaborations, and technical consulting.</p>
                 caretToEnd();
             }
 
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    var v = input.value;
-                    if (v.trim()) { cmdHistory.push(v); }
-                    histIdx = cmdHistory.length;
-                    doCommand(v);
-                    input.value = '';
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    if (histIdx > 0) { histIdx--; input.value = cmdHistory[histIdx]; caretToEnd(); }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    if (histIdx < cmdHistory.length - 1) { histIdx++; input.value = cmdHistory[histIdx]; }
-                    else { histIdx = cmdHistory.length; input.value = ''; }
-                    caretToEnd();
-                } else if (e.key === 'Tab') {
-                    e.preventDefault();
-                    autocomplete();
-                }
-            });
-            document.querySelector('.adventure-body').addEventListener('click', function() { input.focus(); });
+            return { start: startGame, run: doCommand, complete: autocomplete };
         })();
+
+        // ══════════════════════════════════════════════════════
+        // PETRE-OS v4 shell — the terminal that drives everything
+        // ══════════════════════════════════════════════════════
+        var powerOn    = document.getElementById('power-on');
+        var bootScreen = document.getElementById('boot-screen');
+        var bootText   = document.getElementById('boot-text');
+        var terminal   = document.getElementById('terminal');
+        var output     = document.getElementById('term-output');
+        var input      = document.getElementById('term-input');
+        var clockEl    = document.getElementById('term-clock');
+        var canvas     = document.getElementById('matrix-rain');
+
+        var booted  = false;
+        var advMode = false;
+        var history = [];
+        var histIdx = 0;
+
+        // ── CRT power-on flash ────────────────────────────────
+        if (powerOn) {
+            if (sessionStorage.getItem('petre-os-v4')) powerOn.classList.add('quick');
+            var rmPower = function() { if (powerOn && powerOn.parentNode) powerOn.parentNode.removeChild(powerOn); };
+            powerOn.addEventListener('animationend', rmPower);
+            setTimeout(rmPower, 1200);
+        }
+
+        // ── Output helpers ────────────────────────────────────
+        function scrollBottom() { output.scrollTop = output.scrollHeight; }
+        function printLine(text, cls) { var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = text; output.appendChild(d); return d; }
+        function printHTML(html, cls) { var d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; output.appendChild(d); return d; }
+        function echo(cmd) {
+            var d = document.createElement('div'); d.className = 'term-echo';
+            var p = document.createElement('span'); p.className = 'tp'; p.textContent = 'simon@petre:~$ ';
+            var c = document.createElement('span'); c.className = 'tc'; c.textContent = cmd;
+            d.appendChild(p); d.appendChild(c); output.appendChild(d);
+        }
+        function pad(s, n) { while (s.length < n) s += ' '; return s; }
+
+        // ── Render a content section (cloned from #content-source) ──
+        function renderContent(name) {
+            var sec = document.querySelector('#content-source [data-cmd="' + name + '"]');
+            if (!sec) { printLine('cat: ' + name + ': No such file or directory', 'term-err'); return; }
+            var b = document.createElement('div'); b.className = 'term-block'; b.innerHTML = sec.innerHTML;
+            output.appendChild(b);
+        }
+
+        // ── neofetch card ─────────────────────────────────────
+        function renderNeofetch() {
+            var logo = [
+                '    ________________',
+                '   |  ____________  |',
+                '   | |          | |',
+                '   | | > petre_ | |',
+                '   | |          | |',
+                '   | |__________| |',
+                '   |______________|',
+                '     \\____________/'
+            ].join('\n');
+            var wrap = document.createElement('div'); wrap.className = 'term-block neofetch';
+            var l = document.createElement('div'); l.className = 'nf-logo'; l.textContent = logo;
+            wrap.appendChild(l);
+            wrap.insertAdjacentHTML('beforeend',
+                '<div class="nf-info">' +
+                '<div><span class="nf-title">simon@petre-os</span></div>' +
+                '<div><span class="nf-k">os</span>       PETRE-OS v4 &mdash; Phosphor Noir</div>' +
+                '<div><span class="nf-k">host</span>     simpetre.github.io</div>' +
+                '<div><span class="nf-k">shell</span>    bash (type or click)</div>' +
+                '<div><span class="nf-k">role</span>     AI/ML Engineer</div>' +
+                '<div><span class="nf-k">stack</span>    PyTorch &middot; Transformers &middot; Diffusion</div>' +
+                '<div><span class="nf-k">focus</span>    NLP &middot; GenAI &middot; RecSys</div>' +
+                '<div><span class="nf-k">links</span>    type <b>contact</b> or click below</div>' +
+                '</div>');
+            output.appendChild(wrap);
+        }
+
+        // ── help ──────────────────────────────────────────────
+        function renderHelp() {
+            var rows = [
+                ['about', 'whoami / short bio'],
+                ['skills', 'tech stack'],
+                ['projects', 'selected work'],
+                ['experience', 'work history'],
+                ['education', 'background'],
+                ['contact', 'how to reach me'],
+                ['resume', 'open resume.pdf'],
+                ['neofetch', 'system info card'],
+                ['adventure', 'play the hidden game'],
+                ['clear', 'clear the screen']
+            ];
+            var b = document.createElement('div'); b.className = 'term-block';
+            var h = document.createElement('div'); h.className = 'term-dim'; h.textContent = 'available commands:'; b.appendChild(h);
+            rows.forEach(function(r) {
+                var line = document.createElement('div');
+                var k = document.createElement('span'); k.className = 'term-ok'; k.textContent = '  ' + pad(r[0], 12);
+                var v = document.createElement('span'); v.className = 'term-dim'; v.textContent = r[1];
+                line.appendChild(k); line.appendChild(v); b.appendChild(line);
+            });
+            var tip = printHTMLtoNode('tip: <b>up/down</b> for history, <b>tab</b> to autocomplete, or click a command below.', 'term-note');
+            b.appendChild(tip);
+            output.appendChild(b);
+        }
+        function printHTMLtoNode(html, cls) { var d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; return d; }
+
+        function renderBanner() {
+            var d = document.createElement('div'); d.className = 'term-block term-ascii'; d.textContent = 'SIMON PETRE'; output.appendChild(d);
+        }
+
+        function setTheme(name) {
+            var map = { green: '#4af626', cyan: '#3fe6ff', amber: '#ffcf4a', magenta: '#ff3caa', white: '#e8f0ea' };
+            if (map[name]) { document.documentElement.style.setProperty('--accent', map[name]); printLine('accent set to ' + name + '.', 'term-ok'); }
+            else printLine('usage: theme [green|cyan|amber|magenta|white]', 'term-dim');
+        }
+
+        // ── Command registry ──────────────────────────────────
+        var CONTENT = ['about', 'skills', 'projects', 'experience', 'education', 'contact'];
+        var COMMANDS = {
+            help: renderHelp,
+            whoami: function() { renderContent('about'); },
+            about: function() { renderContent('about'); },
+            skills: function() { renderContent('skills'); },
+            projects: function() { renderContent('projects'); },
+            experience: function() { renderContent('experience'); },
+            exp: function() { renderContent('experience'); },
+            education: function() { renderContent('education'); },
+            edu: function() { renderContent('education'); },
+            contact: function() { renderContent('contact'); },
+            neofetch: renderNeofetch,
+            clear: function() { output.innerHTML = ''; },
+            resume: function() { printLine('opening resume.pdf ...', 'term-dim'); window.open('/resume.pdf', '_blank'); },
+            cv: function() { COMMANDS.resume(); },
+            history: function() { if (!history.length) { printLine('(no history yet)', 'term-dim'); return; } history.forEach(function(h, i) { printLine('  ' + (i + 1) + '  ' + h, 'term-dim'); }); },
+            matrix: function() { printLine('entering the matrix... (press any key to return)', 'term-note'); startMatrix(); },
+            adventure: function() { enterAdventure(); },
+            play: function() { enterAdventure(); },
+            echo: function(arg) { printLine(arg || ''); },
+            date: function() { printLine(new Date().toString(), 'term-dim'); },
+            pwd: function() { printLine('/home/simon', 'term-dim'); },
+            banner: renderBanner,
+            theme: function(arg) { setTheme((arg || '').trim().toLowerCase()); },
+            sudo: function() { printLine('nice try. you already have root here.', 'term-note'); },
+            man: function(arg) { printLine('no manual entry for ' + (arg || 'that') + ". you're on your own, operator.", 'term-dim'); },
+            ls: function(arg) {
+                if (arg && arg.indexOf('proj') !== -1) { renderContent('projects'); return; }
+                printLine('about.txt   skills.md   projects/   experience.log   education.dat   contact.sh', 'term-ok');
+                printLine("run a name (e.g. 'projects') or click a command below.", 'term-dim');
+            },
+            cat: function(arg) {
+                var n = (arg || '').replace(/\.(txt|md|log|dat|sh)$/, '').replace(/\/$/, '');
+                if (CONTENT.indexOf(n) !== -1) renderContent(n);
+                else printLine('cat: ' + (arg || '') + ': No such file or directory', 'term-err');
+            }
+        };
+
+        function runCommand(raw) {
+            var cmd = (raw || '').trim();
+            echo(cmd);
+            if (cmd) {
+                var parts = cmd.split(/\s+/);
+                var name = parts[0].toLowerCase();
+                var arg = parts.slice(1).join(' ');
+                var fn = COMMANDS[name];
+                if (fn) fn(arg, parts);
+                else printLine('command not found: ' + name + "   (try 'help')", 'term-err');
+            }
+            scrollBottom();
+        }
+
+        // ── Adventure mode bridge ─────────────────────────────
+        function enterAdventure() {
+            if (advMode) return;
+            advMode = true; terminal.classList.add('adv-mode');
+            printLine('launching adventure.exe ...  (type EXIT to return to the shell)', 'term-note');
+            ADVENTURE.start(); scrollBottom(); input.focus();
+        }
+        function exitAdventure() {
+            if (!advMode) return;
+            advMode = false; terminal.classList.remove('adv-mode');
+            printLine('exited adventure. back to the shell. (progress auto-saved.)', 'term-note');
+            scrollBottom();
+        }
+
+        // ── Input handling ────────────────────────────────────
+        function caretEnd() { setTimeout(function() { input.selectionStart = input.selectionEnd = input.value.length; }, 0); }
+        function shellComplete() {
+            var parts = input.value.split(/\s+/);
+            if (parts.length <= 1) {
+                var pref = (parts[0] || '').toLowerCase(); if (!pref) return;
+                var m = Object.keys(COMMANDS).filter(function(n) { return n.indexOf(pref) === 0; });
+                if (m.length === 1) input.value = m[0] + ' ';
+                else if (m.length > 1) printLine(m.join('   '), 'term-dim');
+                caretEnd(); scrollBottom();
+            }
+        }
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                var v = input.value; input.value = '';
+                if (v.trim()) history.push(v);
+                histIdx = history.length;
+                if (advMode) {
+                    var t = v.trim().toLowerCase();
+                    if (t === 'exit' || t === 'quit') {
+                        var d = document.createElement('div'); d.className = 'adv-input-echo'; d.textContent = t; output.appendChild(d);
+                        exitAdventure();
+                    } else { ADVENTURE.run(v); scrollBottom(); }
+                } else { runCommand(v); }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (histIdx > 0) { histIdx--; input.value = history[histIdx]; caretEnd(); }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (histIdx < history.length - 1) { histIdx++; input.value = history[histIdx]; }
+                else { histIdx = history.length; input.value = ''; }
+                caretEnd();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                if (advMode) ADVENTURE.complete(); else shellComplete();
+            }
+        });
+
+        // ── Clickable command chips ───────────────────────────
+        var chips = document.querySelectorAll('.chip');
+        for (var ci = 0; ci < chips.length; ci++) {
+            chips[ci].addEventListener('click', function() {
+                var cmd = this.getAttribute('data-cmd');
+                if (advMode) exitAdventure();
+                runCommand(cmd); input.focus();
+            });
+        }
+
+        // Click anywhere in the terminal focuses the input (unless selecting / on a link)
+        terminal.addEventListener('click', function(e) {
+            var tag = e.target.tagName;
+            if (tag === 'A' || tag === 'BUTTON') return;
+            if (window.getSelection && String(window.getSelection())) return;
+            input.focus();
+        });
+
+        // ── Clock ─────────────────────────────────────────────
+        function startClock() {
+            function u() { var d = new Date(); clockEl.textContent = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }); }
+            u(); setInterval(u, 10000);
+        }
+
+        // ── Matrix screensaver ────────────────────────────────
+        var mctx = canvas.getContext('2d');
+        var mcols, mdrops, mrunning = false;
+        var mchars = 'アイウエオカキクケコ0123456789ABCDEF<>/_[]{}=+*';
+        function mresize() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            mcols = Math.floor(canvas.width / 14); mdrops = [];
+            for (var i = 0; i < mcols; i++) mdrops[i] = Math.random() * -40;
+        }
+        function accentColor() { return (getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#4af626').trim() || '#4af626'; }
+        function mdraw() {
+            if (!mrunning) return;
+            mctx.fillStyle = 'rgba(7, 9, 11, 0.10)'; mctx.fillRect(0, 0, canvas.width, canvas.height);
+            mctx.fillStyle = accentColor(); mctx.font = '14px monospace';
+            for (var i = 0; i < mdrops.length; i++) {
+                mctx.fillText(mchars.charAt(Math.floor(Math.random() * mchars.length)), i * 14, mdrops[i] * 14);
+                if (mdrops[i] * 14 > canvas.height && Math.random() > 0.975) mdrops[i] = Math.random() * -20;
+                mdrops[i] += 0.5;
+            }
+            requestAnimationFrame(mdraw);
+        }
+        function startMatrix() { if (mrunning) return; mrunning = true; mresize(); canvas.classList.add('active'); requestAnimationFrame(mdraw); }
+        function stopMatrix() { if (!mrunning) return; mrunning = false; canvas.classList.remove('active'); }
+        window.addEventListener('resize', function() { if (mrunning) mresize(); });
+
+        var idleTimer;
+        function resetIdle() {
+            clearTimeout(idleTimer);
+            if (!advMode && booted) idleTimer = setTimeout(function() { if (booted && !advMode) startMatrix(); }, 60000);
+        }
+        ['mousemove', 'mousedown', 'touchstart'].forEach(function(ev) {
+            document.addEventListener(ev, function() { if (mrunning) stopMatrix(); resetIdle(); });
+        });
+        document.addEventListener('keydown', function(e) {
+            if (mrunning) { stopMatrix(); resetIdle(); e.preventDefault(); e.stopPropagation(); return; }
+            resetIdle();
+        }, true);
+
+        // ── Boot → terminal ───────────────────────────────────
+        function typeCommand(cmd, done) {
+            var i = 0; input.value = '';
+            (function step() {
+                if (i < cmd.length) { input.value += cmd.charAt(i++); setTimeout(step, 55); }
+                else setTimeout(function() { var v = input.value; input.value = ''; runCommand(v); if (done) done(); }, 200);
+            })();
+        }
+        function autoIntro() {
+            typeCommand('neofetch', function() {
+                printLine('', 'term-dim');
+                printHTML('type a command or click one below &mdash; try <b>help</b>, <b>projects</b>, or <b>adventure</b>.', 'term-note');
+                scrollBottom();
+            });
+        }
+        function showTerminal() {
+            if (booted) return; booted = true;
+            bootScreen.classList.add('done');
+            terminal.classList.add('active');
+            sessionStorage.setItem('petre-os-v4', '1');
+            startClock(); resetIdle(); input.focus();
+            autoIntro();
+        }
+
+        var bootLines = [
+            ' ___ ___ _____ ___ ___    ___  ___',
+            '| _ \\ __|_   _| _ \\ __|  / _ \\/ __|',
+            '|  _/ _|  | | |   / _|  | (_) \\__ \\',
+            '|_| |___| |_| |_|_\\___|  \\___/|___/',
+            '',
+            'PETRE-OS v4  —  Phosphor Noir',
+            '',
+            'authenticating operator .......... ok',
+            'mounting /home/simon ............. ok',
+            'loading pytorch, transformers .... ok',
+            'starting shell ................... ok',
+            ''
+        ];
+
+        if (sessionStorage.getItem('petre-os-v4')) {
+            setTimeout(showTerminal, 0);
+        } else {
+            var skipH = function() {
+                document.removeEventListener('keydown', skipH);
+                document.removeEventListener('click', skipH);
+                document.removeEventListener('touchstart', skipH);
+                if (!booted) showTerminal();
+            };
+            document.addEventListener('keydown', skipH);
+            document.addEventListener('click', skipH);
+            document.addEventListener('touchstart', skipH);
+
+            var li = 0;
+            (function typeLine() {
+                if (booted) return;
+                if (li < bootLines.length) {
+                    var d = document.createElement('div'); d.textContent = bootLines[li] || ' ';
+                    bootText.appendChild(d); li++;
+                    setTimeout(typeLine, bootLines[li - 1] === '' ? 170 : 45 + Math.random() * 65);
+                } else { runBootProgress(showTerminal); }
+            })();
+        }
+        function runBootProgress(done) {
+            var bar = document.createElement('div'); bootText.appendChild(bar); var pct = 0;
+            (function step() {
+                if (booted) return;
+                var filled = Math.round(pct / 5); var s = '';
+                for (var b = 0; b < 20; b++) s += (b < filled ? '█' : '░');
+                bar.textContent = '[' + s + '] ' + pct + '%';
+                if (pct >= 100) { setTimeout(done, 300); return; }
+                pct += 5 + Math.floor(Math.random() * 9); if (pct > 100) pct = 100;
+                setTimeout(step, 42);
+            })();
+        }
 
     })();
     </script>
@@ -1954,5 +1524,4 @@ collaborations, and technical consulting.</p>
 
 </script>
 </body>
-
 </html>
